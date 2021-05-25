@@ -1,0 +1,40 @@
+{
+  "name": "paneer",
+  "version": "0.0.0",
+  "description": "Modify code like cheese!",
+  "repository": "unjs/paneer",
+  "license": "MIT",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "siroc build",
+    "dev": "jiti test/test.ts",
+    "lint": "eslint --ext .js,.ts .",
+    "prepack": "yarn build",
+    "release": "yarn test && standard-version && git push --follow-tags && npm publish",
+    "test": "yarn lint"
+  },
+  "dependencies": {
+    "ast-types": "^0.14.2",
+    "esprima": "^4.0.1",
+    "recast": "^0.20.4"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "latest",
+    "eslint": "latest",
+    "jiti": "latest",
+    "siroc": "latest",
+    "standard-version": "latest"
+  }
+}
