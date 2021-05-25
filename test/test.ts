@@ -1,12 +1,13 @@
-import { parse, compile } from '../src'
+import { parse, proxifyAST, generate } from '../src'
 
-const program = parse(`
+const ast = proxifyAST(parse(`
 export const a = {}
 export default {
   // This is foo
   foo: ['a']
-}`)
+}`))
 
-program.exports.default.props.foo.push('b')
+ast.exports.default.props.foo.push('b')
 
-console.log(compile(program).code)
+// eslint-disable-next-line no-console
+console.log(generate(ast).code)

@@ -1,5 +1,5 @@
 import * as recast from 'recast'
-import { ProxifiedNode, proxifyNode } from './proxy'
+import { ProxifiedNode } from './proxy'
 
 export interface ASTOptions extends Partial<recast.Options> {}
 

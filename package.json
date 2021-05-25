@@ -26,8 +26,6 @@
     "test": "yarn lint"
   },
   "dependencies": {
-    "ast-types": "^0.14.2",
-    "esprima": "^4.0.1",
     "recast": "^0.20.4"
   },
   "devDependencies": {

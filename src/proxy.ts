@@ -6,7 +6,7 @@ export interface ProxifiedNode extends ast.ASTNode {
   push: (value: string| number | boolean | RegExp) => void
 }
 
-export function proxifyNode (node: any) {
+export function proxifyAST (node: any) {
   return new Proxy(node, {
     get (_, key: string) {
       // .exports
@@ -14,9 +14,9 @@ export function proxifyNode (node: any) {
         const nodeExports: ProxifiedNode['exports'] = {}
         for (const n of node.program.body) {
           if (n.type === 'ExportNamedDeclaration') {
-            nodeExports[n.declaration.declarations[0].id] = proxifyNode(n.declaration)
+            nodeExports[n.declaration.declarations[0].id] = proxifyAST(n.declaration)
           } else if (n.type === 'ExportDefaultDeclaration') {
-            nodeExports.default = proxifyNode(n.declaration)
+            nodeExports.default = proxifyAST(n.declaration)
           }
         }
         return nodeExports
@@ -24,7 +24,7 @@ export function proxifyNode (node: any) {
 
       // .props
       if (key === 'props') {
-        return Object.fromEntries(node.properties.map(prop => [prop.key.name, proxifyNode(prop)]))
+        return Object.fromEntries(node.properties.map(prop => [prop.key.name, proxifyAST(prop)]))
       }
 
       // .push

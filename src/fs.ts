@@ -1,17 +1,17 @@
 import fs, { promises as fsp } from 'fs'
 import { parse, generate, ASTNode, ASTOptions } from './ast'
-import { ProxifiedNode, proxifyNode } from './proxy'
+import { ProxifiedNode, proxifyAST } from './proxy'
 
 export async function load (filename: string, options: ASTOptions = {}): Promise<ProxifiedNode> {
   const contents = await fsp.readFile(filename, 'utf8')
   options.sourceFileName = filename
-  return proxifyNode(parse(contents, options))
+  return proxifyAST(parse(contents, options))
 }
 
 export function loadSync (filename: string, options: ASTOptions = {}): ProxifiedNode {
   const contents = fs.readFileSync(filename, 'utf8')
   options.sourceFileName = filename
-  return proxifyNode(parse(contents, options))
+  return proxifyAST(parse(contents, options))
 }
 
 export async function write (node: ASTNode, filename?: string, options?: ASTOptions): Promise<void> {
