@@ -22,8 +22,8 @@ import { parse, compile } from 'paneer'
 import * as p from 'paneer'
 
 // CommonJS
-const { parse, compile } = require('panner')
-const p = require('panner')
+const { parse, compile } = require('paneer')
+const p = require('paneer')
 ```
 
 **Example:** Modify a file:
