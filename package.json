@@ -22,9 +22,10 @@
     "lint": "eslint --ext .js,.ts .",
     "prepack": "yarn build",
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
-    "test": "mocha -r jiti/register ./test/**/*.test.ts"
+    "test": "nyc mocha -r jiti/register ./test/**/*.test.ts"
   },
   "dependencies": {
+    "pathe": "^0.2.0",
     "recast": "^0.20.4"
   },
   "devDependencies": {
@@ -35,6 +36,7 @@
     "eslint": "latest",
     "jiti": "latest",
     "mocha": "^9.1.3",
+    "nyc": "^15.1.0",
     "siroc": "latest",
     "standard-version": "latest"
   }

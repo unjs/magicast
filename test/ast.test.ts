@@ -14,7 +14,6 @@ describe('proxyAST', () => {
 
     ast.exports.default.props.foo.push('b')
 
-    // eslint-disable-next-line no-console
     expect(generate(ast).code).to.equal(
         `
       export const a = {}
