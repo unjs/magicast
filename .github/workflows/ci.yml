@@ -39,7 +39,7 @@ jobs:
         run: yarn lint
 
       - name: Test
-        run: yarn dev
+        run: yarn test
 
       # - name: Coverage
       #   uses: codecov/codecov-action@v1
