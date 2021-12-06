@@ -19,19 +19,22 @@
   ],
   "scripts": {
     "build": "siroc build",
-    "dev": "jiti test/test.ts",
     "lint": "eslint --ext .js,.ts .",
     "prepack": "yarn build",
     "release": "yarn test && standard-version && git push --follow-tags && npm publish",
-    "test": "yarn lint"
+    "test": "mocha -r jiti/register ./test/**/*.test.ts"
   },
   "dependencies": {
     "recast": "^0.20.4"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "latest",
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
+    "chai": "^4.3.4",
     "eslint": "latest",
     "jiti": "latest",
+    "mocha": "^9.1.3",
     "siroc": "latest",
     "standard-version": "latest"
   }
