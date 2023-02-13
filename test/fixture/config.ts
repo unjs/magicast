@@ -1,5 +1,5 @@
 export default {
   foo: {
-    bar: 123
-  }
-}
+    bar: 123,
+  },
+};
