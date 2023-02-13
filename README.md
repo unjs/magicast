@@ -5,7 +5,32 @@
 [![Github Actions][github-actions-src]][github-actions-href]
 [![Codecov][codecov-src]][codecov-href]
 
-Modify code like a cheese! Powered by [recast](https://github.com/benjamn/recast) and [babel](https://babeljs.io/).
+Paneer allows you to programmatically modify JavaScript and Typescript source codes with a simplified, elegant and familiar syntax built on top of the [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) parsed by [recast](https://github.com/benjamn/recast) and [babel](https://babeljs.io/).
+
+**Roadmap:**
+
+🚧 Paneer is currently in the proof of concept state. While underlying parsers are stable, you might need to directly modify underlying AST for unsupported operations in the meantime.
+
+- Generic API
+  - [x] Working parser and code generation with TS support
+  - [ ] Access to comments
+- ESM
+  - [x] Basic syntax support
+  - [x] Access to the named exports
+  - [ ] Access to imports
+- Typescript
+  - [x] Basic syntax support
+  - [ ] Allow access to type nodes with shortcuts
+- Objects
+  - [x] Iterate over properties
+  - [ ] Assign new properties
+- Arrays
+  - [x] Push literal values
+  - [ ] Iterate and modify elements individually
+- Functions
+  - [x] Access to call expression arguments
+  - [ ] Access to function body
+  - [ ] Access to function return
 
 ## Usage
 
