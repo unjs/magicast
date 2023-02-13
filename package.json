@@ -1,38 +1,47 @@
 {
   "name": "paneer",
-  "version": "0.0.1",
-  "description": "Modify code like cheese!",
+  "version": "0.1.0",
+  "description": "",
   "repository": "unjs/paneer",
   "license": "MIT",
   "sideEffects": false,
+  "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.cjs"
     }
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "siroc build",
-    "dev": "jiti test/test.ts",
-    "lint": "eslint --ext .js,.ts .",
-    "prepack": "yarn build",
-    "release": "yarn test && standard-version && git push --follow-tags && npm publish",
-    "test": "yarn lint"
+    "build": "unbuild",
+    "dev": "vitest dev",
+    "lint": "eslint --cache --ext .ts,.js,.mjs,.cjs . && prettier -c src test",
+    "lint:fix": "eslint --cache --ext .ts,.js,.mjs,.cjs . --fix && prettier -c src test -w",
+    "prepack": "pnpm run build",
+    "release": "pnpm test && changelogen --release && npm publish && git push --follow-tags",
+    "test": "pnpm lint && vitest run --coverage"
   },
   "dependencies": {
-    "recast": "^0.20.4"
+    "recast": "^0.22.0",
+    "@types/estree": "^1.0.0"
   },
   "devDependencies": {
-    "@nuxtjs/eslint-config-typescript": "latest",
-    "eslint": "latest",
-    "jiti": "latest",
-    "siroc": "latest",
-    "standard-version": "latest"
-  }
+    "@types/node": "^18.13.0",
+    "@vitest/coverage-c8": "^0.28.4",
+    "changelogen": "^0.4.1",
+    "eslint": "^8.34.0",
+    "eslint-config-unjs": "^0.1.0",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5",
+    "unbuild": "^1.1.1",
+    "vitest": "^0.28.4"
+  },
+  "packageManager": "pnpm@7.27.0"
 }

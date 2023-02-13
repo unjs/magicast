@@ -1,3 +1,10 @@
 node_modules
+coverage
 dist
-*.log
+types
+.vscode
+.DS_Store
+.eslintcache
+*.log*
+*.conf*
+*.env*

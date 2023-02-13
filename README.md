@@ -1,6 +1,11 @@
 # 🧀 Paneer
 
-Modify code like a cheese! Using [recast](https://github.com/benjamn/recast) for AST modifications.
+[![npm version][npm-version-src]][npm-version-href]
+[![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![Github Actions][github-actions-src]][github-actions-href]
+[![Codecov][codecov-src]][codecov-href]
+
+Modify code like a cheese! Powered by [recast](https://github.com/benjamn/recast) for AST modifications.
 
 ## Usage
 
@@ -12,18 +17,21 @@ yarn add --dev paneer
 
 # using npm
 npm install -D paneer
+
+# using pnpm
+pnpm add -D paneer
 ```
 
 Import utilities:
 
 ```js
 // ESM / Bundler
-import { parse, compile } from 'paneer'
-import * as p from 'paneer'
+import { parseCode, generateCode } from "paneer";
+import * as p from "paneer";
 
 // CommonJS
-const { parse, compile } = require('panner')
-const p = require('panner')
+const { parseCode, generateCode } = require("panner");
+const p = require("panner");
 ```
 
 **Example:** Modify a file:
@@ -32,51 +40,66 @@ const p = require('panner')
 
 ```js
 export default {
-  foo: ['a']
-}
+  foo: ["a"],
+};
 ```
 
 Code to modify and append `b` to `foo` prop of defaultExport:
 
 ```js
-import { load, write } from 'paneer'
+import { loadFile, writeFile } from "paneer";
 
-const ast = await load('config.js')
+const _module = await loadFile("config.js");
 
-ast.exports.default.props.foo.push('b')
+_module.exports.default.props.foo.push("b");
 
-await write(ast)
+await writeFile(_module);
 ```
 
 Updated `config.js`:
 
 ```js
 export default {
-  foo: ['a', "b"]
-}
+  foo: ["a", "b"],
+};
 ```
 
 **Example:** Directly use AST utils:
 
 ```js
-import * as p from 'paneer'
+import { parseCode, generateCode } from "paneer";
 
 // Parse to AST
-const ast = p.parse(`export default { foo: ['a'] }`)
+const _module = parseCode(`export default { foo: ['a'] }`);
 
-// Find default export
-const defaultExport = p.defaultExport(ast)
-
-// Get foo prop of object
-const foo = p.get(p.defaultExport(ast), 'foo')
-
-// Push 'b' literal to array
-p.push(foo, 'b')
+// Add a new array member
+_module.exports.default.props.foo.push("b");
 
 // Generate code
-const { code, map } = p.generate(node)
+const { code, map } = generateCode(_module);
 ```
+
+## Development
+
+- Clone this repository
+- Install latest LTS version of [Node.js](https://nodejs.org/en/)
+- Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable`
+- Install dependencies using `pnpm install`
+- Run interactive tests using `pnpm dev`
 
 ## License
 
-MIT
+Made with 💛
+
+Published under [MIT License](./LICENSE).
+
+<!-- Badges -->
+
+[npm-version-src]: https://img.shields.io/npm/v/packageName?style=flat-square
+[npm-version-href]: https://npmjs.com/package/packageName
+[npm-downloads-src]: https://img.shields.io/npm/dm/packageName?style=flat-square
+[npm-downloads-href]: https://npmjs.com/package/packageName
+[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/packageName/ci/main?style=flat-square
+[github-actions-href]: https://github.com/unjs/packageName/actions?query=workflow%3Aci
+[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/packageName/main?style=flat-square
+[codecov-href]: https://codecov.io/gh/unjs/packageName
