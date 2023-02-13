@@ -1,12 +1,12 @@
 import { promises as fsp } from "node:fs";
-import { print, parse } from "recast";
+import { print, parse, Options as ParseOptions } from "recast";
 import { ModuleNode } from "./ast";
 import { getBabelParser } from "./babel";
-import { ParsedFileNode, ASTOptions } from "./types";
+import { ParsedFileNode } from "./types";
 
-export function parseCode(code: string, options?: ASTOptions): ModuleNode {
+export function parseCode(code: string, options?: ParseOptions): ModuleNode {
   const node: ParsedFileNode = parse(code, {
-    parser: getBabelParser(),
+    parser: options?.parser || getBabelParser(),
     ...options,
   });
   return new ModuleNode(node);
@@ -14,7 +14,7 @@ export function parseCode(code: string, options?: ASTOptions): ModuleNode {
 
 export function generateCode(
   module: ModuleNode,
-  options?: ASTOptions
+  options?: ParseOptions
 ): { code: string; map?: any } {
   const { code, map } = print(module.node, {
     ...options,
@@ -24,7 +24,7 @@ export function generateCode(
 
 export async function loadFile(
   filename: string,
-  options: ASTOptions = {}
+  options: ParseOptions = {}
 ): Promise<ModuleNode> {
   const contents = await fsp.readFile(filename, "utf8");
   options.sourceFileName = options.sourceFileName ?? filename;
@@ -34,7 +34,7 @@ export async function loadFile(
 export async function writeFile(
   node: ModuleNode,
   filename?: string,
-  options?: ASTOptions
+  options?: ParseOptions
 ): Promise<void> {
   const { code, map } = generateCode(node, options);
   filename = filename || node.node.name || "output.js";

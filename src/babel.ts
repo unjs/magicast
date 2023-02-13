@@ -1,4 +1,5 @@
-import babelParser, { ParserOptions, ParserPlugin } from "@babel/parser";
+import babelParser from "@babel/parser";
+import type { ParserOptions, ParserPlugin } from "@babel/parser";
 
 export function getBabelParser() {
   const babelOptions = _getBabelOptions();
@@ -7,7 +8,7 @@ export function getBabelParser() {
       return babelParser.parse(source, {
         ...babelOptions,
         ...options,
-      });
+      }) as any;
     },
   };
 }

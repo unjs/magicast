@@ -2,8 +2,6 @@ import * as recast from "recast";
 import type { Node as ESNode } from "estree";
 export type { Node as ESNode } from "estree";
 
-export interface ASTOptions extends Partial<recast.Options> {}
-
 export interface Loc {
   start?: { line?: number; column?: number; token?: number };
   end?: { line?: number; column?: number; token?: number };
