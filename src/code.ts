@@ -1,10 +1,14 @@
 import { promises as fsp } from "node:fs";
-import * as recast from "recast";
+import { print, parse } from "recast";
 import { ModuleNode } from "./ast";
+import { getBabelParser } from "./babel";
 import { ParsedFileNode, ASTOptions } from "./types";
 
 export function parseCode(code: string, options?: ASTOptions): ModuleNode {
-  const node: ParsedFileNode = recast.parse(code, options);
+  const node: ParsedFileNode = parse(code, {
+    parser: getBabelParser(),
+    ...options,
+  });
   return new ModuleNode(node);
 }
 
@@ -12,7 +16,9 @@ export function generateCode(
   module: ModuleNode,
   options?: ASTOptions
 ): { code: string; map?: any } {
-  const { code, map } = recast.print(module.node, options);
+  const { code, map } = print(module.node, {
+    ...options,
+  });
   return { code, map };
 }
 

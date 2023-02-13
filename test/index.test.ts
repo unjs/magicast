@@ -4,11 +4,12 @@ import { parseCode, generateCode } from "../src";
 describe("packageName", () => {
   it("parse, update, generate", () => {
     const _module = parseCode(`
-    export const a = {}
-    export default defineConfig({
-      // This is foo
-      modules: ["a"]
-    })`);
+      export const a: any = {}
+      export default defineConfig({
+        // Modules
+        modules: ["a"]
+      })
+    `);
 
     const arg = _module.exports.default.arguments[0];
     arg.props.modules.push("b");
@@ -17,11 +18,12 @@ describe("packageName", () => {
 
     expect(code).toMatchInlineSnapshot(`
       "
-          export const a = {}
-          export default defineConfig({
-            // This is foo
-            modules: [\\"a\\", \\"b\\"]
-          })"
+            export const a: any = {}
+            export default defineConfig({
+              // Modules
+              modules: [\\"a\\", \\"b\\"]
+            })
+          "
     `);
   });
 });

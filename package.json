@@ -29,8 +29,9 @@
     "test": "pnpm lint && vitest run --coverage"
   },
   "dependencies": {
-    "recast": "^0.22.0",
-    "@types/estree": "^1.0.0"
+    "@babel/parser": "^7.20.15",
+    "@types/estree": "^1.0.0",
+    "recast": "^0.22.0"
   },
   "devDependencies": {
     "@types/node": "^18.13.0",

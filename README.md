@@ -5,7 +5,7 @@
 [![Github Actions][github-actions-src]][github-actions-href]
 [![Codecov][codecov-src]][codecov-href]
 
-Modify code like a cheese! Powered by [recast](https://github.com/benjamn/recast) for AST modifications.
+Modify code like a cheese! Powered by [recast](https://github.com/benjamn/recast) and [babel](https://babeljs.io/).
 
 ## Usage
 

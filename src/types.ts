@@ -27,7 +27,7 @@ export interface ProgramNode extends recast.types.ASTNode {
 export interface ParsedFileNode extends recast.types.ASTNode {
   type: "file";
   program: ProgramNode;
-  name: null | string;
+  name?: string;
   loc: Loc;
   comments: null | any;
 }
