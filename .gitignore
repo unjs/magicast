@@ -6,5 +6,4 @@ types
 .DS_Store
 .eslintcache
 *.log*
-*.conf*
 *.env*
