@@ -1,7 +1,7 @@
 import { expect, it, describe } from "vitest";
 import { parseCode, generateCode } from "../src";
 
-describe("packageName", () => {
+describe("paneer", () => {
   it("parse, update, generate", () => {
     const _module = parseCode(`
       export const a: any = {}

@@ -95,11 +95,11 @@ Published under [MIT License](./LICENSE).
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/packageName?style=flat-square
-[npm-version-href]: https://npmjs.com/package/packageName
-[npm-downloads-src]: https://img.shields.io/npm/dm/packageName?style=flat-square
-[npm-downloads-href]: https://npmjs.com/package/packageName
-[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/packageName/ci/main?style=flat-square
-[github-actions-href]: https://github.com/unjs/packageName/actions?query=workflow%3Aci
-[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/packageName/main?style=flat-square
-[codecov-href]: https://codecov.io/gh/unjs/packageName
+[npm-version-src]: https://img.shields.io/npm/v/paneer?style=flat-square
+[npm-version-href]: https://npmjs.com/package/paneer
+[npm-downloads-src]: https://img.shields.io/npm/dm/paneer?style=flat-square
+[npm-downloads-href]: https://npmjs.com/package/paneer
+[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/paneer/ci/main?style=flat-square
+[github-actions-href]: https://github.com/unjs/paneer/actions?query=workflow%3Aci
+[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/paneer/main?style=flat-square
+[codecov-href]: https://codecov.io/gh/unjs/paneer
