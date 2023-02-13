@@ -25,6 +25,10 @@ export class ModuleNode {
 export class GenericNode {
   constructor(public node: ESNode) {}
 
+  get type() {
+    return this.node.type;
+  }
+
   get props(): Record<string, GenericNode> {
     if (!("properties" in this.node)) {
       return {};
@@ -36,6 +40,13 @@ export class GenericNode {
       }
     }
     return Object.fromEntries(props);
+  }
+
+  get arguments(): GenericNode[] {
+    if (!("arguments" in this.node)) {
+      return [];
+    }
+    return this.node.arguments.map((arg) => new GenericNode(arg));
   }
 
   get(key: string) {

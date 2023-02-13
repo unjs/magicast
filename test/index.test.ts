@@ -5,22 +5,23 @@ describe("packageName", () => {
   it("parse, update, generate", () => {
     const _module = parseCode(`
     export const a = {}
-    export default {
+    export default defineConfig({
       // This is foo
-      foo: ["a"]
-    }`);
+      modules: ["a"]
+    })`);
 
-    _module.exports.default.props.foo.push("b");
+    const arg = _module.exports.default.arguments[0];
+    arg.props.modules.push("b");
 
     const { code } = generateCode(_module);
 
     expect(code).toMatchInlineSnapshot(`
       "
           export const a = {}
-          export default {
+          export default defineConfig({
             // This is foo
-            foo: [\\"a\\", \\"b\\"]
-          }"
+            modules: [\\"a\\", \\"b\\"]
+          })"
     `);
   });
 });
