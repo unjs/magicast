@@ -1,5 +1,5 @@
 import { expect, it, describe } from "vitest";
-import { parseCode, generateCode } from "../src";
+import { parseCode, generateCode, createNode } from "../src";
 
 describe("paneer", () => {
   it("parse, update, generate", () => {
@@ -26,4 +26,24 @@ describe("paneer", () => {
           "
     `);
   });
-});
+
+  describe('createNode', () => {
+    it('literal', () => {
+      expect(generateCode(createNode(123)).code)
+        .toMatchInlineSnapshot('"123"')
+      expect(generateCode(createNode(true)).code)
+        .toMatchInlineSnapshot('"true"')
+      expect(generateCode(createNode(null)).code)
+        .toMatchInlineSnapshot('"null"')
+    })
+
+    it('object', () => {
+      expect(generateCode(createNode({ foo: 'bar' })).code)
+        .toMatchInlineSnapshot(`
+          "{
+              \\"foo\\":\\"bar\\"
+          }"
+        `)
+    })
+  });
+})

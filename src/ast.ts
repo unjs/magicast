@@ -1,12 +1,12 @@
-import * as recast from "recast";
 import type { ParsedFileNode, ESNode } from "./types";
+import { createNode } from './utils'
 
 export class ModuleNode {
-  constructor(public node: ParsedFileNode) {}
+  constructor(public ast: ParsedFileNode) { }
 
   get exports(): Record<string, GenericNode> {
     const _exports: Record<string, GenericNode> = {};
-    for (const n of this.node.program.body) {
+    for (const n of this.ast.program.body) {
       if (n.type === "ExportNamedDeclaration") {
         if (n.declaration && "declarations" in n.declaration) {
           const dec = n.declaration.declarations[0];
@@ -23,18 +23,18 @@ export class ModuleNode {
 }
 
 export class GenericNode {
-  constructor(public node: ESNode) {}
+  constructor(public ast: ESNode) { }
 
   get type() {
-    return this.node.type;
+    return this.ast.type;
   }
 
   get props(): Record<string, GenericNode> {
-    if (!("properties" in this.node)) {
+    if (!("properties" in this.ast)) {
       return {};
     }
     const props = [];
-    for (const prop of this.node.properties) {
+    for (const prop of this.ast.properties) {
       if ("key" in prop && "name" in prop.key) {
         props.push([prop.key.name, new GenericNode(prop.value)]);
       }
@@ -43,28 +43,29 @@ export class GenericNode {
   }
 
   get arguments(): GenericNode[] {
-    if (!("arguments" in this.node)) {
+    if (!("arguments" in this.ast)) {
       return [];
     }
-    return this.node.arguments.map((arg) => new GenericNode(arg));
+    return this.ast.arguments.map((arg) => new GenericNode(arg));
   }
 
   get(key: string) {
-    if (!("properties" in this.node)) {
+    if (!("properties" in this.ast)) {
       return {};
     }
-    for (const prop of this.node.properties) {
+    for (const prop of this.ast.properties) {
       if ("key" in prop && "name" in prop.key && prop.key.name === key) {
         return prop;
       }
     }
   }
 
-  push(value: string | number | boolean | RegExp | bigint | null) {
-    if (!("elements" in this.node)) {
+  push(value: any) {
+    if (!("elements" in this.ast)) {
       return {};
     }
-    const literal = recast.types.builders.literal(value);
-    this.node.elements.push(literal as any /* ts expects expresion */);
+    const node = createNode(value);
+    this.ast.elements.push(node.ast as any /* ts expects expresion */);
   }
 }
+

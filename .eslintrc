@@ -1,6 +1,7 @@
 {
   "extends": ["eslint-config-unjs"],
   "rules": {
-    "no-useless-constructor": 0
+    "no-useless-constructor": 0,
+    "unicorn/empty-brace-spaces": 0
   }
 }
