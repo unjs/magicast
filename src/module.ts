@@ -1,9 +1,9 @@
 import { proxify } from "./proxy/_utils";
-import type { Proxified } from './proxy/types'
+import type { Proxified } from "./proxy/types";
 import type { ParsedFileNode } from "./types";
 
 export class ModuleNode {
-  constructor(public ast: ParsedFileNode) { }
+  constructor(public ast: ParsedFileNode) {}
 
   get exports(): Record<string, Proxified> {
     const _exports: Record<string, Proxified> = {};

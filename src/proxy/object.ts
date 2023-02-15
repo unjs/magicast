@@ -78,5 +78,5 @@ export function proxifyObject<T extends object>(node: ESNode): Proxified<T> {
         };
       },
     }
-  )
+  );
 }

@@ -2,7 +2,7 @@ import * as recast from "recast";
 
 import type { Node as ESNode } from "estree";
 
-export * from './proxy/types'
+export * from "./proxy/types";
 export type { Node as ESNode } from "estree";
 
 export interface Loc {

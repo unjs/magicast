@@ -22,9 +22,13 @@ export function proxifyFunctionCall<T>(node: ESNode): Proxified<T> {
 
   const argumentsProxy = proxifyArrayElements(node, node.arguments as any);
 
-  return createProxy(node, {
-    $type: "function-call",
-    name: stringifyExpression(node.callee as any),
-    arguments: argumentsProxy,
-  }, {}) as any;
+  return createProxy(
+    node,
+    {
+      $type: "function-call",
+      name: stringifyExpression(node.callee as any),
+      arguments: argumentsProxy,
+    },
+    {}
+  ) as any;
 }
