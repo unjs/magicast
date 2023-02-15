@@ -46,8 +46,12 @@ export function proxify<T>(node: ESNode): Proxified<T> {
 const PROXY_KEY = "__magicast_proxy";
 
 export function literalToAst(value: any): ESNode {
-  if (value[PROXY_KEY]) {
-    return value.$ast;
+  if (value === undefined) {
+    return recast.types.builders.identifier("undefined") as any;
+  }
+  if (value === null) {
+    // eslint-disable-next-line unicorn/no-null
+    return  recast.types.builders.literal(null) as any;
   }
   if (Array.isArray(value)) {
     return recast.types.builders.arrayExpression(
@@ -55,6 +59,9 @@ export function literalToAst(value: any): ESNode {
     ) as any;
   }
   if (typeof value === "object") {
+    if (PROXY_KEY in value) {
+      return value.$ast;
+    }
     return recast.types.builders.objectExpression(
       Object.entries(value).map(([key, value]) => {
         return recast.types.builders.property(
