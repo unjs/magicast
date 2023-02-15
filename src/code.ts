@@ -1,31 +1,35 @@
 import { promises as fsp } from "node:fs";
 import { print, parse, Options as ParseOptions } from "recast";
-import { ModuleNode } from "./module";
 import { getBabelParser } from "./babel";
-import { ESNode, ParsedFileNode } from "./types";
+import { ESNode, ParsedFileNode, ProxifiedModule } from "./types";
+import { proxifyModule } from "./proxy/module";
 
-export function parseCode(code: string, options?: ParseOptions): ModuleNode {
+export function parseCode<T = any>(
+  code: string,
+  options?: ParseOptions
+): ProxifiedModule<T> {
   const node: ParsedFileNode = parse(code, {
     parser: options?.parser || getBabelParser(),
     ...options,
   });
-  return new ModuleNode(node);
+  return proxifyModule(node);
 }
 
 export function generateCode(
-  node: { ast: ESNode } | ESNode,
+  node: { $ast: ESNode } | ESNode,
   options?: ParseOptions
 ): { code: string; map?: any } {
-  const { code, map } = print("ast" in node ? node.ast : node, {
+  const ast = "$ast" in node ? node.$ast : node;
+  const { code, map } = print(ast, {
     ...options,
   });
   return { code, map };
 }
 
-export async function loadFile(
+export async function loadFile<T = any>(
   filename: string,
   options: ParseOptions = {}
-): Promise<ModuleNode> {
+): Promise<ProxifiedModule<T>> {
   const contents = await fsp.readFile(filename, "utf8");
   options.sourceFileName = options.sourceFileName ?? filename;
   return parseCode(contents, options);

@@ -204,4 +204,38 @@ describe("magicast", () => {
       }
     `);
   });
+
+  it("manipulate exports", () => {
+    const mod = parseCode("");
+
+    expect(mod.exports).toMatchInlineSnapshot(`{}`);
+    expect(generate(mod)).toMatchInlineSnapshot('""');
+
+    mod.exports.default = { foo: '1' }
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        foo: \\"1\\",
+      };"
+    `);
+
+    mod.exports.default.foo = 2
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        foo: 2,
+      };"
+    `);
+
+    mod.exports.named ||= []
+    mod.exports.named.push('a')
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        foo: 2,
+      };
+
+      export const named = [\\"a\\"];"
+    `);
+  });
 });
