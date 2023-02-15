@@ -33,7 +33,7 @@ Import utilities:
 import { parseCode, generateCode, builders, createNode } from "magicast";
 
 // CommonJS
-const { parseCode, generateCode, builders, createNode } = require("panner");
+const { parseCode, generateCode, builders, createNode } = require("magicast");
 ```
 
 **Example:** Modify a file:
