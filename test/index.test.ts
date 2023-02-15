@@ -96,7 +96,7 @@ describe("paneer", () => {
     const mod1 = parseCode(`export default { a: 1 }`);
     const mod2 = parseCode(`export default { b: 2 }`);
 
-    mod1.exports.default.b = mod2.exports.default
+    mod1.exports.default.b = mod2.exports.default;
 
     expect(generate(mod1)).toMatchInlineSnapshot(
       `
@@ -109,30 +109,43 @@ describe("paneer", () => {
       };"
     `
     );
-  })
+  });
 
-  it.skip("parse, update, generate", () => {
-    const _module = parseCode(`
-      export const a: any = {}
+  it("parse, update, generate", () => {
+    const mod = parseCode(`
+      export const a: any = { foo: 1}
       export default defineConfig({
         // Modules
         modules: ["a"]
       })
     `);
+    
 
-    const arg = _module.exports.default.arguments[0];
-    arg.props.modules.push("b");
+    expect(mod.exports.a.foo).toBe(1)
+    expect(mod.exports.default.$type).toBe("function-call");
+    expect(mod.exports.default.arguments)
+      .toMatchInlineSnapshot(`
+        [
+          {
+            "modules": [
+              "a",
+            ],
+          },
+        ]
+      `)
 
-    const { code } = generateCode(_module);
 
-    expect(code).toMatchInlineSnapshot(`
-      "
-            export const a: any = {}
-            export default defineConfig({
-              // Modules
-              modules: [\\"a\\", \\"b\\"]
-            })
-          "
+    const options = mod.exports.default.arguments[0]
+
+    options.modules ||= []
+    options.modules.push("b")
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export const a: any = { foo: 1 };
+      export default defineConfig({
+        // Modules
+        modules: [\\"a\\", \\"b\\"],
+      });"
     `);
   });
 

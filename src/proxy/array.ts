@@ -3,36 +3,32 @@ import { literalToAst, makeProxyUtils } from "../utils";
 import { Proxified } from "./types";
 import { proxify } from "./index";
 
-export function proxifyArray<T>(node: ESNode): Proxified<T> {
-  if (!("elements" in node)) {
-    return undefined as any;
-  }
-
+export function proxifyArrayElements<T>(node: ESNode, elements: ESNode[]): Proxified<T> {
   const utils = makeProxyUtils(node, {
     $type: "array",
     push(value: any) {
-      node.elements.push(literalToAst(value) as any);
+      elements.push(literalToAst(value) as any);
     },
     pop() {
-      return proxify(node.elements.pop() as any);
+      return proxify(elements.pop() as any);
     },
     unshift(value: any) {
-      node.elements.unshift(literalToAst(value) as any);
+      elements.unshift(literalToAst(value) as any);
     },
     shift() {
-      return proxify(node.elements.shift() as any);
+      return proxify(elements.shift() as any);
     },
     toJSON() {
-      return node.elements.map((n) => proxify(n as any));
+      return elements.map((n) => proxify(n as any));
     },
   });
 
   const getItem = (key: number) => {
-    return node.elements[key];
+    return elements[key];
   };
 
   const replaceItem = (key: number, value: ESNode) => {
-    node.elements[key] = value as any;
+    elements[key] = value as any;
   };
 
   const proxy = new Proxy([], {
@@ -41,7 +37,7 @@ export function proxifyArray<T>(node: ESNode): Proxified<T> {
         return (utils as any)[key];
       }
       if (key === "length") {
-        return node.elements.length;
+        return elements.length;
       }
       if (typeof key === "symbol") {
         return;
@@ -59,7 +55,7 @@ export function proxifyArray<T>(node: ESNode): Proxified<T> {
       return true;
     },
     ownKeys() {
-      return ["length", ...node.elements.map((_, i) => i.toString())];
+      return ["length", ...elements.map((_, i) => i.toString())];
     },
     getOwnPropertyDescriptor() {
       return {
@@ -70,4 +66,11 @@ export function proxifyArray<T>(node: ESNode): Proxified<T> {
   }) as any;
 
   return proxy;
+}
+
+export function proxifyArray<T>(node: ESNode): Proxified<T> {
+  if (!("elements" in node)) {
+    return undefined as any;
+  }
+  return proxifyArrayElements(node, node.elements as any);
 }

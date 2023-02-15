@@ -11,7 +11,7 @@ export class ModuleNode {
         if (n.declaration && "declarations" in n.declaration) {
           const dec = n.declaration.declarations[0];
           if ("name" in dec.id) {
-            _exports[dec.id.name] = proxify(n.declaration);
+            _exports[dec.id.name] = proxify(dec.init as any);
           }
         }
       } else if (n.type === "ExportDefaultDeclaration") {
