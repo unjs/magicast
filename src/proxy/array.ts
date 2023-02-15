@@ -1,12 +1,20 @@
 import { ESNode } from "../types";
-import { literalToAst, makeProxyUtils, proxify } from "./_utils";
+import { literalToAst, createProxy, proxify } from "./_utils";
 import { Proxified } from "./types";
 
-export function proxifyArrayElements<T>(
+export function proxifyArrayElements<T extends object>(
   node: ESNode,
   elements: ESNode[]
 ): Proxified<T> {
-  const utils = makeProxyUtils(node, {
+  const getItem = (key: number) => {
+    return elements[key];
+  };
+
+  const replaceItem = (key: number, value: ESNode) => {
+    elements[key] = value as any;
+  };
+
+  return createProxy<T>(node, {
     $type: "array",
     push(value: any) {
       elements.push(literalToAst(value) as any);
@@ -23,21 +31,8 @@ export function proxifyArrayElements<T>(
     toJSON() {
       return elements.map((n) => proxify(n as any));
     },
-  });
-
-  const getItem = (key: number) => {
-    return elements[key];
-  };
-
-  const replaceItem = (key: number, value: ESNode) => {
-    elements[key] = value as any;
-  };
-
-  const proxy = new Proxy([], {
+  }, {
     get(_, key) {
-      if (key in utils) {
-        return (utils as any)[key];
-      }
       if (key === "length") {
         return elements.length;
       }
@@ -65,12 +60,10 @@ export function proxifyArrayElements<T>(
         configurable: true,
       };
     },
-  }) as any;
-
-  return proxy;
+  });
 }
 
-export function proxifyArray<T>(node: ESNode): Proxified<T> {
+export function proxifyArray<T extends object>(node: ESNode): Proxified<T> {
   if (!("elements" in node)) {
     return undefined as any;
   }

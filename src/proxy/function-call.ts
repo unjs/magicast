@@ -1,5 +1,5 @@
 import { ESNode } from "../types";
-import { makeProxyUtils } from "./_utils";
+import { createProxy } from "./_utils";
 import { proxifyArrayElements } from "./array";
 import { Proxified } from "./types";
 
@@ -22,9 +22,9 @@ export function proxifyFunctionCall<T>(node: ESNode): Proxified<T> {
 
   const argumentsProxy = proxifyArrayElements(node, node.arguments as any);
 
-  return makeProxyUtils(node, {
+  return createProxy(node, {
     $type: "function-call",
     name: stringifyExpression(node.callee as any),
     arguments: argumentsProxy,
-  }) as any;
+  }, {}) as any;
 }

@@ -1,25 +1,11 @@
 import { ESNode } from "../types";
-import { literalToAst, makeProxyUtils, proxify } from "./_utils";
+import { literalToAst, createProxy, proxify } from "./_utils";
 import { Proxified } from "./types";
 
-export function proxifyObject<T>(node: ESNode): Proxified<T> {
+export function proxifyObject<T extends object>(node: ESNode): Proxified<T> {
   if (!("properties" in node)) {
     return undefined as any;
   }
-
-  const utils = makeProxyUtils(node, {
-    $type: "object",
-    toJSON() {
-      // @ts-expect-error
-      // eslint-disable-next-line unicorn/no-array-reduce
-      return node.properties.reduce((acc, prop) => {
-        if ("key" in prop && "name" in prop.key) {
-          acc[prop.key.name] = proxify(prop.value);
-        }
-        return acc;
-      }, {} as any);
-    },
-  });
 
   const getProp = (key: string | symbol) => {
     for (const prop of node.properties) {
@@ -46,13 +32,23 @@ export function proxifyObject<T>(node: ESNode): Proxified<T> {
     }
   };
 
-  const proxy = new Proxy(
-    {},
+  return createProxy(
+    node,
+    {
+      $type: "object",
+      toJSON() {
+        // @ts-expect-error
+        // eslint-disable-next-line unicorn/no-array-reduce
+        return node.properties.reduce((acc, prop) => {
+          if ("key" in prop && "name" in prop.key) {
+            acc[prop.key.name] = proxify(prop.value);
+          }
+          return acc;
+        }, {} as any);
+      },
+    },
     {
       get(_, key) {
-        if (key in utils) {
-          return (utils as any)[key];
-        }
         const prop = getProp(key);
         if (prop) {
           return proxify(prop);
@@ -82,7 +78,5 @@ export function proxifyObject<T>(node: ESNode): Proxified<T> {
         };
       },
     }
-  ) as any;
-
-  return proxy;
+  )
 }

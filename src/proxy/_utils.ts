@@ -81,3 +81,20 @@ export function makeProxyUtils<T extends object>(
     ...extend,
   } as ProxyUtils & T;
 }
+
+export function createProxy<T extends object>(
+  node: ESNode,
+  extend: any,
+  handler: ProxyHandler<T>
+): Proxified<T> {
+  const utils = makeProxyUtils(node, extend);
+  return new Proxy({}, {
+    ...handler,
+    get(target: T, key: string | symbol, receiver: any) {
+      if (key in utils) {
+        return (utils as any)[key];
+      }
+      return handler.get!(target, key, receiver);
+    },
+  }) as Proxified<T>
+}
