@@ -34,9 +34,9 @@ export function proxifyArrayElements<T extends object>(
         const deleted = elements.splice(
           start,
           deleteCount,
-          ...items.map(n => literalToAst(n))
+          ...items.map((n) => literalToAst(n))
         );
-        return deleted.map(n => proxify(n as any));
+        return deleted.map((n) => proxify(n as any));
       },
       find(predicate: (value: any, index: number, arr: any[]) => boolean) {
         // eslint-disable-next-line unicorn/no-array-callback-reference
@@ -46,7 +46,7 @@ export function proxifyArrayElements<T extends object>(
         // eslint-disable-next-line unicorn/no-array-callback-reference
         return elements.map((n) => proxify(n as any)).findIndex(predicate);
       },
-      includes (value: any) {
+      includes(value: any) {
         return elements.map((n) => proxify(n as any)).includes(value);
       },
       toJSON() {

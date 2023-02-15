@@ -24,6 +24,8 @@ const literals = new Set([
   "undefined",
 ]);
 
+const _cache = new WeakMap<ESNode, Proxified<any>>();
+
 export function proxify<T>(node: ESNode): Proxified<T> {
   if (literals.has(typeof node)) {
     return node as any;
@@ -31,16 +33,31 @@ export function proxify<T>(node: ESNode): Proxified<T> {
   if (literalTypes.has(node.type)) {
     return (node as any).value as any;
   }
-  if (node.type === "ObjectExpression") {
-    return proxifyObject<T>(node);
+
+  if (_cache.has(node)) {
+    return _cache.get(node) as Proxified<T>;
   }
-  if (node.type === "ArrayExpression") {
-    return proxifyArray<T>(node);
+
+  let proxy: Proxified<T>;
+  switch (node.type) {
+    case "ObjectExpression": {
+      proxy = proxifyObject<T>(node);
+      break;
+    }
+    case "ArrayExpression": {
+      proxy = proxifyArray<T>(node);
+      break;
+    }
+    case "CallExpression": {
+      proxy = proxifyFunctionCall(node);
+      break;
+    }
+    default:
+      throw new Error(`Cannot proxify ${node.type}`);
   }
-  if (node.type === "CallExpression") {
-    return proxifyFunctionCall(node);
-  }
-  throw new Error(`Cannot proxify ${node.type}`);
+
+  _cache.set(node, proxy);
+  return proxy;
 }
 
 const PROXY_KEY = "__magicast_proxy";

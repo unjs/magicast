@@ -175,9 +175,9 @@ describe("magicast", () => {
     expect(mod.exports.default.includes(5)).toBe(true);
     expect(mod.exports.default.includes(6)).toBe(false);
 
-    const deleted = mod.exports.default.splice(1, 3, { foo: 'bar' }, 'bar')
-    
-    expect(deleted).toEqual([2, 3, 4])
+    const deleted = mod.exports.default.splice(1, 3, { foo: "bar" }, "bar");
+
+    expect(deleted).toEqual([2, 3, 4]);
 
     expect(generate(mod)).toMatchInlineSnapshot(
       `
@@ -192,14 +192,16 @@ describe("magicast", () => {
     `
     );
 
-    const foundIndex = mod.exports.default.findIndex((item) => item.foo === 'bar')
-    const found = mod.exports.default.find((item) => item.foo === 'bar')
+    const foundIndex = mod.exports.default.findIndex(
+      (item) => item.foo === "bar"
+    );
+    const found = mod.exports.default.find((item) => item.foo === "bar");
 
-    expect(foundIndex).toBe(1)
+    expect(foundIndex).toBe(1);
     expect(found).toMatchInlineSnapshot(`
       {
         "foo": "bar",
       }
-    `)
-  })
+    `);
+  });
 });
