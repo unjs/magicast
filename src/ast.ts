@@ -2,11 +2,11 @@ import { proxify, Proxified } from "./proxy";
 import type { ParsedFileNode } from "./types";
 
 export class ModuleNode {
-  constructor(public ast: ParsedFileNode) { }
+  constructor(public ast: ParsedFileNode) {}
 
   get exports(): Record<string, Proxified> {
     const _exports: Record<string, Proxified> = {};
-    for (const n of this.node.program.body) {
+    for (const n of this.ast.program.body) {
       if (n.type === "ExportNamedDeclaration") {
         if (n.declaration && "declarations" in n.declaration) {
           const dec = n.declaration.declarations[0];
@@ -25,4 +25,3 @@ export class ModuleNode {
     throw new Error("Not implemented");
   }
 }
-

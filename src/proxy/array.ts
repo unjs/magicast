@@ -3,7 +3,10 @@ import { literalToAst, makeProxyUtils } from "../utils";
 import { Proxified } from "./types";
 import { proxify } from "./index";
 
-export function proxifyArrayElements<T>(node: ESNode, elements: ESNode[]): Proxified<T> {
+export function proxifyArrayElements<T>(
+  node: ESNode,
+  elements: ESNode[]
+): Proxified<T> {
   const utils = makeProxyUtils(node, {
     $type: "array",
     push(value: any) {

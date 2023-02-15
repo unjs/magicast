@@ -16,7 +16,7 @@ export function getBabelParser() {
       }) as any;
     },
   };
-  return _babelParser
+  return _babelParser;
 }
 
 function _getBabelOptions(): ParserOptions & { plugins: ParserPlugin[] } {

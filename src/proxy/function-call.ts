@@ -1,4 +1,3 @@
-import { SimpleCallExpression } from "estree";
 import { ESNode } from "../types";
 import { makeProxyUtils } from "../utils";
 import { proxifyArrayElements } from "./array";
@@ -21,11 +20,11 @@ export function proxifyFunctionCall<T>(node: ESNode): Proxified<T> {
     throw new Error("Not implemented");
   }
 
-  const argumentsProxy = proxifyArrayElements(node, node.arguments as any)
+  const argumentsProxy = proxifyArrayElements(node, node.arguments as any);
 
   return makeProxyUtils(node, {
     $type: "function-call",
     name: stringifyExpression(node.callee as any),
-    arguments: argumentsProxy
+    arguments: argumentsProxy,
   }) as any;
 }

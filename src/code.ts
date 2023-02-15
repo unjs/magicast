@@ -36,7 +36,7 @@ export async function writeFile(
   filename?: string,
   options?: ParseOptions
 ): Promise<void> {
-  const ast = "ast" in node ? node.ast : node
+  const ast = "ast" in node ? node.ast : node;
   const { code, map } = generateCode(ast, options);
   filename = filename || (ast as any).name || "output.js";
   await fsp.writeFile(filename as string, code);
@@ -44,4 +44,3 @@ export async function writeFile(
     await fsp.writeFile(filename + ".map", map);
   }
 }
-
