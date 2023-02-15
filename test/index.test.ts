@@ -145,26 +145,4 @@ describe("magicast", () => {
       });"
     `);
   });
-
-  describe.skip("createNode", () => {
-    // it('literal', () => {
-    //   expect(generateCode(createNode(123)).code)
-    //     .toMatchInlineSnapshot('"123"')
-    //   expect(generateCode(createNode(true)).code)
-    //     .toMatchInlineSnapshot('"true"')
-    //   // eslint-disable-next-line unicorn/no-null
-    //   expect(generateCode(createNode(null)).code)
-    //     .toMatchInlineSnapshot('"null"')
-    // })
-
-    it("object", () => {
-      console.log(createNode({ foo: "bar" }));
-      // expect(generateCode(createNode({ foo: 'bar' })).code)
-      //   .toMatchInlineSnapshot(`
-      //     "{
-      //         \\"foo\\":\\"bar\\"
-      //     }"
-      //   `)
-    });
-  });
 });

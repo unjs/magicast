@@ -1,5 +1,5 @@
 import { ESNode } from "../types";
-import { makeProxyUtils } from "../utils";
+import { makeProxyUtils } from "./_utils";
 import { proxifyArrayElements } from "./array";
 import { Proxified } from "./types";
 

@@ -1,0 +1,83 @@
+import * as recast from "recast";
+import type { ESNode } from "../types";
+import { proxifyArray } from "./array";
+import { proxifyFunctionCall } from "./function-call";
+import { proxifyObject } from "./object";
+import { ProxyUtils, Proxified } from "./types";
+
+const literalTypes = new Set([
+  "Literal",
+  "StringLiteral",
+  "NumericLiteral",
+  "BooleanLiteral",
+  "NullLiteral",
+  "RegExpLiteral",
+  "BigIntLiteral",
+]);
+
+const literals = new Set([
+  "string",
+  "number",
+  "boolean",
+  "bigint",
+  "symbol",
+  "undefined",
+]);
+
+export function proxify<T>(node: ESNode): Proxified<T> {
+  if (literals.has(typeof node)) {
+    return node as any;
+  }
+  if (literalTypes.has(node.type)) {
+    return (node as any).value as any;
+  }
+  if (node.type === "ObjectExpression") {
+    return proxifyObject<T>(node);
+  }
+  if (node.type === "ArrayExpression") {
+    return proxifyArray<T>(node);
+  }
+  if (node.type === "CallExpression") {
+    return proxifyFunctionCall(node);
+  }
+  throw new Error(`Cannot proxify ${node.type}`);
+}
+
+const PROXY_KEY = "__magicast_proxy";
+
+export function literalToAst(value: any): ESNode {
+  if (value[PROXY_KEY]) {
+    return value.$ast;
+  }
+  if (Array.isArray(value)) {
+    return recast.types.builders.arrayExpression(
+      value.map((n) => literalToAst(n)) as any
+    ) as any;
+  }
+  if (typeof value === "object") {
+    return recast.types.builders.objectExpression(
+      Object.entries(value).map(([key, value]) => {
+        return recast.types.builders.property(
+          "init",
+          recast.types.builders.identifier(key),
+          literalToAst(value) as any
+        ) as any;
+      })
+    ) as any;
+  }
+  return recast.types.builders.literal(value) as any;
+}
+
+export function makeProxyUtils<T extends object>(
+  node: ESNode,
+  extend: T = {} as T
+): ProxyUtils & T {
+  return {
+    [PROXY_KEY]: true,
+    get $ast() {
+      return node;
+    },
+    $type: "object",
+    ...extend,
+  } as ProxyUtils & T;
+}

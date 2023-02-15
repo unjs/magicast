@@ -1,6 +1,6 @@
 import { promises as fsp } from "node:fs";
 import { print, parse, Options as ParseOptions } from "recast";
-import { ModuleNode } from "./ast";
+import { ModuleNode } from "./module";
 import { getBabelParser } from "./babel";
 import { ESNode, ParsedFileNode } from "./types";
 
