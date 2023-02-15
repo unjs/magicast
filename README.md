@@ -51,9 +51,9 @@ Code to modify and append `b` to `foo` prop of defaultExport:
 ```js
 import { loadFile, writeFile } from "magicast";
 
-const _module = await loadFile("config.js");
+const mod = await loadFile("config.js");
 
-_module.exports.default.props.foo.push("b");
+mod.exports.default.foo.push("b");
 
 await writeFile(_module);
 ```
@@ -72,13 +72,50 @@ export default {
 import { parseCode, generateCode } from "magicast";
 
 // Parse to AST
-const _module = parseCode(`export default { foo: ['a'] }`);
+const mod = parseCode(`export default { }`);
 
+// Ensure foo is an array
+mod.exports.default.foo ||= [];
 // Add a new array member
-_module.exports.default.props.foo.push("b");
+mod.exports.default.foo.push("b");
+mod.exports.default.foo.unshift("a");
 
 // Generate code
 const { code, map } = generateCode(_module);
+```
+
+Generated code:
+
+```js
+export default {
+  foo: ["a", "b"],
+};
+```
+
+**Example:** Get the AST directly:
+
+```js
+import { parseCode, generateCode } from "magicast";
+
+const mod = parseCode(`export default { }`);
+
+const ast = mod.exports.default.$ast
+// do something with ast
+```
+
+**Example:** Function parameters:
+
+```js
+import { parseCode, generateCode } from "magicast";
+
+const mod = parseCode(`export default defineConfig({ foo: 'bar' })`);
+
+// Support for both bare object export and `defineConfig` wrapper
+const options = mod.exports.default.$type === 'function-call'
+  ? mod.exports.default.arguments[0]
+  : mod.exports.default;
+
+console.log(options.foo) // bar
 ```
 
 ## Development
