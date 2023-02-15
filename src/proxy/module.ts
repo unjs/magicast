@@ -77,6 +77,30 @@ export function proxifyModule<T>(ast: ParsedFileNode): ProxifiedModule<T> {
         updateOrAddExport(prop as string, value);
         return true;
       },
+      deleteProperty(_, prop) {
+        const type =
+          prop === "default"
+            ? "ExportDefaultDeclaration"
+            : "ExportNamedDeclaration";
+
+        for (let i = 0; i < root.body.length; i++) {
+          const n = root.body[i];
+          if (n.type === type) {
+            if (prop === "default") {
+              root.body.splice(i, 1);
+              return true;
+            }
+            if (n.declaration && "declarations" in n.declaration) {
+              const dec = n.declaration.declarations[0];
+              if ("name" in dec.id && dec.id.name === prop) {
+                root.body.splice(i, 1);
+                return true;
+              }
+            }
+          }
+        }
+        return false;
+      }
     }
   );
 

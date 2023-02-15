@@ -237,5 +237,15 @@ describe("magicast", () => {
 
       export const named = [\\"a\\"];"
     `);
+
+
+    // delete
+    delete mod.exports.default
+
+    expect(generate(mod)).toMatchInlineSnapshot('"export const named = [\\"a\\"];"');
+
+    delete mod.exports.named
+
+    expect(generate(mod)).toMatchInlineSnapshot('""');
   });
 });
