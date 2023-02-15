@@ -1,9 +1,14 @@
-import babelParser from "@babel/parser";
+import * as babelParser from "@babel/parser";
 import type { ParserOptions, ParserPlugin } from "@babel/parser";
 
+let _babelParser: { parse: typeof babelParser.parse } | undefined;
+
 export function getBabelParser() {
+  if (_babelParser) {
+    return _babelParser;
+  }
   const babelOptions = _getBabelOptions();
-  return {
+  _babelParser = {
     parse(source: string, options?: ParserOptions) {
       return babelParser.parse(source, {
         ...babelOptions,
@@ -11,6 +16,7 @@ export function getBabelParser() {
       }) as any;
     },
   };
+  return _babelParser
 }
 
 function _getBabelOptions(): ParserOptions & { plugins: ParserPlugin[] } {

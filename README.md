@@ -13,6 +13,7 @@ Paneer allows you to programmatically modify JavaScript and Typescript source co
 
 - Generic API
   - [x] Working parser and code generation with TS support
+    - [x] Create node from any value
   - [ ] Access to comments
 - ESM
   - [x] Basic syntax support
@@ -51,12 +52,10 @@ Import utilities:
 
 ```js
 // ESM / Bundler
-import { parseCode, generateCode } from "paneer";
-import * as p from "paneer";
+import { parseCode, generateCode, builders, createNode } from "paneer";
 
 // CommonJS
-const { parseCode, generateCode } = require("panner");
-const p = require("panner");
+const { parseCode, generateCode, builders, createNode } = require("panner");
 ```
 
 **Example:** Modify a file:

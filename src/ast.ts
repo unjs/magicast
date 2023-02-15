@@ -2,7 +2,7 @@ import { proxify, Proxified } from "./proxy";
 import type { ParsedFileNode } from "./types";
 
 export class ModuleNode {
-  constructor(public node: ParsedFileNode) {}
+  constructor(public ast: ParsedFileNode) { }
 
   get exports(): Record<string, Proxified> {
     const _exports: Record<string, Proxified> = {};
@@ -25,3 +25,4 @@ export class ModuleNode {
     throw new Error("Not implemented");
   }
 }
+
