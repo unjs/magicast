@@ -51,7 +51,7 @@ export function literalToAst(value: any): ESNode {
   }
   if (value === null) {
     // eslint-disable-next-line unicorn/no-null
-    return  recast.types.builders.literal(null) as any;
+    return recast.types.builders.literal(null) as any;
   }
   if (Array.isArray(value)) {
     return recast.types.builders.arrayExpression(
