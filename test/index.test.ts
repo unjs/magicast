@@ -211,7 +211,7 @@ describe("magicast", () => {
     expect(mod.exports).toMatchInlineSnapshot(`{}`);
     expect(generate(mod)).toMatchInlineSnapshot('""');
 
-    mod.exports.default = { foo: '1' }
+    mod.exports.default = { foo: "1" };
 
     expect(generate(mod)).toMatchInlineSnapshot(`
       "export default {
@@ -219,7 +219,7 @@ describe("magicast", () => {
       };"
     `);
 
-    mod.exports.default.foo = 2
+    mod.exports.default.foo = 2;
 
     expect(generate(mod)).toMatchInlineSnapshot(`
       "export default {
@@ -227,8 +227,8 @@ describe("magicast", () => {
       };"
     `);
 
-    mod.exports.named ||= []
-    mod.exports.named.push('a')
+    mod.exports.named ||= [];
+    mod.exports.named.push("a");
 
     expect(generate(mod)).toMatchInlineSnapshot(`
       "export default {
@@ -238,13 +238,14 @@ describe("magicast", () => {
       export const named = [\\"a\\"];"
     `);
 
-
     // delete
-    delete mod.exports.default
+    delete mod.exports.default;
 
-    expect(generate(mod)).toMatchInlineSnapshot('"export const named = [\\"a\\"];"');
+    expect(generate(mod)).toMatchInlineSnapshot(
+      '"export const named = [\\"a\\"];"'
+    );
 
-    delete mod.exports.named
+    delete mod.exports.named;
 
     expect(generate(mod)).toMatchInlineSnapshot('""');
   });

@@ -100,7 +100,7 @@ export function proxifyModule<T>(ast: ParsedFileNode): ProxifiedModule<T> {
           }
         }
         return false;
-      }
+      },
     }
   );
 
