@@ -87,7 +87,29 @@ describe("paneer", () => {
         ],
       }
     `);
+
+    expect(mod.exports.default.modules.$type).toBe("array");
+    expect(mod.exports.default.modules[0].$type).toBe("object");
   });
+
+  it("mix two configs", () => {
+    const mod1 = parseCode(`export default { a: 1 }`);
+    const mod2 = parseCode(`export default { b: 2 }`);
+
+    mod1.exports.default.b = mod2.exports.default
+
+    expect(generate(mod1)).toMatchInlineSnapshot(
+      `
+      "export default {
+        a: 1,
+
+        b: {
+          b: 2,
+        },
+      };"
+    `
+    );
+  })
 
   it.skip("parse, update, generate", () => {
     const _module = parseCode(`

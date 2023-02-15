@@ -1,4 +1,4 @@
-import { Proxified, proxify } from "./proxy";
+import { proxify, Proxified } from "./proxy";
 import type { ParsedFileNode } from "./types";
 
 export class ModuleNode {

@@ -1,7 +1,13 @@
 import * as recast from "recast";
-import { ESNode } from "./types";
+import { ProxyUtils } from "./proxy/types";
+import type { ESNode } from "./types";
+
+const PROXY_KEY = "__paneer_proxy";
 
 export function literalToAst(value: any): ESNode {
+  if (value[PROXY_KEY]) {
+    return value.$ast;
+  }
   if (Array.isArray(value)) {
     return recast.types.builders.arrayExpression(
       value.map((n) => literalToAst(n)) as any
@@ -19,4 +25,18 @@ export function literalToAst(value: any): ESNode {
     ) as any;
   }
   return recast.types.builders.literal(value) as any;
+}
+
+export function makeProxyUtils<T extends object>(
+  node: ESNode,
+  extend: T = {} as T
+): ProxyUtils & T {
+  return {
+    [PROXY_KEY]: true,
+    get $ast() {
+      return node;
+    },
+    $type: "object",
+    ...extend,
+  } as ProxyUtils & T;
 }
