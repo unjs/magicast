@@ -61,6 +61,18 @@ export function proxifyObject<T>(node: ESNode): Proxified<T> {
         replaceOrAddProp(key, literalToAst(value));
         return true;
       },
+      deleteProperty(_, key) {
+        if (typeof key !== "string") {
+          key = String(key);
+        }
+        const index = node.properties.findIndex(
+          (prop) => "key" in prop && "name" in prop.key && prop.key.name === key
+        );
+        if (index !== -1) {
+          node.properties.splice(index, 1);
+        }
+        return true;
+      },
       ownKeys() {
         return node.properties
           .map((prop) => {

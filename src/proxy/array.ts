@@ -42,7 +42,11 @@ export function proxifyArrayElements<T extends object>(
         if (typeof key === "symbol") {
           return;
         }
-        const prop = getItem(+key);
+        const index = +key;
+        if (Number.isNaN(index)) {
+          return;
+        }
+        const prop = getItem(index);
         if (prop) {
           return proxify(prop);
         }
@@ -51,7 +55,22 @@ export function proxifyArrayElements<T extends object>(
         if (typeof key === "symbol") {
           return false;
         }
-        replaceItem(+key, literalToAst(value));
+        const index = +key;
+        if (Number.isNaN(index)) {
+          return false;
+        }
+        replaceItem(index, literalToAst(value));
+        return true;
+      },
+      deleteProperty(_, key) {
+        if (typeof key === "symbol") {
+          return false;
+        }
+        const index = +key;
+        if (Number.isNaN(index)) {
+          return false;
+        }
+        elements[index] = literalToAst(undefined);
         return true;
       },
       ownKeys() {

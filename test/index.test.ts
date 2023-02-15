@@ -111,7 +111,7 @@ describe("magicast", () => {
     );
   });
 
-  it("parse, update, generate", () => {
+  it("function wrapper", () => {
     const mod = parseCode(`
       export const a: any = { foo: 1}
       export default defineConfig({
@@ -143,6 +143,28 @@ describe("magicast", () => {
         // Modules
         modules: [\\"a\\", \\"b\\"],
       });"
+    `);
+  });
+
+  it("delete property", () => {
+    const mod = parseCode(`export default { a: 1, b: [1, { foo: 'bar' }] }`);
+
+    delete mod.exports.default.b[1].foo;
+
+    expect(generate(mod)).toMatchInlineSnapshot(
+      '"export default { a: 1, b: [1, {}] };"'
+    );
+
+    delete mod.exports.default.b[0];
+    expect(generate(mod)).toMatchInlineSnapshot(
+      '"export default { a: 1, b: [undefined, {}] };"'
+    );
+
+    delete mod.exports.default.a;
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        b: [undefined, {}],
+      };"
     `);
   });
 });
