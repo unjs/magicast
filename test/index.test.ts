@@ -1,8 +1,95 @@
 import { expect, it, describe } from "vitest";
+import { format } from "prettier";
 import { parseCode, generateCode } from "../src";
 
+function generate(mod: any) {
+  return format(generateCode(mod).code, { parser: "babel-ts" }).trim();
+}
+
 describe("paneer", () => {
-  it("parse, update, generate", () => {
+  it("basic object and array", () => {
+    const mod = parseCode(`export default { a: 1, b: { c: {} } }`);
+
+    mod.exports.default.a = 2;
+
+    expect(generate(mod)).toMatchInlineSnapshot(
+      '"export default { a: 2, b: { c: {} } };"'
+    );
+
+    mod.exports.default.b.c = { d: 3 };
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        a: 2,
+        b: {
+          c: {
+            d: 3,
+          },
+        },
+      };"
+    `);
+
+    expect(mod.exports.default.b.c.d).toBe(3);
+
+    mod.exports.default.modules ||= [];
+
+    expect(mod.exports.default.modules.$ast).toBeDefined();
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        a: 2,
+
+        b: {
+          c: {
+            d: 3,
+          },
+        },
+
+        modules: [],
+      };"
+    `);
+
+    mod.exports.default.modules.push("a");
+    mod.exports.default.modules.unshift({ foo: "bar" });
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        a: 2,
+
+        b: {
+          c: {
+            d: 3,
+          },
+        },
+
+        modules: [
+          {
+            foo: \\"bar\\",
+          },
+          \\"a\\",
+        ],
+      };"
+    `);
+
+    expect(mod.exports.default).toMatchInlineSnapshot(`
+      {
+        "a": 2,
+        "b": {
+          "c": {
+            "d": 3,
+          },
+        },
+        "modules": [
+          {
+            "foo": "bar",
+          },
+          "a",
+        ],
+      }
+    `);
+  });
+
+  it.skip("parse, update, generate", () => {
     const _module = parseCode(`
       export const a: any = {}
       export default defineConfig({
