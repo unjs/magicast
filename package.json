@@ -1,8 +1,8 @@
 {
-  "name": "paneer",
+  "name": "magicast",
   "version": "0.1.0",
   "description": "",
-  "repository": "unjs/paneer",
+  "repository": "unjs/magicast",
   "license": "MIT",
   "sideEffects": false,
   "type": "module",

@@ -6,7 +6,7 @@ function generate(mod: any) {
   return format(generateCode(mod).code, { parser: "babel-ts" }).trim();
 }
 
-describe("paneer", () => {
+describe("magicast", () => {
   it("basic object and array", () => {
     const mod = parseCode(`export default { a: 1, b: { c: {} } }`);
 

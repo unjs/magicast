@@ -2,7 +2,7 @@ import * as recast from "recast";
 import { ProxyUtils } from "./proxy/types";
 import type { ESNode } from "./types";
 
-const PROXY_KEY = "__paneer_proxy";
+const PROXY_KEY = "__magicast_proxy";
 
 export function literalToAst(value: any): ESNode {
   if (value[PROXY_KEY]) {
