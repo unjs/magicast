@@ -2,7 +2,7 @@ import { ESNode } from "../types";
 import { literalToAst, createProxy, proxify } from "./_utils";
 import { Proxified } from "./types";
 
-export function proxifyObject<T extends object>(node: ESNode): Proxified<T> {
+export function proxifyObject<T>(node: ESNode): Proxified<T> {
   if (!("properties" in node)) {
     return undefined as any;
   }
@@ -78,5 +78,5 @@ export function proxifyObject<T extends object>(node: ESNode): Proxified<T> {
         };
       },
     }
-  );
+  ) as Proxified<T>;
 }

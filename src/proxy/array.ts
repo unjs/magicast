@@ -67,9 +67,9 @@ export function proxifyArrayElements<T extends object>(
   );
 }
 
-export function proxifyArray<T extends object>(node: ESNode): Proxified<T> {
+export function proxifyArray<T>(node: ESNode): Proxified<T> {
   if (!("elements" in node)) {
     return undefined as any;
   }
-  return proxifyArrayElements(node, node.elements as any);
+  return proxifyArrayElements(node, node.elements as any) as any;
 }
