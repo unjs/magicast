@@ -8,8 +8,8 @@ export type ProxyUtils = ProxyBase &
   (
     | {
         $type: "function-call";
-        arguments: Proxified[];
-        name: string;
+        $args: Proxified;
+        $callee: string;
       }
     | {
         $type: "object";

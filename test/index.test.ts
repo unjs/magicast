@@ -122,7 +122,8 @@ describe("magicast", () => {
 
     expect(mod.exports.a.foo).toBe(1);
     expect(mod.exports.default.$type).toBe("function-call");
-    expect(mod.exports.default.arguments).toMatchInlineSnapshot(`
+    expect(mod.exports.default.$callee).toBe("defineConfig");
+    expect(mod.exports.default.$args).toMatchInlineSnapshot(`
         [
           {
             "modules": [
@@ -132,7 +133,7 @@ describe("magicast", () => {
         ]
       `);
 
-    const options = mod.exports.default.arguments[0];
+    const options = mod.exports.default.$args[0];
 
     options.modules ||= [];
     options.modules.push("b");

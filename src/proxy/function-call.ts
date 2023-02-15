@@ -26,8 +26,8 @@ export function proxifyFunctionCall<T>(node: ESNode): Proxified<T> {
     node,
     {
       $type: "function-call",
-      name: stringifyExpression(node.callee as any),
-      arguments: argumentsProxy,
+      $callee: stringifyExpression(node.callee as any),
+      $args: argumentsProxy,
     },
     {}
   ) as any;

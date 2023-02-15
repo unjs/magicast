@@ -112,7 +112,7 @@ const mod = parseCode(`export default defineConfig({ foo: 'bar' })`);
 
 // Support for both bare object export and `defineConfig` wrapper
 const options = mod.exports.default.$type === 'function-call'
-  ? mod.exports.default.arguments[0]
+  ? mod.exports.default.$args[0]
   : mod.exports.default;
 
 console.log(options.foo) // bar
