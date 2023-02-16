@@ -1,14 +1,26 @@
 import * as recast from "recast";
-import { ESNode, ParsedFileNode } from "../types";
+import { Program } from "@babel/types";
+import { ParsedFileNode } from "../types";
 import { ProxifiedModule } from "./types";
 import { createProxy, literalToAst, proxify } from "./_utils";
 
 export function proxifyModule<T>(ast: ParsedFileNode): ProxifiedModule<T> {
-  const root = ast.program as ESNode;
+  const root = ast.program;
   if (root.type !== "Program") {
     throw new Error(`Cannot proxify ${ast.type} as module`);
   }
 
+  return {
+    $ast: root,
+    $type: "module",
+    exports: createExportsProxy(root),
+    get imports() {
+      throw new Error("Not implemented");
+    },
+  } as any;
+}
+
+function createExportsProxy(root: Program) {
   const findExport = (key: string) => {
     const type =
       key === "default" ? "ExportDefaultDeclaration" : "ExportNamedDeclaration";
@@ -63,7 +75,7 @@ export function proxifyModule<T>(ast: ParsedFileNode): ProxifiedModule<T> {
     );
   };
 
-  const exportsProxy = createProxy(
+  return createProxy(
     root,
     {},
     {
@@ -103,13 +115,4 @@ export function proxifyModule<T>(ast: ParsedFileNode): ProxifiedModule<T> {
       },
     }
   );
-
-  return {
-    $ast: root,
-    $type: "module",
-    exports: exportsProxy,
-    get imports() {
-      throw new Error("Not implemented");
-    },
-  } as any;
 }

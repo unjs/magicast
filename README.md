@@ -81,7 +81,7 @@ mod.exports.default.foo.push("b");
 mod.exports.default.foo.unshift("a");
 
 // Generate code
-const { code, map } = generateCode(_module);
+const { code, map } = generateCode(mod);
 ```
 
 Generated code:

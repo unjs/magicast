@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@babel/parser": "^7.20.15",
-    "@types/estree": "^1.0.0",
+    "@babel/types": "^7.20.7",
     "recast": "^0.22.0"
   },
   "devDependencies": {

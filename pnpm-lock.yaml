@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@babel/parser': ^7.20.15
-  '@types/estree': ^1.0.0
+  '@babel/types': ^7.20.7
   '@types/node': ^18.13.0
   '@vitest/coverage-c8': ^0.28.5
   changelogen: ^0.4.1
@@ -16,7 +16,7 @@ specifiers:
 
 dependencies:
   '@babel/parser': 7.20.15
-  '@types/estree': 1.0.0
+  '@babel/types': 7.20.7
   recast: 0.22.0
 
 devDependencies:
@@ -851,6 +851,7 @@ packages:
 
   /@types/estree/1.0.0:
     resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
+    dev: true
 
   /@types/istanbul-lib-coverage/2.0.4:
     resolution: {integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==}

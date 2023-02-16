@@ -10,7 +10,8 @@ export function proxifyObject<T>(node: ESNode): Proxified<T> {
   const getProp = (key: string | symbol) => {
     for (const prop of node.properties) {
       if ("key" in prop && "name" in prop.key && prop.key.name === key) {
-        return prop.value;
+        // TODO:
+        return (prop as any).value;
       }
     }
   };
