@@ -35,3 +35,8 @@ export type Proxified<T = any> = T extends
       [K in keyof T]: Proxified<T[K]>;
     } & ProxyUtils
   : T;
+
+export interface ProxifiedModule<T = Record<string, unknown>> {
+  exports: Proxified<T>;
+  imports: unknown[];
+}
