@@ -3,6 +3,7 @@ import { print, parse, Options as ParseOptions } from "recast";
 import { getBabelParser } from "./babel";
 import { ESNode, ParsedFileNode, ProxifiedModule } from "./types";
 import { proxifyModule } from "./proxy/module";
+import { detectCodeStyle } from "./style";
 
 export function parseCode<T = any>(
   code: string,
@@ -12,7 +13,9 @@ export function parseCode<T = any>(
     parser: options?.parser || getBabelParser(),
     ...options,
   });
-  return proxifyModule(node);
+  const mod = proxifyModule(node);
+  mod.code = code;
+  return mod;
 }
 
 export function generateCode(
@@ -20,8 +23,11 @@ export function generateCode(
   options?: ParseOptions
 ): { code: string; map?: any } {
   const ast = "$ast" in node ? node.$ast : node;
+  const syntax = detectCodeStyle((node as any as { code: string }).code);
+  console.log(syntax, node.code);
   const { code, map } = print(ast, {
     ...options,
+    quote: syntax.singleQuotes ? "single" : "double",
   });
   return { code, map };
 }

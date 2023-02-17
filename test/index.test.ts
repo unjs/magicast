@@ -206,6 +206,20 @@ describe("magicast", () => {
     `);
   });
 
+  it("should preserve code styles", () => {
+    const mod = parseCode(`
+      export const config = {
+        array: ['a']
+      }
+    `);
+    mod.exports.config.array.push("b");
+    expect(generateCode(mod).code).toMatchInlineSnapshot(`
+      "export const config = {
+        array: ['a', 'b']
+      }"
+    `);
+  });
+
   it("manipulate exports", () => {
     const mod = parseCode("");
 
