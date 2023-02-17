@@ -47,10 +47,11 @@ export interface ProxifiedModule<T = Record<string, unknown>> {
   imports: ProxifiedImportsMap;
 }
 
-export type ProxifiedImportsMap = Record<string, ProxifiedImportItem> & ProxyBase & {
-  $type: "imports";
-  $add: (item: ImprotItemInput) => void;
-}
+export type ProxifiedImportsMap = Record<string, ProxifiedImportItem> &
+  ProxyBase & {
+    $type: "imports";
+    $add: (item: ImportItemInput) => void;
+  };
 
 export interface ProxifiedImportItem extends ProxyBase {
   $type: "import";
@@ -61,7 +62,7 @@ export interface ProxifiedImportItem extends ProxyBase {
   from: string;
 }
 
-export interface ImprotItemInput {
+export interface ImportItemInput {
   local?: string;
   imported: string;
   from: string;

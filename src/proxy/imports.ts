@@ -4,16 +4,30 @@ import {
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
+  program,
   Program,
 } from "@babel/types";
 import { b, createProxy } from "./_utils";
-import { ImprotItemInput, ProxifiedImportItem, ProxifiedImportsMap } from "./types";
+import {
+  ImportItemInput,
+  ProxifiedImportItem,
+  ProxifiedImportsMap,
+} from "./types";
+
+const _importProxyCache = new WeakMap<any, ProxifiedImportItem>();
 
 export function creatImportProxy(
   node: ImportDeclaration,
-  specifier: ImportSpecifier | ImportNamespaceSpecifier | ImportDefaultSpecifier
-) {
-  return createProxy(
+  specifier:
+    | ImportSpecifier
+    | ImportNamespaceSpecifier
+    | ImportDefaultSpecifier,
+  root: Program
+): ProxifiedImportItem {
+  if (_importProxyCache.has(specifier)) {
+    return _importProxyCache.get(specifier)!;
+  }
+  const proxy = createProxy(
     specifier,
     {
       get $declaration() {
@@ -51,7 +65,29 @@ export function creatImportProxy(
         return node.source.value;
       },
       set from(value) {
-        throw new Error("Changing import source is not yet implemented");
+        if (value === node.source.value) {
+          return;
+        }
+
+        node.specifiers = node.specifiers.filter((s) => s !== specifier);
+        if (node.specifiers.length === 0) {
+          root.body = root.body.filter((s) => s !== node);
+        }
+
+        const declaration = root.body.find(
+          (i) => i.type === "ImportDeclaration" && i.source.value === value
+        ) as ImportDeclaration | undefined;
+        if (!declaration) {
+          root.body.unshift(
+            b.importDeclaration(
+              [specifier as any],
+              b.stringLiteral(value)
+            ) as any
+          );
+        } else {
+          // TODO: insert after the last import maybe?
+          declaration.specifiers.push(specifier as any);
+        }
       },
       toJSON() {
         return {
@@ -67,26 +103,75 @@ export function creatImportProxy(
       },
     }
   ) as ProxifiedImportItem;
+  _importProxyCache.set(specifier, proxy);
+  return proxy;
 }
 
 export function createImportsProxy(root: Program) {
+  // TODO: cache
   const getAllImports = () => {
     const imports: ReturnType<typeof creatImportProxy>[] = [];
     for (const n of root.body) {
       if (n.type === "ImportDeclaration") {
         for (const specifier of n.specifiers) {
-          imports.push(creatImportProxy(n, specifier));
+          imports.push(creatImportProxy(n, specifier, root));
         }
       }
     }
     return imports;
   };
 
+  const updateImport = (key: string, value: ImportItemInput) => {
+    const imports = getAllImports();
+    const item = imports.find((i) => i.local === key);
+    const local = value.local || key;
+    if (item) {
+      item.imported = value.imported;
+      item.local = local;
+      item.from = value.from;
+      return true;
+    }
+
+    const specifier =
+      value.imported === "default"
+        ? b.importDefaultSpecifier(b.identifier(local))
+        : value.imported === "*"
+        ? b.importNamespaceSpecifier(b.identifier(local))
+        : b.importSpecifier(b.identifier(value.imported), b.identifier(local));
+
+    const declaration = imports.find(
+      (i) => i.from === value.from
+    )?.$declaration;
+    if (!declaration) {
+      root.body.unshift(
+        b.importDeclaration([specifier], b.stringLiteral(value.from)) as any
+      );
+    } else {
+      // TODO: insert after the last import maybe?
+      declaration.specifiers.push(specifier as any);
+    }
+    return true;
+  };
+
+  const removeImport = (key: string) => {
+    const item = getAllImports().find((i) => i.local === key);
+    if (!item) {
+      return false;
+    }
+    const node = item.$declaration;
+    const specifier = item.$ast;
+    node.specifiers = node.specifiers.filter((s) => s !== specifier);
+    if (node.specifiers.length === 0) {
+      root.body = root.body.filter((n) => n !== node);
+    }
+    return true;
+  };
+
   const proxy = createProxy(
     root,
     {
       $type: "imports",
-      $add(item: ImprotItemInput) {
+      $add(item: ImportItemInput) {
         proxy[item.local || item.imported] = item as any;
       },
       toJSON() {
@@ -102,51 +187,10 @@ export function createImportsProxy(root: Program) {
         return getAllImports().find((i) => i.local === prop);
       },
       set(_, prop, value) {
-        const imports = getAllImports();
-        const item = imports.find((i) => i.local === prop);
-        const local = value.local || prop;
-        if (item) {
-          item.imported = value.imported;
-          item.local = local;
-          item.from = value.from;
-          return true;
-        }
-
-        const specifier =
-          value.imported === "default"
-            ? b.importDefaultSpecifier(b.identifier(local))
-            : value.imported === "*"
-            ? b.importNamespaceSpecifier(b.identifier(local))
-            : b.importSpecifier(
-                b.identifier(value.imported),
-                b.identifier(local)
-              );
-
-        const declaration = imports.find(
-          (i) => i.from === value.from
-        )?.$declaration;
-        if (!declaration) {
-          root.body.unshift(
-            b.importDeclaration([specifier], b.stringLiteral(value.from)) as any
-          );
-        } else {
-          // TODO: insert after the last import maybe?
-          declaration.specifiers.push(specifier as any);
-        }
-        return true;
+        return updateImport(prop as string, value);
       },
       deleteProperty(_, prop) {
-        const item = getAllImports().find((i) => i.local === prop);
-        if (!item) {
-          return false;
-        }
-        const node = item.$declaration;
-        const specifier = item.$ast;
-        node.specifiers = node.specifiers.filter((s) => s !== specifier);
-        if (node.specifiers.length === 0) {
-          root.body = root.body.filter((n) => n !== node);
-        }
-        return true;
+        return removeImport(prop as string);
       },
       ownKeys() {
         return getAllImports().map((i) => i.local);
@@ -157,5 +201,5 @@ export function createImportsProxy(root: Program) {
     }
   ) as any as ProxifiedImportsMap;
 
-  return proxy
+  return proxy;
 }

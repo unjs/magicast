@@ -328,21 +328,36 @@ export default defineConfig({
       from: "foo",
       imported: "default",
       local: "Foo",
-    })
+    });
     mod.imports.$add({
       from: "star",
       imported: "*",
       local: "Star",
-    })
+    });
     mod.imports.$add({
       from: "vite",
       imported: "Good",
-    })
+    });
 
     expect(generate(mod)).toMatchInlineSnapshot(`
       "import * as Star from \\"star\\";
       import Foo from \\"foo\\";
       import { defineConfig, Good } from \\"vite\\";
+      import VuePlugin from \\"@vitejs/plugin-vue\\";
+      import * as path2 from \\"path\\";
+
+      export default defineConfig({
+        foo: [],
+      });"
+    `);
+
+    mod.imports.defineConfig.from = "vitest/config";
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "import { defineConfig } from \\"vitest/config\\";
+      import * as Star from \\"star\\";
+      import Foo from \\"foo\\";
+      import { Good } from \\"vite\\";
       import VuePlugin from \\"@vitejs/plugin-vue\\";
       import * as path2 from \\"path\\";
 
