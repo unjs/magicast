@@ -24,7 +24,6 @@ export function generateCode(
 ): { code: string; map?: any } {
   const ast = "$ast" in node ? node.$ast : node;
   const syntax = detectCodeStyle((node as any as { code: string }).code);
-  console.log(syntax, node.code);
   const { code, map } = print(ast, {
     ...options,
     quote: syntax.singleQuotes ? "single" : "double",
