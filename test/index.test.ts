@@ -251,7 +251,7 @@ describe("magicast", () => {
     expect(generate(mod)).toMatchInlineSnapshot('""');
   });
 
-  it.only("manipulate imports", () => {
+  it("manipulate imports", () => {
     const mod = parseCode(`
 import { defineConfig, Plugin } from 'vite'
 import Vue from '@vitejs/plugin-vue'
