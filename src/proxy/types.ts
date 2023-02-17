@@ -1,3 +1,9 @@
+import {
+  ImportDeclaration,
+  ImportDefaultSpecifier,
+  ImportNamespaceSpecifier,
+  ImportSpecifier,
+} from "@babel/types";
 import { ESNode } from "../types";
 
 export interface ProxyBase {
@@ -38,5 +44,26 @@ export type Proxified<T = any> = T extends
 
 export interface ProxifiedModule<T = Record<string, unknown>> {
   exports: Proxified<T>;
-  imports: unknown[];
+  imports: ProxifiedImportsMap;
+}
+
+export type ProxifiedImportsMap = Record<string, ProxifiedImportItem> &
+  ProxyBase & {
+    $type: "imports";
+    $add: (item: ImportItemInput) => void;
+  };
+
+export interface ProxifiedImportItem extends ProxyBase {
+  $type: "import";
+  $ast: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier;
+  $declaration: ImportDeclaration;
+  imported: string;
+  local: string;
+  from: string;
+}
+
+export interface ImportItemInput {
+  local?: string;
+  imported: string;
+  from: string;
 }
