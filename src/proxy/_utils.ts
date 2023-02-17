@@ -5,7 +5,7 @@ import { proxifyFunctionCall } from "./function-call";
 import { proxifyObject } from "./object";
 import { ProxyUtils, Proxified } from "./types";
 
-export const b = recast.types.builders;
+const b = recast.types.builders;
 
 const literalTypes = new Set([
   "Literal",

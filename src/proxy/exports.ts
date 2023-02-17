@@ -2,6 +2,8 @@ import * as recast from "recast";
 import { Program } from "@babel/types";
 import { createProxy, literalToAst, proxify } from "./_utils";
 
+const b = recast.types.builders;
+
 export function createExportsProxy(root: Program) {
   const findExport = (key: string) => {
     const type =
@@ -45,13 +47,10 @@ export function createExportsProxy(root: Program) {
 
     root.body.push(
       key === "default"
-        ? recast.types.builders.exportDefaultDeclaration(node)
-        : (recast.types.builders.exportNamedDeclaration(
-            recast.types.builders.variableDeclaration("const", [
-              recast.types.builders.variableDeclarator(
-                recast.types.builders.identifier(key),
-                node
-              ),
+        ? b.exportDefaultDeclaration(node)
+        : (b.exportNamedDeclaration(
+            b.variableDeclaration("const", [
+              b.variableDeclarator(b.identifier(key), node),
             ])
           ) as any)
     );

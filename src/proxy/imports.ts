@@ -1,19 +1,20 @@
 /* eslint-disable unicorn/no-nested-ternary */
+import * as recast from "recast";
 import {
   ImportDeclaration,
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
-  program,
   Program,
 } from "@babel/types";
-import { b, createProxy } from "./_utils";
+import { createProxy } from "./_utils";
 import {
   ImportItemInput,
   ProxifiedImportItem,
   ProxifiedImportsMap,
 } from "./types";
 
+const b = recast.types.builders;
 const _importProxyCache = new WeakMap<any, ProxifiedImportItem>();
 
 export function creatImportProxy(
