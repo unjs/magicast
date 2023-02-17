@@ -5,6 +5,8 @@ import { proxifyFunctionCall } from "./function-call";
 import { proxifyObject } from "./object";
 import { ProxyUtils, Proxified } from "./types";
 
+export const b = recast.types.builders;
+
 const literalTypes = new Set([
   "Literal",
   "StringLiteral",
@@ -64,32 +66,30 @@ const PROXY_KEY = "__magicast_proxy";
 
 export function literalToAst(value: any): ESNode {
   if (value === undefined) {
-    return recast.types.builders.identifier("undefined") as any;
+    return b.identifier("undefined") as any;
   }
   if (value === null) {
     // eslint-disable-next-line unicorn/no-null
-    return recast.types.builders.literal(null) as any;
+    return b.literal(null) as any;
   }
   if (Array.isArray(value)) {
-    return recast.types.builders.arrayExpression(
-      value.map((n) => literalToAst(n)) as any
-    ) as any;
+    return b.arrayExpression(value.map((n) => literalToAst(n)) as any) as any;
   }
   if (typeof value === "object") {
     if (PROXY_KEY in value) {
       return value.$ast;
     }
-    return recast.types.builders.objectExpression(
+    return b.objectExpression(
       Object.entries(value).map(([key, value]) => {
-        return recast.types.builders.property(
+        return b.property(
           "init",
-          recast.types.builders.identifier(key),
+          b.identifier(key),
           literalToAst(value) as any
         ) as any;
       })
     ) as any;
   }
-  return recast.types.builders.literal(value) as any;
+  return b.literal(value) as any;
 }
 
 export function makeProxyUtils<T extends object>(

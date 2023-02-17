@@ -324,19 +324,25 @@ export default defineConfig({
       });"
     `);
 
-    mod.imports.Foo = {
+    mod.imports.$add({
       from: "foo",
       imported: "default",
-    } as any;
-
-    mod.imports.Bar = {
+      local: "Foo",
+    })
+    mod.imports.$add({
+      from: "star",
+      imported: "*",
+      local: "Star",
+    })
+    mod.imports.$add({
       from: "vite",
       imported: "Good",
-    } as any;
+    })
 
     expect(generate(mod)).toMatchInlineSnapshot(`
-      "import Foo from \\"foo\\";
-      import { defineConfig, Good as Bar } from \\"vite\\";
+      "import * as Star from \\"star\\";
+      import Foo from \\"foo\\";
+      import { defineConfig, Good } from \\"vite\\";
       import VuePlugin from \\"@vitejs/plugin-vue\\";
       import * as path2 from \\"path\\";
 
