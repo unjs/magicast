@@ -13,7 +13,7 @@ export function proxifyModule<T>(ast: ParsedFileNode): ProxifiedModule<T> {
   return {
     $ast: root,
     $type: "module",
-    exports: createExportsProxy(root),
-    imports: createImportsProxy(root),
+    $exports: createExportsProxy(root),
+    $imports: createImportsProxy(root),
   } as any;
 }

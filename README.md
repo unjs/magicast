@@ -53,7 +53,7 @@ import { loadFile, writeFile } from "magicast";
 
 const mod = await loadFile("config.js");
 
-mod.exports.default.foo.push("b");
+mod.$exports.default.foo.push("b");
 
 await writeFile(_module);
 ```
@@ -75,10 +75,10 @@ import { parseCode, generateCode } from "magicast";
 const mod = parseCode(`export default { }`);
 
 // Ensure foo is an array
-mod.exports.default.foo ||= [];
+mod.$exports.default.foo ||= [];
 // Add a new array member
-mod.exports.default.foo.push("b");
-mod.exports.default.foo.unshift("a");
+mod.$exports.default.foo.push("b");
+mod.$exports.default.foo.unshift("a");
 
 // Generate code
 const { code, map } = generateCode(mod);
@@ -99,7 +99,7 @@ import { parseCode, generateCode } from "magicast";
 
 const mod = parseCode(`export default { }`);
 
-const ast = mod.exports.default.$ast
+const ast = mod.$exports.default.$ast
 // do something with ast
 ```
 
@@ -111,9 +111,9 @@ import { parseCode, generateCode } from "magicast";
 const mod = parseCode(`export default defineConfig({ foo: 'bar' })`);
 
 // Support for both bare object export and `defineConfig` wrapper
-const options = mod.exports.default.$type === 'function-call'
-  ? mod.exports.default.$args[0]
-  : mod.exports.default;
+const options = mod.$exports.default.$type === 'function-call'
+  ? mod.$exports.default.$args[0]
+  : mod.$exports.default;
 
 console.log(options.foo) // bar
 ```

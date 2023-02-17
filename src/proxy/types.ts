@@ -43,8 +43,8 @@ export type Proxified<T = any> = T extends
   : T;
 
 export interface ProxifiedModule<T = Record<string, unknown>> {
-  exports: Proxified<T>;
-  imports: ProxifiedImportsMap;
+  $exports: Proxified<T>;
+  $imports: ProxifiedImportsMap;
 }
 
 export type ProxifiedImportsMap = Record<string, ProxifiedImportItem> &
