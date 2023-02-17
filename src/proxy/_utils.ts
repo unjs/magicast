@@ -64,7 +64,7 @@ export function proxify<T>(node: ESNode): Proxified<T> {
 
 const PROXY_KEY = "__magicast_proxy";
 
-export function literalToAst(value: any): ESNode {
+export function literalToAst(value: any, seen = new Set()): ESNode {
   if (value === undefined) {
     return b.identifier("undefined") as any;
   }
@@ -72,8 +72,36 @@ export function literalToAst(value: any): ESNode {
     // eslint-disable-next-line unicorn/no-null
     return b.literal(null) as any;
   }
+  if (seen.has(value)) {
+    throw new Error("Can not serialize circular reference");
+  }
+  seen.add(value);
+  if (value instanceof Set) {
+    return b.newExpression(b.identifier("Set"), [
+      b.arrayExpression([...value].map((n) => literalToAst(n, seen)) as any),
+    ]) as any;
+  }
+  if (value instanceof Date) {
+    return b.newExpression(b.identifier("Date"), [
+      b.literal(value.toISOString()),
+    ]) as any;
+  }
+  if (value instanceof Map) {
+    return b.newExpression(b.identifier("Map"), [
+      b.arrayExpression(
+        [...value].map(([key, value]) => {
+          return b.arrayExpression([
+            literalToAst(key, seen) as any,
+            literalToAst(value, seen) as any,
+          ]) as any;
+        }) as any
+      ),
+    ]) as any;
+  }
   if (Array.isArray(value)) {
-    return b.arrayExpression(value.map((n) => literalToAst(n)) as any) as any;
+    return b.arrayExpression(
+      value.map((n) => literalToAst(n, seen)) as any
+    ) as any;
   }
   if (typeof value === "object") {
     if (PROXY_KEY in value) {
@@ -84,7 +112,7 @@ export function literalToAst(value: any): ESNode {
         return b.property(
           "init",
           b.identifier(key),
-          literalToAst(value) as any
+          literalToAst(value, seen) as any
         ) as any;
       })
     ) as any;
