@@ -8,7 +8,7 @@ describe("literalToAst", () => {
     return print(literalToAst(value)).code;
   }
 
-  it("should work", () => {
+  it("basic", () => {
     expect(run(1)).toMatchInlineSnapshot('"1"');
     expect(run(true)).toMatchInlineSnapshot('"true"');
     expect(run(undefined)).toMatchInlineSnapshot('"undefined"');
@@ -19,5 +19,28 @@ describe("literalToAst", () => {
           foo: \\"bar\\"
       }]"
     `);
+  });
+
+  it("built-in objects", () => {
+    expect(run(new Set(["foo", 1]))).toMatchInlineSnapshot(
+      '"new Set([\\"foo\\", 1])"'
+    );
+
+    expect(run(new Date("2010-01-01"))).toMatchInlineSnapshot(
+      '"new Date(\\"2010-01-01T00:00:00.000Z\\")"'
+    );
+
+    const map = new Map();
+    map.set(1, "foo");
+    map.set(2, "bar");
+    expect(run(map)).toMatchInlineSnapshot(
+      '"new Map([[1, \\"foo\\"], [2, \\"bar\\"]])"'
+    );
+  });
+
+  it("circular reference", () => {
+    const obj: any = {};
+    obj.foo = obj;
+    expect(() => run(obj)).toThrowError("Can not serialize circular reference");
   });
 });

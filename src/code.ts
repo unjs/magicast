@@ -13,24 +13,19 @@ export function parseCode<T = any>(
     parser: options?.parser || getBabelParser(),
     ...options,
   });
-  const mod = proxifyModule(node);
-  mod.code = code;
-  return mod;
+  return proxifyModule(node, code);
 }
 
 export function generateCode(
-  node: { $ast: ESNode } | ESNode,
+  node: { $ast: ESNode } | ESNode | ProxifiedModule<any>,
   options: ParseOptions & { format?: false | CodeFormatOptions } = {}
 ): { code: string; map?: any } {
   const ast = "$ast" in node ? node.$ast : node;
 
   const formatOptions =
-    options.format === false
+    options.format === false || !("$code" in node)
       ? {}
-      : detectCodeFormat(
-          (node as any as { code: string }).code,
-          options.format
-        );
+      : detectCodeFormat(node.$code, options.format);
 
   const { code, map } = print(ast, {
     ...options,
