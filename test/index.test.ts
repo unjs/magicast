@@ -1,5 +1,5 @@
 import { expect, it, describe } from "vitest";
-import { parseCode } from "../src";
+import { generateCode, parseCode } from "../src";
 import { generate } from "./_utils";
 
 describe("magicast", () => {
@@ -199,6 +199,20 @@ describe("magicast", () => {
       {
         "foo": "bar",
       }
+    `);
+  });
+
+  it("should preserve code styles", () => {
+    const mod = parseCode(`
+      export const config = {
+        array: ['a']
+      }
+    `);
+    mod.exports.config.array.push("b");
+    expect(generateCode(mod).code).toMatchInlineSnapshot(`
+      "export const config = {
+        array: ['a', 'b']
+      }"
     `);
   });
 });

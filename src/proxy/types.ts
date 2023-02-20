@@ -42,10 +42,12 @@ export type Proxified<T = any> = T extends
     } & ProxyUtils
   : T;
 
-export interface ProxifiedModule<T = Record<string, unknown>> {
+export type ProxifiedModule<T = Record<string, unknown>> = ProxyBase & {
+  $type: "module";
+  $code: string;
   exports: Proxified<T>;
   imports: ProxifiedImportsMap;
-}
+};
 
 export type ProxifiedImportsMap = Record<string, ProxifiedImportItem> &
   ProxyBase & {

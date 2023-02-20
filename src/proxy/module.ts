@@ -4,7 +4,10 @@ import { ProxifiedModule } from "./types";
 import { createImportsProxy } from "./imports";
 import { createExportsProxy } from "./exports";
 
-export function proxifyModule<T>(ast: ParsedFileNode): ProxifiedModule<T> {
+export function proxifyModule<T>(
+  ast: ParsedFileNode,
+  code: string
+): ProxifiedModule<T> {
   const root = ast.program;
   if (root.type !== "Program") {
     throw new Error(`Cannot proxify ${ast.type} as module`);
@@ -12,6 +15,7 @@ export function proxifyModule<T>(ast: ParsedFileNode): ProxifiedModule<T> {
 
   return {
     $ast: root,
+    $code: code,
     $type: "module",
     exports: createExportsProxy(root),
     imports: createImportsProxy(root),
