@@ -29,12 +29,12 @@
     "test": "pnpm lint && vitest run --coverage"
   },
   "dependencies": {
-    "@babel/parser": "^7.20.15",
-    "@babel/types": "^7.20.7",
+    "@babel/parser": "^7.21.2",
+    "@babel/types": "^7.21.2",
     "recast": "^0.22.0"
   },
   "devDependencies": {
-    "@types/node": "^18.14.0",
+    "@types/node": "^18.14.1",
     "@vitest/coverage-c8": "^0.28.5",
     "changelogen": "^0.4.1",
     "eslint": "^8.34.0",
