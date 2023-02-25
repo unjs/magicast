@@ -1,7 +1,7 @@
-import { ESNode } from "./types";
+import { ASTNode } from "./types";
 
 export interface MagicastErrorOptions {
-  ast?: ESNode;
+  ast?: ASTNode;
   code?: string;
 }
 

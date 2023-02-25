@@ -1,14 +1,14 @@
 import { MagicastError } from "../error";
-import { ESNode } from "../types";
+import { ASTNode } from "../types";
 import { proxifyArray } from "./array";
 import { proxifyFunctionCall } from "./function-call";
 import { proxifyObject } from "./object";
-import { Proxified, ProxifiedModule } from "./types";
+import { Proxified, ProxifiedModule, ProxifiedValue } from "./types";
 import { LITERALS_AST, LITERALS_TYPEOF } from "./_utils";
 
-const _cache = new WeakMap<ESNode, Proxified<any>>();
+const _cache = new WeakMap<ASTNode, any>();
 
-export function proxify<T>(node: ESNode, mod?: ProxifiedModule): Proxified<T> {
+export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
   if (LITERALS_TYPEOF.has(typeof node)) {
     return node as any;
   }
@@ -20,14 +20,14 @@ export function proxify<T>(node: ESNode, mod?: ProxifiedModule): Proxified<T> {
     return _cache.get(node) as Proxified<T>;
   }
 
-  let proxy: Proxified<T>;
+  let proxy: ProxifiedValue;
   switch (node.type) {
     case "ObjectExpression": {
-      proxy = proxifyObject<T>(node, mod);
+      proxy = proxifyObject(node, mod);
       break;
     }
     case "ArrayExpression": {
-      proxy = proxifyArray<T>(node, mod);
+      proxy = proxifyArray(node, mod);
       break;
     }
     case "CallExpression": {
@@ -42,5 +42,5 @@ export function proxify<T>(node: ESNode, mod?: ProxifiedModule): Proxified<T> {
   }
 
   _cache.set(node, proxy);
-  return proxy;
+  return proxy as unknown as Proxified<T>;
 }

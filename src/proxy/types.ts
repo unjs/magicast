@@ -4,28 +4,30 @@ import {
   ImportNamespaceSpecifier,
   ImportSpecifier,
 } from "@babel/types";
-import { ESNode } from "../types";
+import { ASTNode } from "../types";
 
 export interface ProxyBase {
-  $ast: ESNode;
+  $ast: ASTNode;
 }
 
-export type ProxyUtils = ProxyBase &
-  (
-    | {
-        $type: "function-call";
-        $args: Proxified;
-        $callee: string;
-      }
-    | {
-        $type: "object";
-      }
-    | {
-        $type: "array";
-      }
-  );
+export type ProxifiedArray<T extends any[] = unknown[]> = {
+  [K in keyof T]: Proxified<T[K]>;
+} & ProxyBase & {
+    $type: "array";
+  };
 
-export type ProxyType = ProxyUtils["$type"];
+export type ProxifiedFunctionCall<Args extends any[] = unknown[]> =
+  ProxyBase & {
+    $type: "function-call";
+    $args: ProxifiedArray<Args>;
+    $callee: string;
+  };
+
+export type ProxifiedObject<T extends object = object> = {
+  [K in keyof T]: Proxified<T[K]>;
+} & ProxyBase & {
+    $type: "object";
+  };
 
 export type Proxified<T = any> = T extends
   | number
@@ -36,18 +38,27 @@ export type Proxified<T = any> = T extends
   | bigint
   | symbol
   ? T
-  : T extends object
+  : T extends any[]
   ? {
       [K in keyof T]: Proxified<T[K]>;
-    } & ProxyUtils
+    } & ProxyBase & {
+        $type: "array";
+      }
+  : T extends object
+  ? ProxyBase & {
+      [K in keyof T]: Proxified<T[K]>;
+    } & {
+      $type: "object";
+    }
   : T;
 
-export type ProxifiedModule<T = Record<string, unknown>> = ProxyBase & {
-  $type: "module";
-  $code: string;
-  exports: Proxified<T>;
-  imports: ProxifiedImportsMap;
-};
+export type ProxifiedModule<T extends object = Record<string, any>> =
+  ProxyBase & {
+    $type: "module";
+    $code: string;
+    exports: ProxifiedObject<T>;
+    imports: ProxifiedImportsMap;
+  };
 
 export type ProxifiedImportsMap = Record<string, ProxifiedImportItem> &
   ProxyBase & {
@@ -69,3 +80,13 @@ export interface ImportItemInput {
   imported: string;
   from: string;
 }
+
+export type ProxifiedValue =
+  | ProxifiedArray
+  | ProxifiedFunctionCall
+  | ProxifiedObject
+  | ProxifiedModule
+  | ProxifiedImportsMap
+  | ProxifiedImportItem;
+
+export type ProxyType = ProxifiedValue["$type"];

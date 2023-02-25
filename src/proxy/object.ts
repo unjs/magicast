@@ -1,16 +1,16 @@
 import * as recast from "recast";
-import { ESNode } from "../types";
+import { ASTNode } from "../types";
 import { MagicastError } from "../error";
 import { literalToAst, createProxy, isValidPropName } from "./_utils";
 import { proxify } from "./proxify";
-import { Proxified, ProxifiedModule } from "./types";
+import { ProxifiedModule, ProxifiedObject } from "./types";
 
 const b = recast.types.builders;
 
-export function proxifyObject<T>(
-  node: ESNode,
+export function proxifyObject<T extends object>(
+  node: ASTNode,
   mod?: ProxifiedModule
-): Proxified<T> {
+): ProxifiedObject<T> {
   if (!("properties" in node)) {
     return undefined as any;
   }
@@ -49,7 +49,7 @@ export function proxifyObject<T>(
     }
   };
 
-  const replaceOrAddProp = (key: string, value: ESNode) => {
+  const replaceOrAddProp = (key: string, value: ASTNode) => {
     const prop = (node.properties as any[]).find(
       (prop: any) => getPropName(prop) === key
     );
@@ -92,7 +92,7 @@ export function proxifyObject<T>(
       get(_, key) {
         const prop = getProp(key);
         if (prop) {
-          return proxify(prop, mod);
+          return proxify<any>(prop, mod);
         }
       },
       set(_, key, value) {
@@ -126,5 +126,5 @@ export function proxifyObject<T>(
         };
       },
     }
-  ) as Proxified<T>;
+  ) as ProxifiedObject<T>;
 }

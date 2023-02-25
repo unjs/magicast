@@ -4,7 +4,9 @@ import { generate } from "./_utils";
 
 describe("array", () => {
   it("array operations", () => {
-    const mod = parseCode(`export default [1, 2, 3, 4, 5]`);
+    const mod = parseCode<{ default: (number | any | string)[] }>(
+      `export default [1, 2, 3, 4, 5]`
+    );
 
     expect(mod.exports.default.length).toBe(5);
     expect(mod.exports.default.includes(5)).toBe(true);

@@ -1,12 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { print } from "recast";
-import { literalToAst, PROXY_KEY } from "../src/proxy/_utils";
-import { parseCode } from "../src";
+import { parseCode, builder } from "../src";
 
 describe("literalToAst", () => {
   // eslint-disable-next-line unicorn/consistent-function-scoping
   function run(value: any) {
-    return print(literalToAst(value)).code;
+    return print(builder.literal(value)).code;
   }
 
   it("basic", () => {
@@ -43,13 +42,7 @@ describe("literalToAst", () => {
     const mod = parseCode(`export default { foo: 1 }`);
     const node = mod.exports.default;
 
-    expect(node[PROXY_KEY]).toBeTruthy();
-    expect(node).toMatchInlineSnapshot(`
-      {
-        "foo": 1,
-      }
-    `);
-    expect(literalToAst(node)).toBe(node.$ast);
+    expect(builder.literal(node)).toBe(node.$ast);
   });
 
   it("circular reference", () => {

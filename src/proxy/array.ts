@@ -1,18 +1,18 @@
-import { ESNode } from "../types";
+import { ASTNode } from "../types";
 import { literalToAst, createProxy } from "./_utils";
 import { proxify } from "./proxify";
-import { Proxified, ProxifiedModule } from "./types";
+import { ProxifiedArray, ProxifiedModule } from "./types";
 
-export function proxifyArrayElements<T extends object>(
-  node: ESNode,
-  elements: ESNode[],
+export function proxifyArrayElements<T extends any[]>(
+  node: ASTNode,
+  elements: ASTNode[],
   mod?: ProxifiedModule
-): Proxified<T> {
+): ProxifiedArray<T> {
   const getItem = (key: number) => {
     return elements[key];
   };
 
-  const replaceItem = (key: number, value: ESNode) => {
+  const replaceItem = (key: number, value: ASTNode) => {
     elements[key] = value as any;
   };
 
@@ -114,10 +114,10 @@ export function proxifyArrayElements<T extends object>(
   );
 }
 
-export function proxifyArray<T>(
-  node: ESNode,
+export function proxifyArray<T extends any[]>(
+  node: ASTNode,
   mod?: ProxifiedModule
-): Proxified<T> {
+): ProxifiedArray<T> {
   if (!("elements" in node)) {
     return undefined as any;
   }

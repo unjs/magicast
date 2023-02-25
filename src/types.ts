@@ -1,7 +1,5 @@
-import * as recast from "recast";
-
 import type { Program } from "@babel/types";
-export type { Node as ESNode } from "@babel/types";
+export type { Node as ASTNode } from "@babel/types";
 
 export * from "./proxy/types";
 
@@ -17,7 +15,7 @@ export interface Token {
   loc?: Loc;
 }
 
-export interface ParsedFileNode extends recast.types.ASTNode {
+export interface ParsedFileNode {
   type: "file";
   program: Program;
   name?: string;

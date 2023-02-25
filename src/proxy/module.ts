@@ -5,7 +5,7 @@ import { ProxifiedModule } from "./types";
 import { createImportsProxy } from "./imports";
 import { createExportsProxy } from "./exports";
 
-export function proxifyModule<T>(
+export function proxifyModule<T extends object>(
   ast: ParsedFileNode,
   code: string
 ): ProxifiedModule<T> {

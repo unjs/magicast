@@ -1,7 +1,6 @@
 import * as recast from "recast";
 import { MagicastError } from "../error";
-import type { ESNode } from "../types";
-import { ProxyUtils, Proxified } from "./types";
+import type { ASTNode } from "../types";
 
 export const LITERALS_AST = new Set([
   "Literal",
@@ -28,9 +27,9 @@ export function isValidPropName(name: string) {
   return /^[$A-Z_a-z][\w$]*$/.test(name);
 }
 
-export const PROXY_KEY = "__magicast_proxy";
+const PROXY_KEY = "__magicast_proxy";
 
-export function literalToAst(value: any, seen = new Set()): ESNode {
+export function literalToAst(value: any, seen = new Set()): ASTNode {
   if (value === undefined) {
     return b.identifier("undefined") as any;
   }
@@ -93,28 +92,27 @@ export function literalToAst(value: any, seen = new Set()): ESNode {
 }
 
 export function makeProxyUtils<T extends object>(
-  node: ESNode,
+  node: ASTNode,
   extend: T = {} as T
-): ProxyUtils & T {
-  const obj = extend as ProxyUtils & T;
-  // @ts-expect-error internal property
+): Record<string, any> {
+  const obj = extend as any;
   obj[PROXY_KEY] = true;
   obj.$ast = node;
   obj.$type ||= "object";
   return obj;
 }
 
-export function createProxy<T extends object>(
-  node: ESNode,
+export function createProxy<T>(
+  node: ASTNode,
   extend: any,
-  handler: ProxyHandler<T>
-): Proxified<T> {
+  handler: ProxyHandler<object>
+): T {
   const utils = makeProxyUtils(node, extend);
   return new Proxy(
     {},
     {
       ...handler,
-      get(target: T, key: string | symbol, receiver: any) {
+      get(target: any, key: string | symbol, receiver: any) {
         if (key in utils) {
           return (utils as any)[key];
         }
@@ -122,7 +120,7 @@ export function createProxy<T extends object>(
           return handler.get(target, key, receiver);
         }
       },
-      set(target: T, key: string | symbol, value: any, receiver: any) {
+      set(target: any, key: string | symbol, value: any, receiver: any) {
         if (key in utils) {
           (utils as any)[key] = value;
           return true;
@@ -133,5 +131,5 @@ export function createProxy<T extends object>(
         return false;
       },
     }
-  ) as Proxified<T>;
+  ) as T;
 }

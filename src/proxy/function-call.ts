@@ -1,18 +1,18 @@
-import { ESNode } from "../types";
+import { ASTNode } from "../types";
 import { MagicastError } from "../error";
 import { createProxy } from "./_utils";
 import { proxifyArrayElements } from "./array";
-import { Proxified, ProxifiedModule } from "./types";
+import { ProxifiedFunctionCall, ProxifiedModule } from "./types";
 
-export function proxifyFunctionCall<T>(
-  node: ESNode,
+export function proxifyFunctionCall<T extends []>(
+  node: ASTNode,
   mod?: ProxifiedModule
-): Proxified<T> {
+): ProxifiedFunctionCall<T> {
   if (node.type !== "CallExpression") {
     throw new MagicastError("Not a function call");
   }
 
-  function stringifyExpression(node: ESNode): string {
+  function stringifyExpression(node: ASTNode): string {
     if (node.type === "Identifier") {
       return node.name;
     }
@@ -24,7 +24,7 @@ export function proxifyFunctionCall<T>(
     throw new MagicastError("Not implemented");
   }
 
-  const argumentsProxy = proxifyArrayElements(node, node.arguments as any, mod);
+  const argumentsProxy = proxifyArrayElements<T>(node, node.arguments, mod);
 
   return createProxy(
     node,
@@ -34,5 +34,5 @@ export function proxifyFunctionCall<T>(
       $args: argumentsProxy,
     },
     {}
-  ) as any;
+  ) as ProxifiedFunctionCall<T>;
 }
