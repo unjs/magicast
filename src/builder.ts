@@ -1,16 +1,19 @@
 import * as recast from "recast";
-import { AST_KEY, literalToAst } from "./proxy/_utils";
+import { proxifyFunctionCall } from "./proxy/function-call";
+import { literalToAst } from "./proxy/_utils";
+import { Proxified } from "./types";
 
 const b = recast.types.builders;
 
 export const builder = {
-  functionCall: (callee: string, ...args: any[]) => {
+  functionCall(callee: string, ...args: any[]): Proxified {
     const node = b.callExpression(
       b.identifier(callee),
       args.map((i) => literalToAst(i) as any)
     );
-    // @ts-expect-error internal property
-    node[AST_KEY] = node;
-    return node;
+    return proxifyFunctionCall(node as any);
+  },
+  literal(value: any): Proxified {
+    return literalToAst(value);
   },
 };

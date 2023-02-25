@@ -29,7 +29,6 @@ export function isValidPropName(name: string) {
 }
 
 export const PROXY_KEY = "__magicast_proxy";
-export const AST_KEY = "__magicast_ast";
 
 export function literalToAst(value: any, seen = new Set()): ESNode {
   if (value === undefined) {
@@ -50,9 +49,6 @@ export function literalToAst(value: any, seen = new Set()): ESNode {
   // forward proxy
   if (value[PROXY_KEY]) {
     return value.$ast;
-  }
-  if (value[AST_KEY]) {
-    return value;
   }
 
   if (value instanceof Set) {
