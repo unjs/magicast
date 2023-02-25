@@ -7,11 +7,13 @@ import {
   ImportSpecifier,
   Program,
 } from "@babel/types";
+import { MagicastError } from "../error";
 import { createProxy } from "./_utils";
 import {
   ImportItemInput,
   ProxifiedImportItem,
   ProxifiedImportsMap,
+  ProxifiedModule,
 } from "./types";
 
 const b = recast.types.builders;
@@ -48,7 +50,9 @@ export function creatImportProxy(
       },
       set imported(value) {
         if (specifier.type !== "ImportSpecifier") {
-          throw new Error("Changing import name is not yet implemented");
+          throw new MagicastError(
+            "Changing import name is not yet implemented"
+          );
         }
         if (specifier.imported.type === "Identifier") {
           specifier.imported.name = value;
@@ -108,7 +112,10 @@ export function creatImportProxy(
   return proxy;
 }
 
-export function createImportsProxy(root: Program) {
+export function createImportsProxy(
+  root: Program,
+  mod: ProxifiedModule
+): ProxifiedImportsMap {
   // TODO: cache
   const getAllImports = () => {
     const imports: ReturnType<typeof creatImportProxy>[] = [];

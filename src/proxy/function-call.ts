@@ -1,11 +1,15 @@
 import { ESNode } from "../types";
+import { MagicastError } from "../error";
 import { createProxy } from "./_utils";
 import { proxifyArrayElements } from "./array";
-import { Proxified } from "./types";
+import { Proxified, ProxifiedModule } from "./types";
 
-export function proxifyFunctionCall<T>(node: ESNode): Proxified<T> {
+export function proxifyFunctionCall<T>(
+  node: ESNode,
+  mod?: ProxifiedModule
+): Proxified<T> {
   if (node.type !== "CallExpression") {
-    throw new Error("Not a function call");
+    throw new MagicastError("Not a function call");
   }
 
   function stringifyExpression(node: ESNode): string {
@@ -17,10 +21,10 @@ export function proxifyFunctionCall<T>(node: ESNode): Proxified<T> {
         node.property
       )}`;
     }
-    throw new Error("Not implemented");
+    throw new MagicastError("Not implemented");
   }
 
-  const argumentsProxy = proxifyArrayElements(node, node.arguments as any);
+  const argumentsProxy = proxifyArrayElements(node, node.arguments as any, mod);
 
   return createProxy(
     node,

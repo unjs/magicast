@@ -1,8 +1,15 @@
+import * as recast from "recast";
 import { ESNode } from "../types";
-import { literalToAst, createProxy, proxify } from "./_utils";
-import { Proxified } from "./types";
+import { MagicastError } from "../error";
+import { literalToAst, createProxy, proxify, isValidPropName } from "./_utils";
+import { Proxified, ProxifiedModule } from "./types";
 
-export function proxifyObject<T>(node: ESNode): Proxified<T> {
+const b = recast.types.builders;
+
+export function proxifyObject<T>(
+  node: ESNode,
+  mod?: ProxifiedModule
+): Proxified<T> {
   if (!("properties" in node)) {
     return undefined as any;
   }
@@ -13,21 +20,53 @@ export function proxifyObject<T>(node: ESNode): Proxified<T> {
         // TODO:
         return (prop as any).value;
       }
+      if (
+        prop.type === "ObjectProperty" &&
+        prop.key.type === "StringLiteral" &&
+        prop.key.value === key
+      ) {
+        return (prop.value as any).value;
+      }
     }
   };
+
+  const getPropName = (
+    prop: (typeof node.properties)[0],
+    throwError = false
+  ) => {
+    if ("key" in prop && "name" in prop.key) {
+      return prop.key.name;
+    }
+    if (prop.type === "ObjectProperty" && prop.key.type === "StringLiteral") {
+      return prop.key.value;
+    }
+    if (throwError) {
+      throw new MagicastError(`Casting "${prop.type}" is not supported`, {
+        ast: prop,
+        code: mod?.$code,
+      });
+    }
+  };
+
   const replaceOrAddProp = (key: string, value: ESNode) => {
-    const index = node.properties.findIndex(
-      (prop) => "key" in prop && "name" in prop.key && prop.key.name === key
+    const prop = (node.properties as any[]).find(
+      (prop: any) => getPropName(prop) === key
     );
-    if (index !== -1) {
-      (node.properties[index] as any).value = value;
-    } else {
+    if (prop) {
+      prop.value = value;
+    } else if (isValidPropName(key)) {
       node.properties.push({
         type: "Property",
         key: {
           type: "Identifier",
           name: key,
         },
+        value,
+      } as any);
+    } else {
+      node.properties.push({
+        type: "ObjectProperty",
+        key: b.stringLiteral(key),
         value,
       } as any);
     }
@@ -42,7 +81,7 @@ export function proxifyObject<T>(node: ESNode): Proxified<T> {
         // eslint-disable-next-line unicorn/no-array-reduce
         return node.properties.reduce((acc, prop) => {
           if ("key" in prop && "name" in prop.key) {
-            acc[prop.key.name] = proxify(prop.value);
+            acc[prop.key.name] = proxify(prop.value, mod);
           }
           return acc;
         }, {} as any);
@@ -52,7 +91,7 @@ export function proxifyObject<T>(node: ESNode): Proxified<T> {
       get(_, key) {
         const prop = getProp(key);
         if (prop) {
-          return proxify(prop);
+          return proxify(prop, mod);
         }
       },
       set(_, key, value) {
@@ -76,12 +115,7 @@ export function proxifyObject<T>(node: ESNode): Proxified<T> {
       },
       ownKeys() {
         return node.properties
-          .map((prop) => {
-            if ("key" in prop && "name" in prop.key) {
-              return prop.key.name;
-            }
-            return undefined;
-          })
+          .map((prop) => getPropName(prop, true))
           .filter(Boolean) as string[];
       },
       getOwnPropertyDescriptor() {

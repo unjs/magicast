@@ -1,10 +1,11 @@
 import * as recast from "recast";
 import { Program } from "@babel/types";
 import { createProxy, literalToAst, proxify } from "./_utils";
+import { ProxifiedModule } from "./types";
 
 const b = recast.types.builders;
 
-export function createExportsProxy(root: Program) {
+export function createExportsProxy(root: Program, mod: ProxifiedModule) {
   const findExport = (key: string) => {
     const type =
       key === "default" ? "ExportDefaultDeclaration" : "ExportNamedDeclaration";
@@ -65,7 +66,7 @@ export function createExportsProxy(root: Program) {
       get(_, prop) {
         const node = findExport(prop as string);
         if (node) {
-          return proxify(node);
+          return proxify(node, mod);
         }
       },
       set(_, prop, value) {

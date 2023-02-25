@@ -1,10 +1,11 @@
 import { ESNode } from "../types";
 import { literalToAst, createProxy, proxify } from "./_utils";
-import { Proxified } from "./types";
+import { Proxified, ProxifiedModule } from "./types";
 
 export function proxifyArrayElements<T extends object>(
   node: ESNode,
-  elements: ESNode[]
+  elements: ESNode[],
+  mod?: ProxifiedModule
 ): Proxified<T> {
   const getItem = (key: number) => {
     return elements[key];
@@ -22,13 +23,13 @@ export function proxifyArrayElements<T extends object>(
         elements.push(literalToAst(value) as any);
       },
       pop() {
-        return proxify(elements.pop() as any);
+        return proxify(elements.pop() as any, mod);
       },
       unshift(value: any) {
         elements.unshift(literalToAst(value) as any);
       },
       shift() {
-        return proxify(elements.shift() as any);
+        return proxify(elements.shift() as any, mod);
       },
       splice(start: number, deleteCount: number, ...items: any[]) {
         const deleted = elements.splice(
@@ -36,27 +37,34 @@ export function proxifyArrayElements<T extends object>(
           deleteCount,
           ...items.map((n) => literalToAst(n))
         );
-        return deleted.map((n) => proxify(n as any));
+        return deleted.map((n) => proxify(n as any, mod));
       },
       find(predicate: (value: any, index: number, arr: any[]) => boolean) {
         // eslint-disable-next-line unicorn/no-array-callback-reference
-        return elements.map((n) => proxify(n as any)).find(predicate);
+        return elements.map((n) => proxify(n as any, mod)).find(predicate);
       },
       findIndex(predicate: (value: any, index: number, arr: any[]) => boolean) {
         // eslint-disable-next-line unicorn/no-array-callback-reference
-        return elements.map((n) => proxify(n as any)).findIndex(predicate);
+        return elements.map((n) => proxify(n as any, mod)).findIndex(predicate);
       },
       includes(value: any) {
-        return elements.map((n) => proxify(n as any)).includes(value);
+        return elements.map((n) => proxify(n as any, mod)).includes(value);
       },
       toJSON() {
-        return elements.map((n) => proxify(n as any));
+        return elements.map((n) => proxify(n as any, mod));
       },
     },
     {
       get(_, key) {
         if (key === "length") {
           return elements.length;
+        }
+        if (key === Symbol.iterator) {
+          return function* () {
+            for (const item of elements) {
+              yield proxify(item as any, mod);
+            }
+          };
         }
         if (typeof key === "symbol") {
           return;
@@ -67,7 +75,7 @@ export function proxifyArrayElements<T extends object>(
         }
         const prop = getItem(index);
         if (prop) {
-          return proxify(prop);
+          return proxify(prop, mod);
         }
       },
       set(_, key, value) {
@@ -105,9 +113,12 @@ export function proxifyArrayElements<T extends object>(
   );
 }
 
-export function proxifyArray<T>(node: ESNode): Proxified<T> {
+export function proxifyArray<T>(
+  node: ESNode,
+  mod?: ProxifiedModule
+): Proxified<T> {
   if (!("elements" in node)) {
     return undefined as any;
   }
-  return proxifyArrayElements(node, node.elements as any) as any;
+  return proxifyArrayElements(node, node.elements as any, mod) as any;
 }

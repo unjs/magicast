@@ -1,9 +1,10 @@
 import * as recast from "recast";
+import { MagicastError } from "../error";
 import type { ESNode } from "../types";
 import { proxifyArray } from "./array";
 import { proxifyFunctionCall } from "./function-call";
 import { proxifyObject } from "./object";
-import { ProxyUtils, Proxified } from "./types";
+import { ProxyUtils, Proxified, ProxifiedModule } from "./types";
 
 const b = recast.types.builders;
 
@@ -28,7 +29,11 @@ const literals = new Set([
 
 const _cache = new WeakMap<ESNode, Proxified<any>>();
 
-export function proxify<T>(node: ESNode): Proxified<T> {
+export function isValidPropName(name: string) {
+  return /^[$A-Z_a-z][\w$]*$/.test(name);
+}
+
+export function proxify<T>(node: ESNode, mod?: ProxifiedModule): Proxified<T> {
   if (literals.has(typeof node)) {
     return node as any;
   }
@@ -43,19 +48,22 @@ export function proxify<T>(node: ESNode): Proxified<T> {
   let proxy: Proxified<T>;
   switch (node.type) {
     case "ObjectExpression": {
-      proxy = proxifyObject<T>(node);
+      proxy = proxifyObject<T>(node, mod);
       break;
     }
     case "ArrayExpression": {
-      proxy = proxifyArray<T>(node);
+      proxy = proxifyArray<T>(node, mod);
       break;
     }
     case "CallExpression": {
-      proxy = proxifyFunctionCall(node);
+      proxy = proxifyFunctionCall(node, mod);
       break;
     }
     default:
-      throw new Error(`Cannot proxify ${node.type}`);
+      throw new MagicastError(`Casting "${node.type}" is not supported`, {
+        ast: node,
+        code: mod?.$code,
+      });
   }
 
   _cache.set(node, proxy);
@@ -73,7 +81,7 @@ export function literalToAst(value: any, seen = new Set()): ESNode {
     return b.literal(null) as any;
   }
   if (seen.has(value)) {
-    throw new Error("Can not serialize circular reference");
+    throw new MagicastError("Can not serialize circular reference");
   }
   seen.add(value);
   if (value instanceof Set) {
