@@ -4,33 +4,15 @@ import { proxifyArray } from "./array";
 import { proxifyFunctionCall } from "./function-call";
 import { proxifyObject } from "./object";
 import { Proxified, ProxifiedModule } from "./types";
-
-const _literalTypes = new Set([
-  "Literal",
-  "StringLiteral",
-  "NumericLiteral",
-  "BooleanLiteral",
-  "NullLiteral",
-  "RegExpLiteral",
-  "BigIntLiteral",
-]);
-
-const _literals = new Set([
-  "string",
-  "number",
-  "boolean",
-  "bigint",
-  "symbol",
-  "undefined",
-]);
+import { LITERALS_AST, LITERALS_TYPEOF } from "./_utils";
 
 const _cache = new WeakMap<ESNode, Proxified<any>>();
 
 export function proxify<T>(node: ESNode, mod?: ProxifiedModule): Proxified<T> {
-  if (_literals.has(typeof node)) {
+  if (LITERALS_TYPEOF.has(typeof node)) {
     return node as any;
   }
-  if (_literalTypes.has(node.type)) {
+  if (LITERALS_AST.has(node.type)) {
     return (node as any).value as any;
   }
 
