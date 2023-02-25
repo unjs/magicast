@@ -2,7 +2,7 @@ import { expect, describe, it } from "vitest";
 import { parseCode } from "../src";
 import { generate } from "./_utils";
 
-describe("magicast", () => {
+describe("errors", () => {
   it("ternary", () => {
     const mod = parseCode(
       `

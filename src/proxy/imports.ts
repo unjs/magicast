@@ -28,6 +28,7 @@ export function creatImportProxy(
   root: Program
 ): ProxifiedImportItem {
   if (_importProxyCache.has(specifier)) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return _importProxyCache.get(specifier)!;
   }
   const proxy = createProxy(
@@ -114,6 +115,7 @@ export function creatImportProxy(
 
 export function createImportsProxy(
   root: Program,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   mod: ProxifiedModule
 ): ProxifiedImportsMap {
   // TODO: cache

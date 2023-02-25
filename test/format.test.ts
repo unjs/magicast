@@ -1,7 +1,7 @@
 import { expect, it, describe } from "vitest";
 import { CodeFormatOptions, detectCodeFormat } from "../src";
 
-describe("magicast:style", () => {
+describe("format", () => {
   const cases: Array<{
     name: string;
     code: string;
