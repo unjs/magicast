@@ -1,7 +1,8 @@
 import * as recast from "recast";
 import { ESNode } from "../types";
 import { MagicastError } from "../error";
-import { literalToAst, createProxy, proxify, isValidPropName } from "./_utils";
+import { literalToAst, createProxy, isValidPropName } from "./_utils";
+import { proxify } from "./proxify";
 import { Proxified, ProxifiedModule } from "./types";
 
 const b = recast.types.builders;

@@ -1,6 +1,7 @@
 import * as recast from "recast";
 import { Program } from "@babel/types";
-import { createProxy, literalToAst, proxify } from "./_utils";
+import { createProxy, literalToAst } from "./_utils";
+import { proxify } from "./proxify";
 import { ProxifiedModule } from "./types";
 
 const b = recast.types.builders;

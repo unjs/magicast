@@ -1,5 +1,6 @@
 import { ESNode } from "../types";
-import { literalToAst, createProxy, proxify } from "./_utils";
+import { literalToAst, createProxy } from "./_utils";
+import { proxify } from "./proxify";
 import { Proxified, ProxifiedModule } from "./types";
 
 export function proxifyArrayElements<T extends object>(
