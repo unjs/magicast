@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { print } from "recast";
-import { literalToAst } from "../src/proxy/_utils";
+import { literalToAst, PROXY_KEY } from "../src/proxy/_utils";
+import { parseCode, builder } from "../src";
 
 describe("literalToAst", () => {
   // eslint-disable-next-line unicorn/consistent-function-scoping
@@ -36,6 +37,24 @@ describe("literalToAst", () => {
     expect(run(map)).toMatchInlineSnapshot(
       '"new Map([[1, \\"foo\\"], [2, \\"bar\\"]])"'
     );
+  });
+
+  it("forward proxy", () => {
+    const mod = parseCode(`export default { foo: 1 }`);
+    const node = mod.exports.default;
+
+    expect(node[PROXY_KEY]).toBeTruthy();
+    expect(node).toMatchInlineSnapshot(`
+      {
+        "foo": 1,
+      }
+    `);
+    expect(literalToAst(node)).toBe(node.$ast);
+  });
+
+  it("forward ast", () => {
+    const ast = builder.functionCall("foo", [{ foo: "value" }]);
+    expect(literalToAst(ast)).toBe(ast);
   });
 
   it("circular reference", () => {

@@ -3,13 +3,33 @@ import { MagicastError } from "../error";
 import type { ESNode } from "../types";
 import { ProxyUtils, Proxified } from "./types";
 
+export const LITERALS_AST = new Set([
+  "Literal",
+  "StringLiteral",
+  "NumericLiteral",
+  "BooleanLiteral",
+  "NullLiteral",
+  "RegExpLiteral",
+  "BigIntLiteral",
+]);
+
+export const LITERALS_TYPEOF = new Set([
+  "string",
+  "number",
+  "boolean",
+  "bigint",
+  "symbol",
+  "undefined",
+]);
+
 const b = recast.types.builders;
 
 export function isValidPropName(name: string) {
   return /^[$A-Z_a-z][\w$]*$/.test(name);
 }
 
-const PROXY_KEY = "__magicast_proxy";
+export const PROXY_KEY = "__magicast_proxy";
+export const AST_KEY = "__magicast_ast";
 
 export function literalToAst(value: any, seen = new Set()): ESNode {
   if (value === undefined) {
@@ -19,10 +39,22 @@ export function literalToAst(value: any, seen = new Set()): ESNode {
     // eslint-disable-next-line unicorn/no-null
     return b.literal(null) as any;
   }
+  if (LITERALS_TYPEOF.has(typeof value)) {
+    return b.literal(value) as any;
+  }
   if (seen.has(value)) {
     throw new MagicastError("Can not serialize circular reference");
   }
   seen.add(value);
+
+  // forward proxy
+  if (value[PROXY_KEY]) {
+    return value.$ast;
+  }
+  if (value[AST_KEY]) {
+    return value;
+  }
+
   if (value instanceof Set) {
     return b.newExpression(b.identifier("Set"), [
       b.arrayExpression([...value].map((n) => literalToAst(n, seen)) as any),
@@ -51,9 +83,6 @@ export function literalToAst(value: any, seen = new Set()): ESNode {
     ) as any;
   }
   if (typeof value === "object") {
-    if (PROXY_KEY in value) {
-      return value.$ast;
-    }
     return b.objectExpression(
       Object.entries(value).map(([key, value]) => {
         return b.property(
