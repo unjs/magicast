@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { builder, parseCode, ProxifiedModule } from "../src";
+import { builders, parseCode, ProxifiedModule } from "../src";
 import { generate } from "./_utils";
 
 describe("function-calls", () => {
@@ -48,7 +48,7 @@ describe("function-calls", () => {
           imported: "defineConfig",
           from: "vite",
         });
-        mod.exports.default = builder.functionCall("defineConfig", {});
+        mod.exports.default = builders.functionCall("defineConfig", {});
       }
 
       // Get config object, if it's a function call, get the first argument
@@ -67,7 +67,7 @@ describe("function-calls", () => {
       // Install vue plugin
       config.plugins ||= [];
       config.plugins.push(
-        builder.functionCall("vuePlugin", {
+        builders.functionCall("vuePlugin", {
           jsx: true,
         })
       );
