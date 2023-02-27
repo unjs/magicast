@@ -4,7 +4,7 @@ import {
   ImportNamespaceSpecifier,
   ImportSpecifier,
 } from "@babel/types";
-import { ASTNode } from "../types";
+import { ASTNode, GenerateOptions } from "../types";
 
 export interface ProxyBase {
   $ast: ASTNode;
@@ -58,6 +58,7 @@ export type ProxifiedModule<T extends object = Record<string, any>> =
     $code: string;
     exports: ProxifiedObject<T>;
     imports: ProxifiedImportsMap;
+    generate: (options?: GenerateOptions) => { code: string; map?: any };
   };
 
 export type ProxifiedImportsMap = Record<string, ProxifiedImportItem> &

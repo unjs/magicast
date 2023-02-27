@@ -1,9 +1,14 @@
 import { promises as fsp } from "node:fs";
 import { print, parse, Options as ParseOptions } from "recast";
 import { getBabelParser } from "./babel";
-import { ASTNode, ParsedFileNode, ProxifiedModule } from "./types";
+import {
+  ASTNode,
+  GenerateOptions,
+  ParsedFileNode,
+  ProxifiedModule,
+} from "./types";
 import { proxifyModule } from "./proxy/module";
-import { CodeFormatOptions, detectCodeFormat } from "./format";
+import { detectCodeFormat } from "./format";
 
 export function parseCode<Exports extends object = any>(
   code: string,
@@ -18,7 +23,7 @@ export function parseCode<Exports extends object = any>(
 
 export function generateCode(
   node: { $ast: ASTNode } | ASTNode | ProxifiedModule<any>,
-  options: ParseOptions & { format?: false | CodeFormatOptions } = {}
+  options: GenerateOptions = {}
 ): { code: string; map?: any } {
   const ast = "$ast" in node ? node.$ast : node;
 
