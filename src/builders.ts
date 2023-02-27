@@ -5,7 +5,7 @@ import { Proxified } from "./types";
 
 const b = recast.types.builders;
 
-export const builder = {
+export const builders = {
   functionCall(callee: string, ...args: any[]): Proxified {
     const node = b.callExpression(
       b.identifier(callee),

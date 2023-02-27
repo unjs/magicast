@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { print } from "recast";
-import { parseCode, builder } from "../src";
+import { parseCode, builders } from "../src";
 
 describe("literalToAst", () => {
   // eslint-disable-next-line unicorn/consistent-function-scoping
   function run(value: any) {
-    return print(builder.literal(value)).code;
+    return print(builders.literal(value)).code;
   }
 
   it("basic", () => {
@@ -42,7 +42,7 @@ describe("literalToAst", () => {
     const mod = parseCode(`export default { foo: 1 }`);
     const node = mod.exports.default;
 
-    expect(builder.literal(node)).toBe(node.$ast);
+    expect(builders.literal(node)).toBe(node.$ast);
   });
 
   it("circular reference", () => {
