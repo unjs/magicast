@@ -5,13 +5,15 @@
 [![Github Actions][github-actions-src]][github-actions-href]
 [![Codecov][codecov-src]][codecov-href]
 
-Magicast allows you to programmatically modify JavaScript and Typescript source codes with a simplified, elegant and familiar syntax built on top of the [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) parsed by [recast](https://github.com/benjamn/recast) and [babel](https://babeljs.io/).
+Programmatically modify JavaScript and Typescript source codes with a simplified, elegant and familiar syntax.Built on top of the [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) parsed by [recast](https://github.com/benjamn/recast) and [babel](https://babeljs.io/).
 
-**Roadmap:**
+❯ 🧙🏼 **Magical** modify a JS/TS file and write back magically just like JSON!<br>
+❯ 🔀 **Exports/Import** manipulate module's imports and exports at ease<br>
+❯ 💼 **Function Arguments** easily manipulate arguments passed to a function call, like `defineConfig()`<br>
+❯ 🎨 **Smart Formatting** preseves the formatting style (quotes, tabs, etc.) from the original code<br>
+❯ 🧑‍💻 **Readable** get rid of the complexity of AST manipulation and make your code super readable<br>
 
-🚧 Magicast is currently in the proof of concept state. While underlying parsers are stable, you might need to directly modify underlying AST for unsupported operations in the meantime.
-
-## Usage
+## Install
 
 Install npm package:
 
@@ -35,6 +37,8 @@ import { parseCode, generateCode, builders, createNode } from "magicast";
 // CommonJS
 const { parseCode, generateCode, builders, createNode } = require("magicast");
 ```
+
+## Examples
 
 **Example:** Modify a file:
 
@@ -138,7 +142,7 @@ Published under [MIT License](./LICENSE).
 [npm-version-href]: https://npmjs.com/package/magicast
 [npm-downloads-src]: https://img.shields.io/npm/dm/magicast?style=flat-square
 [npm-downloads-href]: https://npmjs.com/package/magicast
-[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/magicast/ci/main?style=flat-square
+[github-actions-src]: https://img.shields.io/github/actions/workflow/status/unjs/magicast/ci.yml?style=flat-square&branch=main
 [github-actions-href]: https://github.com/unjs/magicast/actions?query=workflow%3Aci
 [codecov-src]: https://img.shields.io/codecov/c/gh/unjs/magicast/main?style=flat-square
 [codecov-href]: https://codecov.io/gh/unjs/magicast
