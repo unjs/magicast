@@ -1,10 +1,10 @@
 import { expect, it, describe } from "vitest";
-import { parseCode } from "../src";
+import { parseModule } from "../src";
 import { generate } from "./_utils";
 
 describe("imports", () => {
   it("manipulate imports", () => {
-    const mod = parseCode(`
+    const mod = parseModule(`
 import { defineConfig, Plugin } from 'vite'
 import Vue from '@vitejs/plugin-vue'
 import * as path from 'path'

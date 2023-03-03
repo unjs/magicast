@@ -1,10 +1,10 @@
 import { expect, it, describe } from "vitest";
-import { parseCode } from "../src";
+import { parseModule } from "../src";
 import { generate } from "./_utils";
 
 describe("exports", () => {
   it("manipulate exports", () => {
-    const mod = parseCode("");
+    const mod = parseModule("");
 
     expect(mod.exports).toMatchInlineSnapshot(`{}`);
     expect(generate(mod)).toMatchInlineSnapshot('""');

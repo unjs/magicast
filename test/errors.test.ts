@@ -1,10 +1,10 @@
 import { expect, describe, it } from "vitest";
-import { parseCode } from "../src";
+import { parseExpression, parseModule } from "../src";
 import { generate } from "./_utils";
 
 describe("errors", () => {
   it("ternary", () => {
-    const mod = parseCode(
+    const mod = parseModule(
       `
 export default {
   a: 1 + 1 === 2
@@ -30,7 +30,7 @@ export default {
   });
 
   it("expression", () => {
-    const mod = parseCode(
+    const mod = parseModule(
       `
 export default {
   a: 1 + 1
@@ -53,7 +53,7 @@ export default {
 
   // TODO: This could be supported
   it("identifier", () => {
-    const mod = parseCode(
+    const mod = parseModule(
       `
 const foo = {
   bar: 1
@@ -81,7 +81,7 @@ export default {
 
   // TODO: This could be supported
   it("object shorthand", () => {
-    const mod = parseCode(
+    const mod = parseModule(
       `
 const foo = {
   bar: 1
@@ -108,7 +108,7 @@ export default {
   });
 
   it("array destructuring", () => {
-    const mod = parseCode(
+    const mod = parseModule(
       `
 export default {
   foo: [
@@ -147,7 +147,7 @@ export default {
   });
 
   it("object destructuring", () => {
-    const mod = parseCode(
+    const mod = parseModule(
       `
 export default {
   foo: {
@@ -186,5 +186,25 @@ export default {
       "
     `
     );
+  });
+
+  it("parseExpression", () => {
+    expect(() => parseExpression<any>("foo ? {} : []"))
+      .toThrowErrorMatchingInlineSnapshot(`
+        "Casting \\"ConditionalExpression\\" is not supported
+
+          1 |  foo ? {} : [] 
+               ^
+        "
+      `);
+
+    const exp = parseExpression<any>("{ a: foo ? {} : [] }");
+    expect(() => exp.a).toThrowErrorMatchingInlineSnapshot(`
+        "Casting \\"ConditionalExpression\\" is not supported
+
+          1 |  { a: foo ? {} : [] } 
+                    ^
+        "
+      `);
   });
 });

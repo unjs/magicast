@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { parseCode } from "../src";
+import { parseModule } from "../src";
 import { generate } from "./_utils";
 
 describe("object", () => {
   it("object property", () => {
-    const mod = parseCode(
+    const mod = parseModule(
       `
 export default {
   foo: {

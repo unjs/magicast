@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { builders, parseCode, ProxifiedModule } from "../src";
+import { builders, parseModule, ProxifiedModule } from "../src";
 import { generate } from "./_utils";
 
 describe("function-calls", () => {
   it("function wrapper", () => {
-    const mod = parseCode(`
+    const mod = parseModule(`
       export const a: any = { foo: 1}
       export default defineConfig({
         // Modules
@@ -73,12 +73,12 @@ describe("function-calls", () => {
       );
     };
 
-    const mod1 = parseCode(`
+    const mod1 = parseModule(`
       import { defineConfig } from 'vite'
 
       export default defineConfig({})
     `);
-    const mod2 = parseCode("");
+    const mod2 = parseModule("");
 
     installVuePlugin(mod1);
     installVuePlugin(mod2);

@@ -32,10 +32,10 @@ Import utilities:
 
 ```js
 // ESM / Bundler
-import { parseCode, generateCode, builders, createNode } from "magicast";
+import { parseModule, generateCode, builders, createNode } from "magicast";
 
 // CommonJS
-const { parseCode, generateCode, builders, createNode } = require("magicast");
+const { parseModule, generateCode, builders, createNode } = require("magicast");
 ```
 
 ## Examples
@@ -73,10 +73,10 @@ export default {
 **Example:** Directly use AST utils:
 
 ```js
-import { parseCode, generateCode } from "magicast";
+import { parseModule, generateCode } from "magicast";
 
 // Parse to AST
-const mod = parseCode(`export default { }`);
+const mod = parseModule(`export default { }`);
 
 // Ensure foo is an array
 mod.exports.default.foo ||= [];
@@ -99,9 +99,9 @@ export default {
 **Example:** Get the AST directly:
 
 ```js
-import { parseCode, generateCode } from "magicast";
+import { parseModule, generateCode } from "magicast";
 
-const mod = parseCode(`export default { }`);
+const mod = parseModule(`export default { }`);
 
 const ast = mod.exports.default.$ast
 // do something with ast
@@ -110,9 +110,9 @@ const ast = mod.exports.default.$ast
 **Example:** Function parameters:
 
 ```js
-import { parseCode, generateCode } from "magicast";
+import { parseModule, generateCode } from "magicast";
 
-const mod = parseCode(`export default defineConfig({ foo: 'bar' })`);
+const mod = parseModule(`export default defineConfig({ foo: 'bar' })`);
 
 // Support for both bare object export and `defineConfig` wrapper
 const options = mod.exports.default.$type === 'function-call'
