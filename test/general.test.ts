@@ -1,10 +1,10 @@
 import { expect, it, describe } from "vitest";
-import { generateCode, parseCode } from "../src";
+import { generateCode, parseModule, parseExpression } from "../src";
 import { generate } from "./_utils";
 
 describe("general", () => {
   it("basic object and array", () => {
-    const mod = parseCode(`export default { a: 1, b: { c: {} } }`);
+    const mod = parseModule(`export default { a: 1, b: { c: {} } }`);
 
     mod.exports.default.a = 2;
 
@@ -89,8 +89,8 @@ describe("general", () => {
   });
 
   it("mix two configs", () => {
-    const mod1 = parseCode(`export default { a: 1 }`);
-    const mod2 = parseCode(`export default { b: 2 }`);
+    const mod1 = parseModule(`export default { a: 1 }`);
+    const mod2 = parseModule(`export default { b: 2 }`);
 
     mod1.exports.default.b = mod2.exports.default;
 
@@ -108,7 +108,7 @@ describe("general", () => {
   });
 
   it("delete property", () => {
-    const mod = parseCode(`export default { a: 1, b: [1, { foo: 'bar' }] }`);
+    const mod = parseModule(`export default { a: 1, b: [1, { foo: 'bar' }] }`);
 
     delete mod.exports.default.b[1].foo;
 
@@ -130,7 +130,7 @@ describe("general", () => {
   });
 
   it("should preserve code styles", () => {
-    const mod = parseCode(`
+    const mod = parseModule(`
       export const config = {
         array: ['a']
       }
@@ -141,5 +141,41 @@ describe("general", () => {
         array: ['a', 'b']
       }"
     `);
+  });
+
+  describe("parseExpression", () => {
+    it("object", () => {
+      const exp = parseExpression<any>("{ a: 1, b: 2 }");
+
+      expect(exp).toEqual({ a: 1, b: 2 });
+
+      exp.a = [1, 3, 4];
+
+      expect(generateCode(exp).code).toMatchInlineSnapshot(`
+        "{
+          a: [1, 3, 4],
+          b: 2
+        }"
+      `);
+    });
+
+    it("array", () => {
+      const exp = parseExpression<any>("[1, { foo: 2 }]");
+
+      expect(exp).toMatchInlineSnapshot(`
+        [
+          1,
+          {
+            "foo": 2,
+          },
+        ]
+      `);
+
+      exp[2] = "foo";
+
+      expect(generateCode(exp).code).toMatchInlineSnapshot(
+        '"[1, { foo: 2 }, \\"foo\\"]"'
+      );
+    });
   });
 });

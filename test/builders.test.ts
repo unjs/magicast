@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { builders, parseCode } from "../src";
+import { builders, parseModule } from "../src";
 import { generate } from "./_utils";
 
 describe("builders", () => {
@@ -19,7 +19,7 @@ describe("builders", () => {
       ]
     `);
 
-    const mod = parseCode("");
+    const mod = parseModule("");
     mod.exports.a = call;
 
     expect(generate(mod)).toMatchInlineSnapshot(`

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { print } from "recast";
-import { parseCode, builders } from "../src";
+import { parseModule, builders } from "../src";
 
 describe("literalToAst", () => {
   // eslint-disable-next-line unicorn/consistent-function-scoping
@@ -39,7 +39,7 @@ describe("literalToAst", () => {
   });
 
   it("forward proxy", () => {
-    const mod = parseCode(`export default { foo: 1 }`);
+    const mod = parseModule(`export default { foo: 1 }`);
     const node = mod.exports.default;
 
     expect(builders.literal(node)).toBe(node.$ast);

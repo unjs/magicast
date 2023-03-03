@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { parseCode } from "../src";
+import { parseModule } from "../src";
 import { generate } from "./_utils";
 
 describe("array", () => {
   it("array operations", () => {
-    const mod = parseCode<{ default: (number | any | string)[] }>(
+    const mod = parseModule<{ default: (number | any | string)[] }>(
       `export default [1, 2, 3, 4, 5]`
     );
 
@@ -43,7 +43,7 @@ describe("array", () => {
   });
 
   it("array should be iterable", () => {
-    const mod = parseCode(`
+    const mod = parseModule(`
       export const config = {
         array: ['a']
       }
