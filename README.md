@@ -2,8 +2,10 @@
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![Github Actions][github-actions-src]][github-actions-href]
+[![bundle][bundle-src]][bundle-href]
 [![Codecov][codecov-src]][codecov-href]
+[![License][license-src]][license-href]
+[![JSDocs][jsdocs-src]][jsdocs-href]
 
 Programmatically modify JavaScript and Typescript source codes with a simplified, elegant and familiar syntax. Built on top of the [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) parsed by [recast](https://github.com/benjamn/recast) and [babel](https://babeljs.io/).
 
@@ -138,11 +140,16 @@ Published under [MIT License](./LICENSE).
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/magicast?style=flat-square
+
+[npm-version-src]: https://img.shields.io/npm/v/magicast?style=flat&colorA=18181B&colorB=F0DB4F
 [npm-version-href]: https://npmjs.com/package/magicast
-[npm-downloads-src]: https://img.shields.io/npm/dm/magicast?style=flat-square
+[npm-downloads-src]: https://img.shields.io/npm/dm/magicast?style=flat&colorA=18181B&colorB=F0DB4F
 [npm-downloads-href]: https://npmjs.com/package/magicast
-[github-actions-src]: https://img.shields.io/github/actions/workflow/status/unjs/magicast/ci.yml?style=flat-square&branch=main
-[github-actions-href]: https://github.com/unjs/magicast/actions?query=workflow%3Aci
-[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/magicast/main?style=flat-square
+[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/magicast/main?style=flat&colorA=18181B&colorB=F0DB4F
 [codecov-href]: https://codecov.io/gh/unjs/magicast
+[bundle-src]: https://img.shields.io/bundlephobia/minzip/magicast?style=flat&colorA=18181B&colorB=F0DB4F
+[bundle-href]: https://bundlephobia.com/result?p=magicast
+[license-src]: https://img.shields.io/github/license/unjs/magicast.svg?style=flat&colorA=18181B&colorB=F0DB4F
+[license-href]: https://github.com/unjs/magicast/blob/main/LICENSE
+[jsdocs-src]: https://img.shields.io/badge/jsDocs.io-reference-18181B?style=flat&colorA=18181B&colorB=F0DB4F
+[jsdocs-href]: https://www.jsdocs.io/package/magicast
