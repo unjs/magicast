@@ -7,7 +7,7 @@
 [![License][license-src]][license-href]
 [![JSDocs][jsdocs-src]][jsdocs-href]
 
-Programmatically modify JavaScript and Typescript source codes with a simplified, elegant and familiar syntax. Built on top of the [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) parsed by [recast](https://github.com/benjamn/recast) and [babel](https://babeljs.io/).
+Programmatically modify JavaScript and TypeScript source codes with a simplified, elegant and familiar syntax. Built on top of the [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) parsed by [recast](https://github.com/benjamn/recast) and [babel](https://babeljs.io/).
 
 ❯ 🧙🏼 **Magical** modify a JS/TS file and write back magically just like JSON!<br>
 ❯ 🔀 **Exports/Import** manipulate module's imports and exports at ease<br>
