@@ -23,6 +23,13 @@ export type ProxifiedFunctionCall<Args extends any[] = unknown[]> =
     $callee: string;
   };
 
+export type ProxifiedNewExpression<Args extends any[] = unknown[]> =
+  ProxyBase & {
+    $type: "new-expression";
+    $args: ProxifiedArray<Args>;
+    $callee: string;
+  };
+
 export type ProxifiedObject<T extends object = object> = {
   [K in keyof T]: Proxified<T[K]>;
 } & ProxyBase & {
@@ -86,6 +93,7 @@ export interface ImportItemInput {
 export type ProxifiedValue =
   | ProxifiedArray
   | ProxifiedFunctionCall
+  | ProxifiedNewExpression
   | ProxifiedObject
   | ProxifiedModule
   | ProxifiedImportsMap
