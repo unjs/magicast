@@ -28,4 +28,18 @@ describe("builders", () => {
       });"
     `);
   });
+
+  it("raw", () => {
+    const expression = builders.raw("{ foo: 1 }");
+    expect(expression.$type).toBe("object");
+    expect(expression.foo).toBe(1);
+    const mod = parseModule("");
+    mod.exports.a = expression;
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export const a = {
+        foo: 1,
+      };"
+    `);
+  });
 });
