@@ -124,6 +124,14 @@ const options = mod.exports.default.$type === 'function-call'
 console.log(options.foo) // bar
 ```
 
+## High Level Helpers
+
+We also experiments to provide a few high level helpers to make common tasks easier. They might be move to a separate package in the future.
+
+We currently have: `addNuxtModule`, `addVitePlugin`, `updateVitePluginConfig`, `deepMergeObject` etc.
+
+We recommend to check out the [source code](./src/helpers) and [test cases](./test/helpers) for more details.
+
 ## Development
 
 - Clone this repository

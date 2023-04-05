@@ -26,7 +26,7 @@ export function detectCodeFormat(
   };
 
   // Frequency counters and state
-  let codeIndent = 4;
+  let codeIndent = 2;
   let tabUsages = 0;
   let semiUsages = 0;
   let maxLineLength = 0;

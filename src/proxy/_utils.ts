@@ -50,6 +50,12 @@ export function literalToAst(value: any, seen = new Set()): ASTNode {
     return value.$ast;
   }
 
+  if (value instanceof RegExp) {
+    const regex = b.regExpLiteral(value.source, value.flags) as any;
+    // seems to be a bug in recast
+    delete regex.extra.raw;
+    return regex;
+  }
   if (value instanceof Set) {
     return b.newExpression(b.identifier("Set"), [
       b.arrayExpression([...value].map((n) => literalToAst(n, seen)) as any),

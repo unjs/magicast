@@ -105,7 +105,7 @@ export function creatImportProxy(
     },
     {
       ownKeys() {
-        return ["imported", "local", "from"];
+        return ["imported", "local", "from", "toJSON"];
       },
     }
   ) as ProxifiedImportItem;
@@ -183,6 +183,9 @@ export function createImportsProxy(
       $type: "imports",
       $add(item: ImportItemInput) {
         proxy[item.local || item.imported] = item as any;
+      },
+      get $items() {
+        return getAllImports();
       },
       toJSON() {
         // eslint-disable-next-line unicorn/no-array-reduce

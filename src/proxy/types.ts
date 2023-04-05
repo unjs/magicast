@@ -65,6 +65,7 @@ export type ProxifiedImportsMap = Record<string, ProxifiedImportItem> &
   ProxyBase & {
     $type: "imports";
     $add: (item: ImportItemInput) => void;
+    $items: ProxifiedImportItem[];
   };
 
 export interface ProxifiedImportItem extends ProxyBase {
