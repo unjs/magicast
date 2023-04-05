@@ -61,7 +61,7 @@ const mod = await loadFile("config.js");
 
 mod.exports.default.foo.push("b");
 
-await writeFile(_module);
+await writeFile(mod);
 ```
 
 Updated `config.js`:
