@@ -1,6 +1,26 @@
 # Changelog
 
 
+## v0.2.1
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.2.0...v0.2.1)
+
+
+### 🚀 Enhancements
+
+  - Support `builder.raw` ([4983f47](https://github.com/unjs/magicast/commit/4983f47))
+  - Support `builder.newExpression` ([cf5ad6d](https://github.com/unjs/magicast/commit/cf5ad6d))
+
+### 📖 Documentation
+
+  - Add some examples ([3106c32](https://github.com/unjs/magicast/commit/3106c32))
+  - Typo ([#32](https://github.com/unjs/magicast/pull/32))
+
+### ❤️  Contributors
+
+- Anthony Fu <anthonyfu117@hotmail.com>
+- Betteroneday
+
 ## v0.2.0
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.1.1...v0.2.0)
