@@ -16,4 +16,16 @@ describe("builders/raw", () => {
       };"
     `);
   });
+
+  it("identifier", () => {
+    const expression = builders.raw("foo");
+    expect(expression.$type).toBe("identifier");
+    expect(expression.$name).toBe("foo");
+    const mod = parseModule("");
+    mod.exports.a = expression;
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export const a = foo;"
+    `);
+  });
 });

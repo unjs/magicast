@@ -36,6 +36,11 @@ export type ProxifiedObject<T extends object = object> = {
     $type: "object";
   };
 
+export type ProxifiedIdentifier = ProxyBase & {
+  $type: "identifier";
+  $name: string;
+};
+
 export type Proxified<T = any> = T extends
   | number
   | string
@@ -94,6 +99,7 @@ export type ProxifiedValue =
   | ProxifiedArray
   | ProxifiedFunctionCall
   | ProxifiedNewExpression
+  | ProxifiedIdentifier
   | ProxifiedObject
   | ProxifiedModule
   | ProxifiedImportsMap

@@ -4,6 +4,7 @@ import { proxifyArray } from "./array";
 import { proxifyFunctionCall } from "./function-call";
 import { proxifyObject } from "./object";
 import { proxifyNewExpression } from "./new-expression";
+import { proxifyIdentifier } from "./identifier";
 import { Proxified, ProxifiedModule, ProxifiedValue } from "./types";
 import { LITERALS_AST, LITERALS_TYPEOF } from "./_utils";
 
@@ -37,6 +38,10 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
     }
     case "NewExpression": {
       proxy = proxifyNewExpression(node, mod);
+      break;
+    }
+    case "Identifier": {
+      proxy = proxifyIdentifier(node);
       break;
     }
     default:

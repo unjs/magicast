@@ -51,62 +51,6 @@ export default {
     );
   });
 
-  // TODO: This could be supported
-  it("identifier", () => {
-    const mod = parseModule(
-      `
-const foo = {
-  bar: 1
-}
-
-export default {
-  a: foo
-}
-    `.trim()
-    );
-
-    expect(() => mod.exports.default.a).toThrowErrorMatchingInlineSnapshot(
-      `
-      "Casting \\"Identifier\\" is not supported
-
-        4 | 
-        5 | export default {
-        6 |   a: foo
-                 ^
-        7 | }
-      "
-    `
-    );
-  });
-
-  // TODO: This could be supported
-  it("object shorthand", () => {
-    const mod = parseModule(
-      `
-const foo = {
-  bar: 1
-}
-
-export default {
-  foo
-}
-    `.trim()
-    );
-
-    expect(() => mod.exports.default.foo).toThrowErrorMatchingInlineSnapshot(
-      `
-      "Casting \\"Identifier\\" is not supported
-
-        4 | 
-        5 | export default {
-        6 |   foo
-              ^
-        7 | }
-      "
-    `
-    );
-  });
-
   it("array destructuring", () => {
     const mod = parseModule(
       `
@@ -189,11 +133,13 @@ export default {
   });
 
   it("parseExpression", () => {
+    // \u0020 is used to prevent IDEs from removing the trailing space
+
     expect(() => parseExpression<any>("foo ? {} : []"))
       .toThrowErrorMatchingInlineSnapshot(`
         "Casting \\"ConditionalExpression\\" is not supported
 
-          1 |  foo ? {} : [] 
+          1 |  foo ? {} : []\u0020
                ^
         "
       `);
@@ -202,7 +148,7 @@ export default {
     expect(() => exp.a).toThrowErrorMatchingInlineSnapshot(`
         "Casting \\"ConditionalExpression\\" is not supported
 
-          1 |  { a: foo ? {} : [] } 
+          1 |  { a: foo ? {} : [] }\u0020
                     ^
         "
       `);
