@@ -7,3 +7,4 @@ types
 .eslintcache
 *.log*
 *.env*
+.idea
