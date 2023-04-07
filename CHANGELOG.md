@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v0.2.2
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.2.1...v0.2.2)
+
+
+### 🚀 Enhancements
+
+  - Add identifier casting ([#39](https://github.com/unjs/magicast/pull/39))
+
+### ❤️  Contributors
+
+- Hugo ATTAL <hugoattal@hotmail.fr>
+
 ## v0.2.1
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.2.0...v0.2.1)
