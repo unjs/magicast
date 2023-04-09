@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v0.2.3
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.2.2...v0.2.3)
+
+
+### 🩹 Fixes
+
+  - Enumerable keys for `exports` and `imports`, close #38 ([#38](https://github.com/unjs/magicast/issues/38))
+
+### ❤️  Contributors
+
+- Anthony Fu <anthonyfu117@hotmail.com>
+
 ## v0.2.2
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.2.1...v0.2.2)
