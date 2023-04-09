@@ -5,6 +5,7 @@ import { generateCode } from "../code";
 import { ProxifiedModule } from "./types";
 import { createImportsProxy } from "./imports";
 import { createExportsProxy } from "./exports";
+import { createProxy } from "./_utils";
 
 export function proxifyModule<T extends object>(
   ast: ParsedFileNode,
@@ -15,15 +16,16 @@ export function proxifyModule<T extends object>(
     throw new MagicastError(`Cannot proxify ${ast.type} as module`);
   }
 
-  const mod = {
-    $ast: root,
+  const util = {
     $code: code,
     $type: "module",
   } as ProxifiedModule<T>;
 
-  mod.exports = createExportsProxy(root, mod) as any;
-  mod.imports = createImportsProxy(root, mod) as any;
-  mod.generate = (options) => generateCode(mod, options);
+  const mod = createProxy(root, util, {}) as ProxifiedModule<T>;
+
+  util.exports = createExportsProxy(root, mod) as any;
+  util.imports = createImportsProxy(root, mod) as any;
+  util.generate = (options) => generateCode(mod, options);
 
   return mod;
 }

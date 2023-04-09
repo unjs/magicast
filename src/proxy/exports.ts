@@ -74,6 +74,25 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
         updateOrAddExport(prop as string, value);
         return true;
       },
+      ownKeys() {
+        return root.body
+          .flatMap((i) => {
+            if (i.type === "ExportDefaultDeclaration") {
+              return ["default"];
+            }
+            if (
+              i.type === "ExportNamedDeclaration" &&
+              i.declaration &&
+              "declarations" in i.declaration
+            ) {
+              return i.declaration.declarations.map((d) =>
+                "name" in d.id ? d.id.name : ""
+              );
+            }
+            return [];
+          })
+          .filter(Boolean);
+      },
       deleteProperty(_, prop) {
         const type =
           prop === "default"

@@ -108,6 +108,11 @@ export function makeProxyUtils<T extends object>(
   return obj;
 }
 
+const propertyDescriptor = {
+  enumerable: true,
+  configurable: true,
+};
+
 export function createProxy<T>(
   node: ASTNode,
   extend: any,
@@ -117,6 +122,14 @@ export function createProxy<T>(
   return new Proxy(
     {},
     {
+      ownKeys() {
+        return Object.keys(utils).filter(
+          (i) => i !== PROXY_KEY && !i.startsWith("$")
+        );
+      },
+      getOwnPropertyDescriptor() {
+        return propertyDescriptor;
+      },
       ...handler,
       get(target: any, key: string | symbol, receiver: any) {
         if (key in utils) {

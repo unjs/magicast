@@ -130,16 +130,18 @@ describe("general", () => {
   });
 
   it("should preserve code styles", () => {
-    const mod = parseModule(`
-      export const config = {
-        array: ['a']
-      }
-    `);
+    const mod = parseModule(
+      `
+export const config = {
+  array: ['a']
+}
+    `.trim()
+    );
     mod.exports.config.array.push("b");
-    expect(generateCode(mod).code).toMatchInlineSnapshot(`
+    expect(generate(mod)).toMatchInlineSnapshot(`
       "export const config = {
-        array: ['a', 'b']
-      }"
+        array: [\\"a\\", \\"b\\"],
+      };"
     `);
   });
 

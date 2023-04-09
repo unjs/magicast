@@ -12,7 +12,6 @@ import * as path from 'path'
 export default defineConfig({
 foo: []
 })`);
-
     expect(mod.exports.default.$args[0]).toMatchInlineSnapshot(`
     {
       "foo": [],
@@ -53,6 +52,15 @@ foo: []
 
     mod.imports.path.local = "path2";
     mod.imports.Vue.local = "VuePlugin";
+
+    expect(Object.keys(mod.imports)).toMatchInlineSnapshot(`
+      [
+        "defineConfig",
+        "Plugin",
+        "VuePlugin",
+        "path2",
+      ]
+    `);
 
     delete mod.imports.Plugin;
 

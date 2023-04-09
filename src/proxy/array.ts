@@ -104,12 +104,6 @@ export function proxifyArrayElements<T extends any[]>(
       ownKeys() {
         return ["length", ...elements.map((_, i) => i.toString())];
       },
-      getOwnPropertyDescriptor() {
-        return {
-          enumerable: true,
-          configurable: true,
-        };
-      },
     }
   );
 }

@@ -6,6 +6,7 @@ describe("exports", () => {
   it("manipulate exports", () => {
     const mod = parseModule("");
 
+    expect(Object.keys(mod.exports)).toEqual([]);
     expect(mod.exports).toMatchInlineSnapshot(`{}`);
     expect(generate(mod)).toMatchInlineSnapshot('""');
 
@@ -28,6 +29,8 @@ describe("exports", () => {
     mod.exports.named ||= [];
     mod.exports.named.push("a");
 
+    expect(Object.keys(mod.exports)).toEqual(["default", "named"]);
+
     expect(generate(mod)).toMatchInlineSnapshot(`
     "export default {
       foo: 2,
@@ -35,6 +38,20 @@ describe("exports", () => {
 
     export const named = [\\"a\\"];"
   `);
+
+    expect(JSON.stringify(mod, undefined, 2)).toMatchInlineSnapshot(`
+        "{
+          \\"exports\\": {
+            \\"default\\": {
+              \\"foo\\": 2
+            },
+            \\"named\\": [
+              \\"a\\"
+            ]
+          },
+          \\"imports\\": {}
+        }"
+      `);
 
     // delete
     delete mod.exports.default;
@@ -44,6 +61,8 @@ describe("exports", () => {
     );
 
     delete mod.exports.named;
+
+    expect(Object.keys(mod.exports)).toEqual([]);
 
     expect(generate(mod)).toMatchInlineSnapshot('""');
   });

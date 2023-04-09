@@ -119,12 +119,6 @@ export function proxifyObject<T extends object>(
           .map((prop) => getPropName(prop, true))
           .filter(Boolean) as string[];
       },
-      getOwnPropertyDescriptor() {
-        return {
-          enumerable: true,
-          configurable: true,
-        };
-      },
     }
   ) as ProxifiedObject<T>;
 }
