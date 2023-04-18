@@ -1,7 +1,8 @@
 import * as recast from "recast";
+import type { ObjectProperty } from "@babel/types";
 import { ASTNode } from "../types";
 import { MagicastError } from "../error";
-import { literalToAst, createProxy, isValidPropName } from "./_utils";
+import { literalToAst, createProxy, isValidPropName, isUndef } from "./_utils";
 import { proxify } from "./proxify";
 import { ProxifiedModule, ProxifiedObject } from "./types";
 
@@ -49,12 +50,21 @@ export function proxifyObject<T extends object>(
     }
   };
 
-  const replaceOrAddProp = (key: string, value: ASTNode) => {
+  const replaceOrAddProp = (
+    key: string,
+    value: ASTNode,
+    identifierOnly: boolean = false,
+    shorthand: ObjectProperty["shorthand"] = false,
+  ) => {
     const prop = (node.properties as any[]).find(
-      (prop: any) => getPropName(prop) === key
+      (prop: any) =>
+      getPropName(prop) === key &&
+      (!identifierOnly || prop.key.type === 'Identifier')
     );
+
     if (prop) {
       prop.value = value;
+      prop.shorthand = shorthand;
     } else if (isValidPropName(key)) {
       node.properties.push({
         type: "Property",
@@ -63,12 +73,14 @@ export function proxifyObject<T extends object>(
           name: key,
         },
         value,
+        shorthand,
       } as any);
     } else {
       node.properties.push({
         type: "ObjectProperty",
         key: b.stringLiteral(key),
         value,
+        shorthand,
       } as any);
     }
   };
@@ -77,6 +89,26 @@ export function proxifyObject<T extends object>(
     node,
     {
       $type: "object",
+      $set(keyOrAndValue: string, value?: string) {
+        /**
+         * 1: $set("a") ==> { a }
+         * 2: $set("a", "b") ==> { a: b }
+         *
+         * TODO:
+         * 3: $set("[a]") ==> { [a]: a }
+         * 4: $set("[a]", "b") ==> { [a]: b }
+         */
+        replaceOrAddProp(
+          keyOrAndValue,
+          {
+            type: "Identifier",
+            name: keyOrAndValue
+          },
+          true,
+          isUndef(value)
+        );
+        return true;
+      },
       toJSON() {
         // @ts-expect-error
         // eslint-disable-next-line unicorn/no-array-reduce

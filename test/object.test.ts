@@ -50,4 +50,37 @@ export default {
       };"
     `);
   });
+
+  it("call $set function", () => {
+    const mod = parseModule(
+      `
+const a = "dog";
+const b = "cat";
+export default {
+  foo: {
+    ['a']: 1,
+    ['a-b']: 2,
+    foo() {}
+  }
+}
+    `.trim()
+    );
+
+    mod.exports.default.foo.$set('a');
+    mod.exports.default.foo.$set('b', 'b');
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "const a = \\"dog\\";
+      const b = \\"cat\\";
+      export default {
+        foo: {
+          [\\"a\\"]: 1,
+          [\\"a-b\\"]: 2,
+          foo() {},
+          a,
+          b: b,
+        },
+      };"
+    `);
+  });
 });

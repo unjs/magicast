@@ -27,6 +27,10 @@ export function isValidPropName(name: string) {
   return /^[$A-Z_a-z][\w$]*$/.test(name);
 }
 
+export function isUndef(v: unknown): v is undefined {
+  return v === undefined;
+}
+
 const PROXY_KEY = "__magicast_proxy";
 
 export function literalToAst(value: any, seen = new Set()): ASTNode {
