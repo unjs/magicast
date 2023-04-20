@@ -31,7 +31,7 @@ describe("builders/raw", () => {
 
   it("identifier as property", () => {
     const mod = parseModule("");
-    mod.exports.default ||= {}
+    mod.exports.default ||= {};
     mod.exports.default.foo = builders.raw("foo");
 
     expect(generate(mod)).toMatchInlineSnapshot(`
