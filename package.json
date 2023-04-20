@@ -32,7 +32,7 @@
     "lint:fix": "eslint --cache --ext .ts,.js,.mjs,.cjs . --fix && prettier -c src test -w",
     "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit",
-    "release": "pnpm test && changelogen --release && npm publish && git push --follow-tags",
+    "release": "pnpm test run --coverage && changelogen --release && npm publish && git push --follow-tags",
     "test": "vitest"
   },
   "dependencies": {
