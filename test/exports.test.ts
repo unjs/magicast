@@ -39,19 +39,20 @@ describe("exports", () => {
     export const named = [\\"a\\"];"
   `);
 
+    expect(Object.keys(mod)).toEqual(["imports", "exports", "generate"]);
     expect(JSON.stringify(mod, undefined, 2)).toMatchInlineSnapshot(`
-        "{
-          \\"exports\\": {
-            \\"default\\": {
-              \\"foo\\": 2
-            },
-            \\"named\\": [
-              \\"a\\"
-            ]
+      "{
+        \\"imports\\": {},
+        \\"exports\\": {
+          \\"default\\": {
+            \\"foo\\": 2
           },
-          \\"imports\\": {}
-        }"
-      `);
+          \\"named\\": [
+            \\"a\\"
+          ]
+        }
+      }"
+    `);
 
     // delete
     delete mod.exports.default;

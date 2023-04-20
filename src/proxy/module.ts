@@ -21,7 +21,11 @@ export function proxifyModule<T extends object>(
     $type: "module",
   } as ProxifiedModule<T>;
 
-  const mod = createProxy(root, util, {}) as ProxifiedModule<T>;
+  const mod = createProxy(root, util, {
+    ownKeys() {
+      return ["imports", "exports", "generate"];
+    },
+  }) as ProxifiedModule<T>;
 
   util.exports = createExportsProxy(root, mod) as any;
   util.imports = createImportsProxy(root, mod) as any;
