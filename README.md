@@ -137,6 +137,27 @@ const options = mod.exports.default.list = builders.functionCall('create', [1, 2
 console.log(mod.generateCode()) // export default { list: create([1, 2, 3]) }
 ```
 
+## Notes
+
+As JavaScript is a very dynamic language, you should be aware that Magicast's convention **CAN NOT cover all possible cases**. Magicast serves as a simple and maintainable interface to update static-ish JavaScript code. When interacting with Magicast node, be aware that every option might have chance to throw an error depending on the input code. We recommend to always wrap the code in a `try/catch` block (even better to do some defensive coding), for example:
+
+```ts
+import { loadFile, writeFile } from "magicast";
+
+function updateConfig() {
+  try {
+    const mod = await loadFile("config.js");
+
+    mod.exports.default.foo.push("b");
+
+    await writeFile(mod);
+  } catch (e) {
+    console.error('Unable to update config.js')
+    console.error('Please update it manually with the following instructions: ...')
+    // handle error
+  }
+}
+```
 
 ## High Level Helpers
 
