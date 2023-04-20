@@ -1,6 +1,35 @@
 # Changelog
 
 
+## v0.2.4
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.2.3...v0.2.4)
+
+
+### 🩹 Fixes
+
+  - Enumerable keys for `exports` and `imports`, close #38 ([#38](https://github.com/unjs/magicast/issues/38))
+  - Make proxied module enumerable, close #47 ([#47](https://github.com/unjs/magicast/issues/47))
+
+### 📖 Documentation
+
+  - Add notes about usage ([5c5cd52](https://github.com/unjs/magicast/commit/5c5cd52))
+
+### 🏡 Chore
+
+  - **release:** V0.2.3 ([f8dc796](https://github.com/unjs/magicast/commit/f8dc796))
+  - Update deps ([3de0c61](https://github.com/unjs/magicast/commit/3de0c61))
+  - Update deps ([cf0e6cb](https://github.com/unjs/magicast/commit/cf0e6cb))
+  - Add lint-staged ([7fa88fc](https://github.com/unjs/magicast/commit/7fa88fc))
+
+### ✅ Tests
+
+  - Add identifier as property example ([fb77b5d](https://github.com/unjs/magicast/commit/fb77b5d))
+
+### ❤️  Contributors
+
+- Anthony Fu <anthonyfu117@hotmail.com>
+
 ## v0.2.3
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.2.2...v0.2.3)
