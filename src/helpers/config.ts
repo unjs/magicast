@@ -1,4 +1,4 @@
-import { ProxifiedModule } from "../types";
+import type { ProxifiedModule } from "../types";
 
 export function getDefaultExportOptions(magicast: ProxifiedModule<any>) {
   return magicast.exports.default.$type === "function-call"

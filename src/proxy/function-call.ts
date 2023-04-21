@@ -1,8 +1,8 @@
-import { ASTNode } from "../types";
+import type { ASTNode } from "../types";
+import type { ProxifiedFunctionCall, ProxifiedModule } from "./types";
 import { MagicastError } from "../error";
 import { createProxy } from "./_utils";
 import { proxifyArrayElements } from "./array";
-import { ProxifiedFunctionCall, ProxifiedModule } from "./types";
 
 export function proxifyFunctionCall<T extends []>(
   node: ASTNode,

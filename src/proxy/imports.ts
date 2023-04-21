@@ -1,20 +1,20 @@
 /* eslint-disable unicorn/no-nested-ternary */
 import * as recast from "recast";
-import {
+import type {
   ImportDeclaration,
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
   Program,
 } from "@babel/types";
-import { MagicastError } from "../error";
-import { createProxy } from "./_utils";
-import {
+import type {
   ImportItemInput,
   ProxifiedImportItem,
   ProxifiedImportsMap,
   ProxifiedModule,
 } from "./types";
+import { MagicastError } from "../error";
+import { createProxy } from "./_utils";
 
 const b = recast.types.builders;
 const _importProxyCache = new WeakMap<any, ProxifiedImportItem>();
@@ -146,8 +146,8 @@ export function createImportsProxy(
       value.imported === "default"
         ? b.importDefaultSpecifier(b.identifier(local))
         : value.imported === "*"
-        ? b.importNamespaceSpecifier(b.identifier(local))
-        : b.importSpecifier(b.identifier(value.imported), b.identifier(local));
+          ? b.importNamespaceSpecifier(b.identifier(local))
+          : b.importSpecifier(b.identifier(value.imported), b.identifier(local));
 
     const declaration = imports.find(
       (i) => i.from === value.from

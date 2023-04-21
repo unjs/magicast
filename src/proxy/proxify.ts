@@ -1,11 +1,11 @@
+import type { Proxified, ProxifiedModule, ProxifiedValue } from "./types";
+import type { ASTNode } from "../types";
 import { MagicastError } from "../error";
-import { ASTNode } from "../types";
 import { proxifyArray } from "./array";
 import { proxifyFunctionCall } from "./function-call";
 import { proxifyObject } from "./object";
 import { proxifyNewExpression } from "./new-expression";
 import { proxifyIdentifier } from "./identifier";
-import { Proxified, ProxifiedModule, ProxifiedValue } from "./types";
 import { LITERALS_AST, LITERALS_TYPEOF } from "./_utils";
 
 const _cache = new WeakMap<ASTNode, any>();

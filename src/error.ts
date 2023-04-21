@@ -1,4 +1,4 @@
-import { ASTNode } from "./types";
+import type { ASTNode } from "./types";
 
 export interface MagicastErrorOptions {
   ast?: ASTNode;

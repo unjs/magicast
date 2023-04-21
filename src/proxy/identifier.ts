@@ -1,4 +1,4 @@
-import { ASTNode, ProxifiedIdentifier } from "../types";
+import type { ASTNode, ProxifiedIdentifier } from "../types";
 import { MagicastError } from "../error";
 import { createProxy } from "./_utils";
 
