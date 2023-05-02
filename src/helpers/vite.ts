@@ -37,12 +37,17 @@ export interface UpdateVitePluginConfigOptions {
 
 export function addVitePlugin(
   magicast: ProxifiedModule<any>,
-  plugin: AddVitePluginOptions
+  plugin: AddVitePluginOptions,
+  index?: number
 ) {
   const config = getDefaultExportOptions(magicast);
 
+  const insertionIndex = index ?? config.plugins?.length ?? 0;
+
   config.plugins ||= [];
-  config.plugins.push(
+  config.plugins.splice(
+    insertionIndex,
+    0,
     plugin.options
       ? builders.functionCall(plugin.constructor, plugin.options)
       : builders.functionCall(plugin.constructor)
