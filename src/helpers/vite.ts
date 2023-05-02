@@ -21,6 +21,12 @@ export interface AddVitePluginOptions {
    * The options of the plugin
    */
   options?: Record<string, any>;
+
+  /**
+   * The index in the plugins array where the plugin should be inserted at.
+   * By default, the plugin is appended to the array.
+   */
+  index?: number;
 }
 
 export interface UpdateVitePluginConfigOptions {
@@ -37,12 +43,11 @@ export interface UpdateVitePluginConfigOptions {
 
 export function addVitePlugin(
   magicast: ProxifiedModule<any>,
-  plugin: AddVitePluginOptions,
-  index?: number
+  plugin: AddVitePluginOptions
 ) {
   const config = getDefaultExportOptions(magicast);
 
-  const insertionIndex = index ?? config.plugins?.length ?? 0;
+  const insertionIndex = plugin.index ?? config.plugins?.length ?? 0;
 
   config.plugins ||= [];
   config.plugins.splice(

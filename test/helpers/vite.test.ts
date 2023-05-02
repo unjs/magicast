@@ -69,45 +69,32 @@ export default defineConfig({
 
     const mod = parseModule(code);
 
-    addVitePlugin(
-      mod,
-      {
-        from: "@vitejs/plugin-vue",
-        constructor: "vuePlugin",
-        options: {
-          include: [/\\.vue$/, /\.md$/],
-        },
+    addVitePlugin(mod, {
+      from: "@vitejs/plugin-vue",
+      constructor: "vuePlugin",
+      options: {
+        include: [/\\.vue$/, /\.md$/],
       },
-      0 // at the beginning
-    );
+      index: 0, // at the beginning
+    });
 
-    addVitePlugin(
-      mod,
-      {
-        from: "vite-plugin-inspect",
-        constructor: "Inspect",
-        options: {
-          build: true,
-        },
+    addVitePlugin(mod, {
+      from: "vite-plugin-inspect",
+      constructor: "Inspect",
+      options: {
+        build: true,
       },
-      2 // in the middle
-    );
+      index: 2, // in the middle
+    });
 
-    addVitePlugin(
-      mod,
-      {
-        from: "vite-plugin-pwa",
-        imported: "VitePWA",
-        constructor: "VitePWA",
-      },
-      5 // at the end, out of bounds on purpose
-    );
+    addVitePlugin(mod, {
+      from: "vite-plugin-pwa",
+      imported: "VitePWA",
+      constructor: "VitePWA",
+      index: 5, // at the end, out of bounds on purpose
+    });
 
-    const res = generate(mod);
-
-    console.log(res);
-
-    expect(res).toMatchInlineSnapshot(`
+    expect(generate(mod)).toMatchInlineSnapshot(`
       "import { VitePWA } from \\"vite-plugin-pwa\\";
       import Inspect from \\"vite-plugin-inspect\\";
       import vuePlugin from \\"@vitejs/plugin-vue\\";
