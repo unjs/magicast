@@ -1,6 +1,33 @@
 # Changelog
 
 
+## v0.2.5
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.2.4...v0.2.5)
+
+
+### 🚀 Enhancements
+
+  - Add Vite plugin at a given index ([#53](https://github.com/unjs/magicast/pull/53))
+
+### 🩹 Fixes
+
+  - Support code with `as` and `satisfies` ([#55](https://github.com/unjs/magicast/pull/55))
+
+### 🏡 Chore
+
+  - Update release script ([602c25d](https://github.com/unjs/magicast/commit/602c25d))
+  - Import type ([#50](https://github.com/unjs/magicast/pull/50))
+  - Update format ([48be33a](https://github.com/unjs/magicast/commit/48be33a))
+  - Update script ([e21055b](https://github.com/unjs/magicast/commit/e21055b))
+
+### ❤️  Contributors
+
+- Anthony Fu <anthonyfu117@hotmail.com>
+- Lukas Stracke <lukas.stracke@sentry.io>
+- LiuSeen 
+- Mateusz Burzyński ([@Andarist](http://github.com/Andarist))
+
 ## v0.2.4
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.2.3...v0.2.4)
