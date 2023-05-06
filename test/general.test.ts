@@ -145,6 +145,54 @@ export const config = {
     `);
   });
 
+  it("satisfies", () => {
+    const mod = parseModule(
+      `export const obj = { foo: 42 } satisfies Record<string, number>;`
+    );
+
+    mod.exports.obj.foo = 100;
+
+    expect(generate(mod)).toMatchInlineSnapshot(
+      '"export const obj = { foo: 100 } satisfies Record<string, number>;"'
+    );
+  });
+
+  it("satisfies 2", () => {
+    const mod = parseModule(`export default {} satisfies {}`);
+
+    mod.exports.default.foo = 100;
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        foo: 100,
+      } satisfies {};"
+    `);
+  });
+
+  it("as", () => {
+    const mod = parseModule(
+      `export const obj = { foo: 42 } as Record<string, number>;`
+    );
+
+    mod.exports.obj.foo = 100;
+
+    expect(generate(mod)).toMatchInlineSnapshot(
+      '"export const obj = { foo: 100 } as Record<string, number>;"'
+    );
+  });
+
+  it("as 2", () => {
+    const mod = parseModule(`export default {} as {}`);
+
+    mod.exports.default.foo = 100;
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        foo: 100,
+      } as {};"
+    `);
+  });
+
   describe("parseExpression", () => {
     it("object", () => {
       const exp = parseExpression<any>("{ a: 1, b: 2 }");

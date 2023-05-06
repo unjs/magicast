@@ -44,6 +44,11 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
       proxy = proxifyIdentifier(node);
       break;
     }
+    case "TSAsExpression":
+    case "TSSatisfiesExpression": {
+      proxy = proxify(node.expression, mod) as ProxifiedValue;
+      break;
+    }
     default:
       throw new MagicastError(`Casting "${node.type}" is not supported`, {
         ast: node,
