@@ -56,4 +56,64 @@ export default defineConfig({})
       });"
     `);
   });
+
+  it("add plugin at index", () => {
+    const code = `
+import { defineConfig } from 'vite'
+import { somePlugin1, somePlugin2 } from 'some-module'
+
+export default defineConfig({
+  plugins: [somePlugin1(), somePlugin2()]
+})
+    `;
+
+    const mod = parseModule(code);
+
+    addVitePlugin(mod, {
+      from: "@vitejs/plugin-vue",
+      constructor: "vuePlugin",
+      options: {
+        include: [/\\.vue$/, /\.md$/],
+      },
+      index: 0, // at the beginning
+    });
+
+    addVitePlugin(mod, {
+      from: "vite-plugin-inspect",
+      constructor: "Inspect",
+      options: {
+        build: true,
+      },
+      index: 2, // in the middle
+    });
+
+    addVitePlugin(mod, {
+      from: "vite-plugin-pwa",
+      imported: "VitePWA",
+      constructor: "VitePWA",
+      index: 5, // at the end, out of bounds on purpose
+    });
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "import { VitePWA } from \\"vite-plugin-pwa\\";
+      import Inspect from \\"vite-plugin-inspect\\";
+      import vuePlugin from \\"@vitejs/plugin-vue\\";
+      import { defineConfig } from \\"vite\\";
+      import { somePlugin1, somePlugin2 } from \\"some-module\\";
+
+      export default defineConfig({
+        plugins: [
+          vuePlugin({
+            include: [/\\\\\\\\.vue$/, /\\\\.md$/],
+          }),
+          somePlugin1(),
+          Inspect({
+            build: true,
+          }),
+          somePlugin2(),
+          VitePWA(),
+        ],
+      });"
+    `);
+  });
 });

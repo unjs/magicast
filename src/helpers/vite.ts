@@ -21,6 +21,12 @@ export interface AddVitePluginOptions {
    * The options of the plugin
    */
   options?: Record<string, any>;
+
+  /**
+   * The index in the plugins array where the plugin should be inserted at.
+   * By default, the plugin is appended to the array.
+   */
+  index?: number;
 }
 
 export interface UpdateVitePluginConfigOptions {
@@ -41,8 +47,12 @@ export function addVitePlugin(
 ) {
   const config = getDefaultExportOptions(magicast);
 
+  const insertionIndex = plugin.index ?? config.plugins?.length ?? 0;
+
   config.plugins ||= [];
-  config.plugins.push(
+  config.plugins.splice(
+    insertionIndex,
+    0,
     plugin.options
       ? builders.functionCall(plugin.constructor, plugin.options)
       : builders.functionCall(plugin.constructor)
