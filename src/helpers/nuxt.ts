@@ -1,4 +1,4 @@
-import { ProxifiedModule } from "../proxy/types";
+import type { ProxifiedModule } from "../proxy/types";
 import { getDefaultExportOptions } from "./config";
 import { deepMergeObject } from "./deep-merge";
 

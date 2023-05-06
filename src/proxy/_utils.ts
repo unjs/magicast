@@ -1,6 +1,6 @@
 import * as recast from "recast";
-import { MagicastError } from "../error";
 import type { ASTNode } from "../types";
+import { MagicastError } from "../error";
 
 export const LITERALS_AST = new Set([
   "Literal",

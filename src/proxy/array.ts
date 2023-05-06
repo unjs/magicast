@@ -1,7 +1,7 @@
-import { ASTNode } from "../types";
+import type { ASTNode } from "../types";
+import type { ProxifiedArray, ProxifiedModule } from "./types";
 import { literalToAst, createProxy } from "./_utils";
 import { proxify } from "./proxify";
-import { ProxifiedArray, ProxifiedModule } from "./types";
 
 export function proxifyArrayElements<T extends any[]>(
   node: ASTNode,

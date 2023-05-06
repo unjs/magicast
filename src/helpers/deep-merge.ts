@@ -1,4 +1,4 @@
-import { Proxified } from "../types";
+import type { Proxified } from "../types";
 
 export function deepMergeObject(magicast: Proxified<any>, object: any) {
   if (typeof object === "object") {

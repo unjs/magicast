@@ -1,8 +1,8 @@
 /* eslint-disable unicorn/no-nested-ternary */
-import { ParsedFileNode } from "../types";
+import type { ParsedFileNode } from "../types";
+import type { ProxifiedModule } from "./types";
 import { MagicastError } from "../error";
 import { generateCode } from "../code";
-import { ProxifiedModule } from "./types";
 import { createImportsProxy } from "./imports";
 import { createExportsProxy } from "./exports";
 import { createProxy } from "./_utils";

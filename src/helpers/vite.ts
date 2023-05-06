@@ -1,5 +1,5 @@
+import type { ProxifiedFunctionCall, ProxifiedModule } from "../proxy/types";
 import { builders } from "../builders";
-import { ProxifiedFunctionCall, ProxifiedModule } from "../proxy/types";
 import { getDefaultExportOptions } from "./config";
 import { deepMergeObject } from "./deep-merge";
 

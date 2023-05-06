@@ -2,7 +2,7 @@ import * as recast from "recast";
 import { proxifyFunctionCall } from "./proxy/function-call";
 import { proxifyNewExpression } from "./proxy/new-expression";
 import { literalToAst } from "./proxy/_utils";
-import { Proxified } from "./types";
+import type { Proxified } from "./types";
 import { parseExpression } from "./code";
 
 const b = recast.types.builders;
