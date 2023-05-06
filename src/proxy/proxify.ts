@@ -1,6 +1,6 @@
-import type { Proxified, ProxifiedModule, ProxifiedValue } from "./types";
 import type { ASTNode } from "../types";
 import { MagicastError } from "../error";
+import type { Proxified, ProxifiedModule, ProxifiedValue } from "./types";
 import { proxifyArray } from "./array";
 import { proxifyFunctionCall } from "./function-call";
 import { proxifyObject } from "./object";

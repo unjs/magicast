@@ -13,8 +13,8 @@ export interface ProxyBase {
 export type ProxifiedArray<T extends any[] = unknown[]> = {
   [K in keyof T]: Proxified<T[K]>;
 } & ProxyBase & {
-  $type: "array";
-};
+    $type: "array";
+  };
 
 export type ProxifiedFunctionCall<Args extends any[] = unknown[]> =
   ProxyBase & {
@@ -33,8 +33,8 @@ export type ProxifiedNewExpression<Args extends any[] = unknown[]> =
 export type ProxifiedObject<T extends object = object> = {
   [K in keyof T]: Proxified<T[K]>;
 } & ProxyBase & {
-  $type: "object";
-};
+    $type: "object";
+  };
 
 export type ProxifiedIdentifier = ProxyBase & {
   $type: "identifier";
@@ -52,16 +52,16 @@ export type Proxified<T = any> = T extends
   ? T
   : T extends any[]
   ? {
-    [K in keyof T]: Proxified<T[K]>;
-  } & ProxyBase & {
-    $type: "array";
-  }
+      [K in keyof T]: Proxified<T[K]>;
+    } & ProxyBase & {
+        $type: "array";
+      }
   : T extends object
   ? ProxyBase & {
-    [K in keyof T]: Proxified<T[K]>;
-  } & {
-    $type: "object";
-  }
+      [K in keyof T]: Proxified<T[K]>;
+    } & {
+      $type: "object";
+    }
   : T;
 
 export type ProxifiedModule<T extends object = Record<string, any>> =

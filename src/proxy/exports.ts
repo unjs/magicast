@@ -51,10 +51,10 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
       key === "default"
         ? b.exportDefaultDeclaration(node)
         : (b.exportNamedDeclaration(
-          b.variableDeclaration("const", [
-            b.variableDeclarator(b.identifier(key), node),
-          ])
-        ) as any)
+            b.variableDeclaration("const", [
+              b.variableDeclarator(b.identifier(key), node),
+            ])
+          ) as any)
     );
   };
 

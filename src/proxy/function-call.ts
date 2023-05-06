@@ -1,6 +1,6 @@
 import type { ASTNode } from "../types";
-import type { ProxifiedFunctionCall, ProxifiedModule } from "./types";
 import { MagicastError } from "../error";
+import type { ProxifiedFunctionCall, ProxifiedModule } from "./types";
 import { createProxy } from "./_utils";
 import { proxifyArrayElements } from "./array";
 

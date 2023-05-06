@@ -1,7 +1,7 @@
 import * as recast from "recast";
 import type { ASTNode } from "../types";
-import type { ProxifiedModule, ProxifiedObject } from "./types";
 import { MagicastError } from "../error";
+import type { ProxifiedModule, ProxifiedObject } from "./types";
 import { literalToAst, createProxy, isValidPropName } from "./_utils";
 import { proxify } from "./proxify";
 
