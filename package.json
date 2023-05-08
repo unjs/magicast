@@ -13,7 +13,7 @@
       "require": "./dist/index.cjs"
     },
     "./helpers": {
-      "types": "./dist/helpers.d.ts",
+      "types": "./helpers.d.ts",
       "import": "./dist/helpers.mjs",
       "require": "./dist/helpers.cjs"
     }
@@ -22,7 +22,8 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "*.d.ts"
   ],
   "scripts": {
     "build": "unbuild",
