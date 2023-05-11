@@ -42,7 +42,7 @@
     "recast": "^0.22.0"
   },
   "devDependencies": {
-    "@types/node": "^18.16.5",
+    "@types/node": "^18.16.8",
     "@vitest/coverage-c8": "^0.31.0",
     "@vitest/ui": "^0.31.0",
     "changelogen": "^0.5.3",
@@ -64,5 +64,5 @@
       "prettier -w"
     ]
   },
-  "packageManager": "pnpm@8.4.0"
+  "packageManager": "pnpm@8.5.0"
 }
