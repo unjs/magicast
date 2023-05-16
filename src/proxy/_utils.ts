@@ -131,10 +131,10 @@ export function createProxy<T>(
         return propertyDescriptor;
       },
       has(_target: any, key: string | symbol) {
-        if(key in utils) {
-          return true
+        if (key in utils) {
+          return true;
         }
-        return false
+        return false;
       },
       ...handler,
       get(target: any, key: string | symbol, receiver: any) {
