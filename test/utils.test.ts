@@ -50,4 +50,14 @@ describe("literalToAst", () => {
     obj.foo = obj;
     expect(() => run(obj)).toThrowError("Can not serialize circular reference");
   });
+
+  describe("makeProxyUtils", () => {
+    it("trap in operator", () => {
+      const mod = parseModule("");
+      const keys = ["$code", "$type", "$ast", "__magicast_proxy"];
+      for (const key of keys) {
+        expect(key in mod).toBe(true);
+      }
+    });
+  });
 });
