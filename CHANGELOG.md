@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v0.2.7
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.2.6...v0.2.7)
+
+
+### 🩹 Fixes
+
+  - **createProxy:** Trap for the 'in' operator ([#58](https://github.com/unjs/magicast/pull/58))
+
+### ❤️  Contributors
+
+- Zoeyzhao19
+
 ## v0.2.6
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.2.5...v0.2.6)
