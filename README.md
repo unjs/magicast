@@ -161,7 +161,7 @@ function updateConfig() {
 
 ## High Level Helpers
 
-We also experiments to provide a few high level helpers to make common tasks easier. You could import them from `magicast/helpers`. They might be move to a separate package in the future.
+We also experiment to provide a few high level helpers to make common tasks easier. You could import them from `magicast/helpers`. They might be moved to a separate package in the future.
 
 ```js
 import { 
