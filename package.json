@@ -37,23 +37,23 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@babel/parser": "^7.21.8",
+    "@babel/parser": "^7.21.9",
     "@babel/types": "^7.21.5",
     "recast": "^0.23.2"
   },
   "devDependencies": {
-    "@types/node": "^18.16.10",
-    "@vitest/coverage-c8": "^0.31.0",
-    "@vitest/ui": "^0.31.0",
+    "@types/node": "^18.16.14",
+    "@vitest/coverage-c8": "^0.31.1",
+    "@vitest/ui": "^0.31.1",
     "changelogen": "^0.5.3",
-    "eslint": "^8.40.0",
+    "eslint": "^8.41.0",
     "eslint-config-unjs": "^0.1.0",
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
     "simple-git-hooks": "^2.8.1",
     "typescript": "^5.0.4",
     "unbuild": "^1.2.1",
-    "vitest": "^0.31.0"
+    "vitest": "^0.31.1"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
