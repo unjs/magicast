@@ -110,7 +110,7 @@ export default {
     };
 
     // Recursively merge existing object with `obj`
-    deepMergeObject(mod, obj);
+    deepMergeObject(mod.exports.default, obj);
 
     expect(generate(mod)).toMatchInlineSnapshot(`
       "export default {
