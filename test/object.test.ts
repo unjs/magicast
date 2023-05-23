@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseModule } from "../src";
+import { deepMergeObject } from "../src/helpers/deep-merge";
 import { generate } from "./_utils";
 
 describe("object", () => {
@@ -46,6 +47,81 @@ export default {
           [\\"a-b\\"]: \\"updated\\",
           foo() {},
           \\"a-b-c\\": 3,
+        },
+      };"
+    `);
+  });
+
+  it("recursively create objects", () => {
+    const mod = parseModule(
+      `
+export default {
+  foo: {
+  }
+}
+    `.trim()
+    );
+
+    // Update existing object keys
+    expect(mod.exports.default.foo).toEqual({});
+    mod.exports.default.foo.value = 1;
+    expect(mod.exports.default.foo.value).toEqual(1);
+
+    // Create nested object
+    mod.exports.default.bar = {};
+    mod.exports.default.bar.testValue = {};
+    mod.exports.default.bar.testValue.value = "a";
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        foo: {
+          value: 1,
+        },
+
+        bar: {
+          testValue: {
+            value: \\"a\\",
+          },
+        },
+      };"
+    `);
+  });
+
+  it("recursively merge objects", () => {
+    const mod = parseModule(
+      `
+export default {
+  foo: {
+  }
+}
+    `.trim()
+    );
+
+    const obj = {
+      foo: {
+        value: 1,
+      },
+
+      bar: {
+        testValue: {
+          value: "a",
+        },
+      },
+    };
+
+    // Recursively merge existing object with `obj`
+    deepMergeObject(mod, obj);
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        foo: {
+          value: 1,
+        },
+
+        bar: {
+          testValue: {
+            value: \\"a\\",
+          },
         },
       };"
     `);
