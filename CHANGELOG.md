@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v0.2.8
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.2.7...v0.2.8)
+
+
+### 🩹 Fixes
+
+  - Type resolution in node16 environments ([#60](https://github.com/unjs/magicast/pull/60))
+  - **helpers:** Improve deepMergeObject handling case ([#62](https://github.com/unjs/magicast/pull/62))
+
+### 🏡 Chore
+
+  - **release:** V0.2.7 ([c719013](https://github.com/unjs/magicast/commit/c719013))
+  - Typo ([#59](https://github.com/unjs/magicast/pull/59))
+
+### ❤️  Contributors
+
+- Yaël Guilloux ([@Tahul](http://github.com/Tahul))
+- Samuel Stroschein 
+- Igor Babko ([@igorbabko](http://github.com/igorbabko))
+- Anthony Fu <anthonyfu117@hotmail.com>
+
 ## v0.2.7
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.2.6...v0.2.7)
