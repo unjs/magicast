@@ -23,7 +23,9 @@ export function proxifyObject<T extends object>(
       }
       if (
         prop.type === "ObjectProperty" &&
-        prop.key.type === "StringLiteral" &&
+        (prop.key.type === "StringLiteral" ||
+          prop.key.type === "NumericLiteral" ||
+          prop.key.type === "BooleanLiteral") &&
         prop.key.value === key
       ) {
         return (prop.value as any).value;
@@ -38,8 +40,13 @@ export function proxifyObject<T extends object>(
     if ("key" in prop && "name" in prop.key) {
       return prop.key.name;
     }
-    if (prop.type === "ObjectProperty" && prop.key.type === "StringLiteral") {
-      return prop.key.value;
+    if (
+      prop.type === "ObjectProperty" &&
+      (prop.key.type === "StringLiteral" ||
+        prop.key.type === "NumericLiteral" ||
+        prop.key.type === "BooleanLiteral")
+    ) {
+      return prop.key.value.toString();
     }
     if (throwError) {
       throw new MagicastError(`Casting "${prop.type}" is not supported`, {
