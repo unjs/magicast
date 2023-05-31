@@ -77,7 +77,7 @@ export function detectCodeFormat(
     }
 
     // Line ending analysis
-    if (trimmitedLine[trimmitedLine.length - 1] === ";") {
+    if (trimmitedLine.at(-1) === ";") {
       semiUsages++;
     } else if (trimmitedLine.length > 0) {
       semiUsages--;

@@ -83,16 +83,16 @@ export function creatImportProxy(
         const declaration = root.body.find(
           (i) => i.type === "ImportDeclaration" && i.source.value === value
         ) as ImportDeclaration | undefined;
-        if (!declaration) {
+        if (declaration) {
+          // TODO: insert after the last import maybe?
+          declaration.specifiers.push(specifier as any);
+        } else {
           root.body.unshift(
             b.importDeclaration(
               [specifier as any],
               b.stringLiteral(value)
             ) as any
           );
-        } else {
-          // TODO: insert after the last import maybe?
-          declaration.specifiers.push(specifier as any);
         }
       },
       toJSON() {
@@ -152,13 +152,13 @@ export function createImportsProxy(
     const declaration = imports.find(
       (i) => i.from === value.from
     )?.$declaration;
-    if (!declaration) {
+    if (declaration) {
+      // TODO: insert after the last import maybe?
+      declaration.specifiers.push(specifier as any);
+    } else {
       root.body.unshift(
         b.importDeclaration([specifier], b.stringLiteral(value.from)) as any
       );
-    } else {
-      // TODO: insert after the last import maybe?
-      declaration.specifiers.push(specifier as any);
     }
     return true;
   };

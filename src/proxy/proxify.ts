@@ -49,11 +49,12 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
       proxy = proxify(node.expression, mod) as ProxifiedValue;
       break;
     }
-    default:
+    default: {
       throw new MagicastError(`Casting "${node.type}" is not supported`, {
         ast: node,
         code: mod?.$code,
       });
+    }
   }
 
   _cache.set(node, proxy);
