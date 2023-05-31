@@ -1,6 +1,24 @@
 # Changelog
 
 
+## v0.2.9
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.2.8...v0.2.9)
+
+
+### 🚀 Enhancements
+
+  - DeepMergeObject improvements; NumericLiteral and StringLiteral keys ([#63](https://github.com/unjs/magicast/pull/63))
+
+### 🏡 Chore
+
+  - Update deps ([15d091e](https://github.com/unjs/magicast/commit/15d091e))
+
+### ❤️  Contributors
+
+- Anthony Fu <anthonyfu117@hotmail.com>
+- Yaël Guilloux ([@Tahul](http://github.com/Tahul))
+
 ## v0.2.8
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.2.7...v0.2.8)
