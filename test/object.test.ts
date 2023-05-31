@@ -92,7 +92,9 @@ export default {
       `
 export default {
   foo: {
-  }
+  },
+  100: 10,
+  true: 10
 }
     `.trim()
     );
@@ -107,6 +109,10 @@ export default {
           value: "a",
         },
       },
+
+      100: 20,
+
+      true: 20,
     };
 
     // Recursively merge existing object with `obj`
@@ -117,6 +123,9 @@ export default {
         foo: {
           value: 1,
         },
+
+        100: 20,
+        true: 20,
 
         bar: {
           testValue: {
