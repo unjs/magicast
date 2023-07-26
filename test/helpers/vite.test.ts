@@ -116,4 +116,69 @@ export default defineConfig({
       });"
     `);
   });
+
+  it("handles default export from identifier (fn call)", () => {
+    const code = `
+      import { defineConfig } from 'vite';
+      import { somePlugin1, somePlugin2 } from 'some-module'
+
+      const config = defineConfig({
+        plugins: [somePlugin1(), somePlugin2()]
+      });
+
+      export default config;
+    `;
+
+    const mod = parseModule(code);
+
+    addVitePlugin(mod, {
+      from: "vite-plugin-pwa",
+      imported: "VitePWA",
+      constructor: "VitePWA",
+    });
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "import { VitePWA } from \\"vite-plugin-pwa\\";
+      import { defineConfig } from \\"vite\\";
+      import { somePlugin1, somePlugin2 } from \\"some-module\\";
+
+      const config = defineConfig({
+        plugins: [somePlugin1(), somePlugin2(), VitePWA()],
+      });
+      
+      export default config;"
+    `);
+  });
+
+  it("handles default export from identifier (object)", () => {
+    const code = `
+      import { somePlugin1, somePlugin2 } from 'some-module'
+
+      const myConfig = {
+        plugins: [somePlugin1(), somePlugin2()]
+      };
+
+      export default myConfig;
+    `;
+
+    const mod = parseModule(code);
+
+    addVitePlugin(mod, {
+      index: 1,
+      from: "vite-plugin-pwa",
+      imported: "VitePWA",
+      constructor: "VitePWA",
+    });
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "import { VitePWA } from \\"vite-plugin-pwa\\";
+      import { somePlugin1, somePlugin2 } from \\"some-module\\";
+
+      const myConfig = {
+        plugins: [somePlugin1(), VitePWA(), somePlugin2()],
+      };
+      
+      export default myConfig;"
+    `);
+  });
 });
