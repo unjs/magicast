@@ -8,3 +8,5 @@ types
 *.log*
 *.env*
 .idea
+# vsc history plugin
+.history
