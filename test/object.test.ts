@@ -143,38 +143,42 @@ export default {
       }
     })`);
 
-    const config = mod.exports.default.$type === 'function-call'
-    ? mod.exports.default.$args[0]
-    : mod.exports.default
+    const config =
+      mod.exports.default.$type === "function-call"
+        ? mod.exports.default.$args[0]
+        : mod.exports.default;
 
-    const obj1 = { kebabCase: 1 }
+    const obj1 = { kebabCase: 1 };
 
-    deepMergeObject(config, obj1)
+    deepMergeObject(config, obj1);
 
-    expect(generate(mod)).toMatchSnapshot(`
-      export default defineAppConfig({
-          test: {
-            foo: 1,
-          },
-          "kebabCase": 1
-      });`
-    )
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default defineAppConfig({
+        test: {
+          foo: 1,
+        },
 
-    const obj2 = { kebabCaseParent: { kebabCaseChild: 1 } }
+        kebabCase: 1,
+      });"
+    `);
 
-    deepMergeObject(config, obj2)
+    const obj2 = { kebabCaseParent: { kebabCaseChild: 1 } };
 
-    expect(generate(mod)).toMatchSnapshot(`
-      export default defineAppConfig({
-          test: {
-            foo: 1,
-          },
-          "kebabCase": 1,
-          "kebabCaseParent": {
-            "kebabCaseChild": 1
-          }
-      });`
-    )
+    deepMergeObject(config, obj2);
+
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default defineAppConfig({
+        test: {
+          foo: 1,
+        },
+
+        kebabCase: 1,
+
+        kebabCaseParent: {
+          kebabCaseChild: 1,
+        },
+      });"
+    `);
   });
 
   it("object keys kebab-case style", () => {
@@ -184,39 +188,43 @@ export default {
       }
     })`);
 
-    const config = mod.exports.default.$type === 'function-call'
-    ? mod.exports.default.$args[0]
-    : mod.exports.default
+    const config =
+      mod.exports.default.$type === "function-call"
+        ? mod.exports.default.$args[0]
+        : mod.exports.default;
 
-    const obj1 = { 'kebab-case': 1 }
+    const obj1 = { "kebab-case": 1 };
 
-    deepMergeObject(config, obj1)
+    deepMergeObject(config, obj1);
 
     // Valid
-    expect(generate(mod)).toMatchSnapshot(`
-      export default defineAppConfig({
-          test: {
-            foo: 1,
-          },
-          "kebab-case": 1
-      });`
-    )
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default defineAppConfig({
+        test: {
+          foo: 1,
+        },
 
-    const obj2 = { 'kebab-case-parent': { 'kebab-case-child': 1 } }
+        \\"kebab-case\\": 1,
+      });"
+    `);
 
-    deepMergeObject(config, obj2)
+    const obj2 = { "kebab-case-parent": { "kebab-case-child": 1 } };
+
+    deepMergeObject(config, obj2);
 
     // TODO: Should be valid
-    expect(generate(mod)).toMatchSnapshot(`
-      export default defineAppConfig({
-          test: {
-            foo: 1,
-          },
-          "kebab-case": 1,
-          "kebab-case-parent": {
-            "kebab-case-child": 1
-          }
-      });`
-    )
+    expect(generate(mod)).toMatchInlineSnapshot(`
+      "export default defineAppConfig({
+        test: {
+          foo: 1,
+        },
+
+        \\"kebab-case\\": 1,
+
+        \\"kebab-case-parent\\": {
+          \\"kebab-case-child\\": 1,
+        },
+      });"
+    `);
   });
 });
