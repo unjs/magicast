@@ -37,23 +37,23 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@babel/parser": "^7.22.4",
-    "@babel/types": "^7.22.4",
-    "recast": "^0.23.2"
+    "@babel/parser": "^7.22.7",
+    "@babel/types": "^7.22.5",
+    "recast": "^0.23.3"
   },
   "devDependencies": {
-    "@types/node": "^18.16.16",
-    "@vitest/coverage-c8": "^0.31.2",
-    "@vitest/ui": "^0.31.2",
-    "changelogen": "^0.5.3",
-    "eslint": "^8.41.0",
-    "eslint-config-unjs": "^0.2.0",
-    "lint-staged": "^13.2.2",
+    "@types/node": "^20.4.5",
+    "@vitest/coverage-c8": "^0.33.0",
+    "@vitest/ui": "^0.33.0",
+    "changelogen": "^0.5.4",
+    "eslint": "^8.45.0",
+    "eslint-config-unjs": "^0.2.1",
+    "lint-staged": "^13.2.3",
     "prettier": "^2.8.8",
-    "simple-git-hooks": "^2.8.1",
-    "typescript": "^5.0.4",
+    "simple-git-hooks": "^2.9.0",
+    "typescript": "^5.1.6",
     "unbuild": "^1.2.1",
-    "vitest": "^0.31.2"
+    "vitest": "^0.33.0"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
@@ -64,5 +64,5 @@
       "prettier -w"
     ]
   },
-  "packageManager": "pnpm@8.6.0"
+  "packageManager": "pnpm@8.6.10"
 }
