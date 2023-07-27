@@ -8,3 +8,4 @@ types
 *.log*
 *.env*
 .idea
+.history
