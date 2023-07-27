@@ -1,6 +1,30 @@
 # Changelog
 
 
+## v0.2.10
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.2.9...v0.2.10)
+
+### 🚀 Enhancements
+
+- **helpers:** Handle Vite config objects declared as variables in `addVitePlugin` ([#69](https://github.com/unjs/magicast/pull/69))
+
+### 🩹 Fixes
+
+- **object:** Handle nested keys kebab-case style ([#71](https://github.com/unjs/magicast/pull/71))
+
+### 🏡 Chore
+
+- Update deps ([15d091e](https://github.com/unjs/magicast/commit/15d091e))
+- **release:** V0.2.9 ([d9ef2eb](https://github.com/unjs/magicast/commit/d9ef2eb))
+- Update deps ([fd297f0](https://github.com/unjs/magicast/commit/fd297f0))
+
+### ❤️  Contributors
+
+- Anthony Fu <anthonyfu117@hotmail.com>
+- Lukas Stracke <lukas.stracke@sentry.io>
+- Baptiste Leproux <leproux.baptiste@gmail.com>
+
 ## v0.2.9
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.2.8...v0.2.9)

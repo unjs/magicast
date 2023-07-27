@@ -1,6 +1,6 @@
 {
   "name": "magicast",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "Modify a JS/TS file and write back magically just like JSON!",
   "repository": "unjs/magicast",
   "license": "MIT",
