@@ -48,7 +48,7 @@
     "changelogen": "^0.5.4",
     "eslint": "^8.47.0",
     "eslint-config-unjs": "^0.2.1",
-    "lint-staged": "^13.3.0",
+    "lint-staged": "^14.0.1",
     "prettier": "^2.8.8",
     "simple-git-hooks": "^2.9.0",
     "typescript": "^5.1.6",
