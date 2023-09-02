@@ -61,7 +61,7 @@ const mod = await loadFile("config.js");
 
 mod.exports.default.foo.push("b");
 
-await writeFile(mod);
+await writeFile(mod, "config.js");
 ```
 
 Updated `config.js`:
@@ -164,7 +164,7 @@ function updateConfig() {
 We also experiment to provide a few high level helpers to make common tasks easier. You could import them from `magicast/helpers`. They might be moved to a separate package in the future.
 
 ```js
-import { 
+import {
   deepMergeObject,
   addNuxtModule,
   addVitePlugin,

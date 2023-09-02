@@ -20,7 +20,6 @@ export interface Token {
 export interface ParsedFileNode {
   type: "file";
   program: Program;
-  name?: string;
   loc: Loc;
   comments: null | any;
 }
