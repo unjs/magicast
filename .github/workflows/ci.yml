@@ -21,6 +21,6 @@ jobs:
       - run: pnpm install
       - run: pnpm build
       - run: pnpm lint
-      - run: pnpm test --coverage
-      - run: pnpm test:build
+      - run: pnpm run test --coverage
+      - run: pnpm run test:build
       - uses: codecov/codecov-action@v3
