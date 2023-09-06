@@ -2,6 +2,7 @@
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
 import { execa } from 'execa'
+import { downloadTemplate } from 'giget'
 
 // This script clones recast and patches, and then re-bundle it so we get rid of the unnecessary polyfills
 
@@ -11,7 +12,9 @@ async function cloneRecast() {
   }
   else {
     // Clone recast
-    await execa('npx', ['tiged', 'benjamn/recast#v0.23.4', 'vendor/recast'], { stdio: 'inherit' })
+    await downloadTemplate('github:benjamn/recast#v0.23.4', {
+      dir: 'vendor/recast',
+    })
 
     // Remove the tsconfig.json so it's targeting newer node versions
     await fsp.rm('vendor/recast/tsconfig.json')
@@ -60,7 +63,9 @@ async function cloneAstTypes() {
   }
   else {
     // Clone recast
-    await execa('npx', ['tiged', 'benjamn/ast-types#v0.16.1', 'vendor/ast-types'], { stdio: 'inherit' })
+    await downloadTemplate('github:benjamn/ast-types#v0.16.1', {
+      dir: 'vendor/ast-types',
+    })
 
     // Remove the tsconfig.json so it's targeting newer node versions
     await fsp.rm('vendor/ast-types/tsconfig.json')
