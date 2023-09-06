@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { builders, parseModule, ProxifiedModule } from "../src";
+import { builders, parseModule, ProxifiedModule } from "magicast";
 import { generate } from "./_utils";
 
 describe("function-calls", () => {
-  it("function wrapper", () => {
+  it("function wrapper", async () => {
     const mod = parseModule(`
       export const a: any = { foo: 1}
       export default defineConfig({
@@ -30,7 +30,7 @@ describe("function-calls", () => {
     options.modules ||= [];
     options.modules.push("b");
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export const a: any = { foo: 1 };
       export default defineConfig({
         // Modules
@@ -39,7 +39,7 @@ describe("function-calls", () => {
     `);
   });
 
-  it("construct function call", () => {
+  it("construct function call", async () => {
     // eslint-disable-next-line unicorn/consistent-function-scoping
     const installVuePlugin = (mod: ProxifiedModule<any>) => {
       // Inject export default if not exists
@@ -69,7 +69,7 @@ describe("function-calls", () => {
       config.plugins.push(
         builders.functionCall("vuePlugin", {
           jsx: true,
-        })
+        }),
       );
     };
 
@@ -83,7 +83,7 @@ describe("function-calls", () => {
     installVuePlugin(mod1);
     installVuePlugin(mod2);
 
-    expect(generate(mod1)).toMatchInlineSnapshot(`
+    expect(await generate(mod1)).toMatchInlineSnapshot(`
       "import vuePlugin from \\"@vitejs/plugin-vue\\";
       import { defineConfig } from \\"vite\\";
 
@@ -96,6 +96,6 @@ describe("function-calls", () => {
       });"
     `);
 
-    expect(generate(mod2)).toEqual(generate(mod1));
+    expect(await generate(mod2)).toEqual(await generate(mod1));
   });
 });

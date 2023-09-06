@@ -25,7 +25,7 @@ export function creatImportProxy(
     | ImportSpecifier
     | ImportNamespaceSpecifier
     | ImportDefaultSpecifier,
-  root: Program
+  root: Program,
 ): ProxifiedImportItem {
   if (_importProxyCache.has(specifier)) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -52,7 +52,7 @@ export function creatImportProxy(
       set imported(value) {
         if (specifier.type !== "ImportSpecifier") {
           throw new MagicastError(
-            "Changing import name is not yet implemented"
+            "Changing import name is not yet implemented",
           );
         }
         if (specifier.imported.type === "Identifier") {
@@ -81,7 +81,7 @@ export function creatImportProxy(
         }
 
         const declaration = root.body.find(
-          (i) => i.type === "ImportDeclaration" && i.source.value === value
+          (i) => i.type === "ImportDeclaration" && i.source.value === value,
         ) as ImportDeclaration | undefined;
         if (declaration) {
           // TODO: insert after the last import maybe?
@@ -90,8 +90,8 @@ export function creatImportProxy(
           root.body.unshift(
             b.importDeclaration(
               [specifier as any],
-              b.stringLiteral(value)
-            ) as any
+              b.stringLiteral(value),
+            ) as any,
           );
         }
       },
@@ -107,7 +107,7 @@ export function creatImportProxy(
       ownKeys() {
         return ["imported", "local", "from", "toJSON"];
       },
-    }
+    },
   ) as ProxifiedImportItem;
   _importProxyCache.set(specifier, proxy);
   return proxy;
@@ -116,7 +116,7 @@ export function creatImportProxy(
 export function createImportsProxy(
   root: Program,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  mod: ProxifiedModule
+  mod: ProxifiedModule,
 ): ProxifiedImportsMap {
   // TODO: cache
   const getAllImports = () => {
@@ -149,15 +149,14 @@ export function createImportsProxy(
         ? b.importNamespaceSpecifier(b.identifier(local))
         : b.importSpecifier(b.identifier(value.imported), b.identifier(local));
 
-    const declaration = imports.find(
-      (i) => i.from === value.from
-    )?.$declaration;
+    const declaration = imports.find((i) => i.from === value.from)
+      ?.$declaration;
     if (declaration) {
       // TODO: insert after the last import maybe?
       declaration.specifiers.push(specifier as any);
     } else {
       root.body.unshift(
-        b.importDeclaration([specifier], b.stringLiteral(value.from)) as any
+        b.importDeclaration([specifier], b.stringLiteral(value.from)) as any,
       );
     }
     return true;
@@ -211,7 +210,7 @@ export function createImportsProxy(
       has(_, prop) {
         return getAllImports().some((i) => i.local === prop);
       },
-    }
+    },
   ) as any as ProxifiedImportsMap;
 
   return proxy;

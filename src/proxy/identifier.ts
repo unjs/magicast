@@ -13,6 +13,6 @@ export function proxifyIdentifier(node: ASTNode): ProxifiedIdentifier {
       $type: "identifier",
       $name: node.name,
     },
-    {}
+    {},
   ) as ProxifiedIdentifier;
 }

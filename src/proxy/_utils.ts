@@ -74,13 +74,13 @@ export function literalToAst(value: any, seen = new Set()): ASTNode {
             literalToAst(key, seen) as any,
             literalToAst(value, seen) as any,
           ]) as any;
-        }) as any
+        }) as any,
       ),
     ]) as any;
   }
   if (Array.isArray(value)) {
     return b.arrayExpression(
-      value.map((n) => literalToAst(n, seen)) as any
+      value.map((n) => literalToAst(n, seen)) as any,
     ) as any;
   }
   if (typeof value === "object") {
@@ -89,9 +89,9 @@ export function literalToAst(value: any, seen = new Set()): ASTNode {
         return b.property(
           "init",
           /^[$A-Z_a-z][\w$]*$/g.test(key) ? b.identifier(key) : b.literal(key),
-          literalToAst(value, seen) as any
+          literalToAst(value, seen) as any,
         ) as any;
-      })
+      }),
     ) as any;
   }
   return b.literal(value) as any;
@@ -99,7 +99,7 @@ export function literalToAst(value: any, seen = new Set()): ASTNode {
 
 export function makeProxyUtils<T extends object>(
   node: ASTNode,
-  extend: T = {} as T
+  extend: T = {} as T,
 ): Record<string, any> {
   const obj = extend as any;
   obj[PROXY_KEY] = true;
@@ -116,7 +116,7 @@ const propertyDescriptor = {
 export function createProxy<T>(
   node: ASTNode,
   extend: any,
-  handler: ProxyHandler<object>
+  handler: ProxyHandler<object>,
 ): T {
   const utils = makeProxyUtils(node, extend);
   return new Proxy(
@@ -124,7 +124,7 @@ export function createProxy<T>(
     {
       ownKeys() {
         return Object.keys(utils).filter(
-          (i) => i !== PROXY_KEY && !i.startsWith("$")
+          (i) => i !== PROXY_KEY && !i.startsWith("$"),
         );
       },
       getOwnPropertyDescriptor() {
@@ -155,6 +155,6 @@ export function createProxy<T>(
         }
         return false;
       },
-    }
+    },
   ) as T;
 }

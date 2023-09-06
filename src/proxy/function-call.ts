@@ -6,7 +6,7 @@ import { proxifyArrayElements } from "./array";
 
 export function proxifyFunctionCall<T extends []>(
   node: ASTNode,
-  mod?: ProxifiedModule
+  mod?: ProxifiedModule,
 ): ProxifiedFunctionCall<T> {
   if (node.type !== "CallExpression") {
     throw new MagicastError("Not a function call");
@@ -18,7 +18,7 @@ export function proxifyFunctionCall<T extends []>(
     }
     if (node.type === "MemberExpression") {
       return `${stringifyExpression(node.object)}.${stringifyExpression(
-        node.property
+        node.property,
       )}`;
     }
     throw new MagicastError("Not implemented");
@@ -33,6 +33,6 @@ export function proxifyFunctionCall<T extends []>(
       $callee: stringifyExpression(node.callee as any),
       $args: argumentsProxy,
     },
-    {}
+    {},
   ) as ProxifiedFunctionCall<T>;
 }

@@ -1,20 +1,20 @@
 import { expect, it, describe } from "vitest";
-import { generateCode, parseModule, parseExpression } from "../src";
+import { generateCode, parseModule, parseExpression } from "magicast";
 import { generate } from "./_utils";
 
 describe("general", () => {
-  it("basic object and array", () => {
+  it("basic object and array", async () => {
     const mod = parseModule(`export default { a: 1, b: { c: {} } }`);
 
     mod.exports.default.a = 2;
 
-    expect(generate(mod)).toMatchInlineSnapshot(
-      '"export default { a: 2, b: { c: {} } };"'
+    expect(await generate(mod)).toMatchInlineSnapshot(
+      '"export default { a: 2, b: { c: {} } };"',
     );
 
     mod.exports.default.b.c = { d: 3 };
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         a: 2,
         b: {
@@ -31,7 +31,7 @@ describe("general", () => {
 
     expect(mod.exports.default.modules.$ast).toBeDefined();
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         a: 2,
 
@@ -48,7 +48,7 @@ describe("general", () => {
     mod.exports.default.modules.push("a");
     mod.exports.default.modules.unshift({ foo: "bar" });
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         a: 2,
 
@@ -88,13 +88,13 @@ describe("general", () => {
     expect(mod.exports.default.modules[0].$type).toBe("object");
   });
 
-  it("mix two configs", () => {
+  it("mix two configs", async () => {
     const mod1 = parseModule(`export default { a: 1 }`);
     const mod2 = parseModule(`export default { b: 2 }`);
 
     mod1.exports.default.b = mod2.exports.default;
 
-    expect(generate(mod1)).toMatchInlineSnapshot(
+    expect(await generate(mod1)).toMatchInlineSnapshot(
       `
       "export default {
         a: 1,
@@ -103,90 +103,90 @@ describe("general", () => {
           b: 2,
         },
       };"
-    `
+    `,
     );
   });
 
-  it("delete property", () => {
+  it("delete property", async () => {
     const mod = parseModule(`export default { a: 1, b: [1, { foo: 'bar' }] }`);
 
     delete mod.exports.default.b[1].foo;
 
-    expect(generate(mod)).toMatchInlineSnapshot(
-      '"export default { a: 1, b: [1, {}] };"'
+    expect(await generate(mod)).toMatchInlineSnapshot(
+      '"export default { a: 1, b: [1, {}] };"',
     );
 
     delete mod.exports.default.b[0];
-    expect(generate(mod)).toMatchInlineSnapshot(
-      '"export default { a: 1, b: [undefined, {}] };"'
+    expect(await generate(mod)).toMatchInlineSnapshot(
+      '"export default { a: 1, b: [undefined, {}] };"',
     );
 
     delete mod.exports.default.a;
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         b: [undefined, {}],
       };"
     `);
   });
 
-  it("should preserve code styles", () => {
+  it("should preserve code styles", async () => {
     const mod = parseModule(
       `
 export const config = {
   array: ['a']
 }
-    `.trim()
+    `.trim(),
     );
     mod.exports.config.array.push("b");
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export const config = {
         array: [\\"a\\", \\"b\\"],
       };"
     `);
   });
 
-  it("satisfies", () => {
+  it("satisfies", async () => {
     const mod = parseModule(
-      `export const obj = { foo: 42 } satisfies Record<string, number>;`
+      `export const obj = { foo: 42 } satisfies Record<string, number>;`,
     );
 
     mod.exports.obj.foo = 100;
 
-    expect(generate(mod)).toMatchInlineSnapshot(
-      '"export const obj = { foo: 100 } satisfies Record<string, number>;"'
+    expect(await generate(mod)).toMatchInlineSnapshot(
+      '"export const obj = { foo: 100 } satisfies Record<string, number>;"',
     );
   });
 
-  it("satisfies 2", () => {
+  it("satisfies 2", async () => {
     const mod = parseModule(`export default {} satisfies {}`);
 
     mod.exports.default.foo = 100;
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         foo: 100,
       } satisfies {};"
     `);
   });
 
-  it("as", () => {
+  it("as", async () => {
     const mod = parseModule(
-      `export const obj = { foo: 42 } as Record<string, number>;`
+      `export const obj = { foo: 42 } as Record<string, number>;`,
     );
 
     mod.exports.obj.foo = 100;
 
-    expect(generate(mod)).toMatchInlineSnapshot(
-      '"export const obj = { foo: 100 } as Record<string, number>;"'
+    expect(await generate(mod)).toMatchInlineSnapshot(
+      '"export const obj = { foo: 100 } as Record<string, number>;"',
     );
   });
 
-  it("as 2", () => {
+  it("as 2", async () => {
     const mod = parseModule(`export default {} as {}`);
 
     mod.exports.default.foo = 100;
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         foo: 100,
       } as {};"
@@ -224,7 +224,7 @@ export const config = {
       exp[2] = "foo";
 
       expect(generateCode(exp).code).toMatchInlineSnapshot(
-        '"[1, { foo: 2 }, \\"foo\\"]"'
+        '"[1, { foo: 2 }, \\"foo\\"]"',
       );
     });
   });

@@ -4,7 +4,7 @@ import { deepMergeObject } from "../src/helpers/deep-merge";
 import { generate } from "./_utils";
 
 describe("object", () => {
-  it("object property", () => {
+  it("object property", async () => {
     const mod = parseModule(
       `
 export default {
@@ -14,7 +14,7 @@ export default {
     foo() {}
   }
 }
-    `.trim()
+    `.trim(),
     );
 
     expect(mod.exports.default.foo.a).toBe(1);
@@ -40,7 +40,7 @@ export default {
 
     mod.exports.default.foo["a-b"] = "updated";
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         foo: {
           [\\"a\\"]: 1,
@@ -52,14 +52,14 @@ export default {
     `);
   });
 
-  it("recursively create objects", () => {
+  it("recursively create objects", async () => {
     const mod = parseModule(
       `
 export default {
   foo: {
   }
 }
-    `.trim()
+    `.trim(),
     );
 
     // Update existing object keys
@@ -72,7 +72,7 @@ export default {
     mod.exports.default.bar.testValue = {};
     mod.exports.default.bar.testValue.value = "a";
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         foo: {
           value: 1,
@@ -87,7 +87,7 @@ export default {
     `);
   });
 
-  it("recursively merge objects", () => {
+  it("recursively merge objects", async () => {
     const mod = parseModule(
       `
 export default {
@@ -96,7 +96,7 @@ export default {
   100: 10,
   true: 10
 }
-    `.trim()
+    `.trim(),
     );
 
     const obj = {
@@ -118,7 +118,7 @@ export default {
     // Recursively merge existing object with `obj`
     deepMergeObject(mod.exports.default, obj);
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         foo: {
           value: 1,
@@ -136,7 +136,7 @@ export default {
     `);
   });
 
-  it("object keys camelCase style", () => {
+  it("object keys camelCase style", async () => {
     const mod = parseModule(`export default defineAppConfig({
       test: {
         foo: 1,
@@ -152,7 +152,7 @@ export default {
 
     deepMergeObject(config, obj1);
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default defineAppConfig({
         test: {
           foo: 1,
@@ -166,7 +166,7 @@ export default {
 
     deepMergeObject(config, obj2);
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default defineAppConfig({
         test: {
           foo: 1,
@@ -181,7 +181,7 @@ export default {
     `);
   });
 
-  it("object keys kebab-case style", () => {
+  it("object keys kebab-case style", async () => {
     const mod = parseModule(`export default defineAppConfig({
       test: {
         foo: 1,
@@ -198,7 +198,7 @@ export default {
     deepMergeObject(config, obj1);
 
     // Valid
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default defineAppConfig({
         test: {
           foo: 1,
@@ -213,7 +213,7 @@ export default {
     deepMergeObject(config, obj2);
 
     // TODO: Should be valid
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default defineAppConfig({
         test: {
           foo: 1,
