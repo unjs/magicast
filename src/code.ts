@@ -14,7 +14,7 @@ import { proxify } from "./proxy/proxify";
 
 export function parseModule<Exports extends object = any>(
   code: string,
-  options?: ParseOptions
+  options?: ParseOptions,
 ): ProxifiedModule<Exports> {
   const node: ParsedFileNode = parse(code, {
     parser: options?.parser || getBabelParser(),
@@ -25,7 +25,7 @@ export function parseModule<Exports extends object = any>(
 
 export function parseExpression<T>(
   code: string,
-  options?: ParseOptions
+  options?: ParseOptions,
 ): Proxified<T> {
   const root: ParsedFileNode = parse("(" + code + ")", {
     parser: options?.parser || getBabelParser(),
@@ -50,7 +50,7 @@ export function parseExpression<T>(
 
 export function generateCode(
   node: { $ast: ASTNode } | ASTNode | ProxifiedModule<any>,
-  options: GenerateOptions = {}
+  options: GenerateOptions = {},
 ): { code: string; map?: any } {
   const ast = (node as Proxified).$ast || node;
 
@@ -69,7 +69,7 @@ export function generateCode(
 
 export async function loadFile<Exports extends object = any>(
   filename: string,
-  options: ParseOptions = {}
+  options: ParseOptions = {},
 ): Promise<ProxifiedModule<Exports>> {
   const contents = await fsp.readFile(filename, "utf8");
   options.sourceFileName = options.sourceFileName ?? filename;
@@ -79,7 +79,7 @@ export async function loadFile<Exports extends object = any>(
 export async function writeFile(
   node: { ast: ASTNode } | ASTNode,
   filename?: string,
-  options?: ParseOptions
+  options?: ParseOptions,
 ): Promise<void> {
   const ast = "ast" in node ? node.ast : node;
   const { code, map } = generateCode(ast, options);

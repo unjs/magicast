@@ -14,7 +14,7 @@ export const builders = {
   functionCall(callee: string, ...args: any[]): Proxified {
     const node = b.callExpression(
       b.identifier(callee),
-      args.map((i) => literalToAst(i) as any)
+      args.map((i) => literalToAst(i) as any),
     );
     return proxifyFunctionCall(node as any);
   },
@@ -24,7 +24,7 @@ export const builders = {
   newExpression(callee: string, ...args: any[]): Proxified {
     const node = b.newExpression(
       b.identifier(callee),
-      args.map((i) => literalToAst(i) as any)
+      args.map((i) => literalToAst(i) as any),
     );
     return proxifyNewExpression(node as any);
   },

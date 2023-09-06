@@ -1,12 +1,19 @@
 {
   "compilerOptions": {
+    "rootDir": ".",
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "magicast": [
+        "./src/index.ts"
+      ]
+    }
   },
-  "include": [
-    "src"
+  "exclude": [
+    "dist",
+    "vendor"
   ]
 }

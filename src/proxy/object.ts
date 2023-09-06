@@ -9,7 +9,7 @@ const b = recast.types.builders;
 
 export function proxifyObject<T extends object>(
   node: ASTNode,
-  mod?: ProxifiedModule
+  mod?: ProxifiedModule,
 ): ProxifiedObject<T> {
   if (!("properties" in node)) {
     return undefined as any;
@@ -35,7 +35,7 @@ export function proxifyObject<T extends object>(
 
   const getPropName = (
     prop: (typeof node.properties)[0],
-    throwError = false
+    throwError = false,
   ) => {
     if ("key" in prop && "name" in prop.key) {
       return prop.key.name;
@@ -58,7 +58,7 @@ export function proxifyObject<T extends object>(
 
   const replaceOrAddProp = (key: string, value: ASTNode) => {
     const prop = (node.properties as any[]).find(
-      (prop: any) => getPropName(prop) === key
+      (prop: any) => getPropName(prop) === key,
     );
     if (prop) {
       prop.value = value;
@@ -114,7 +114,8 @@ export function proxifyObject<T extends object>(
           key = String(key);
         }
         const index = node.properties.findIndex(
-          (prop) => "key" in prop && "name" in prop.key && prop.key.name === key
+          (prop) =>
+            "key" in prop && "name" in prop.key && prop.key.name === key,
         );
         if (index !== -1) {
           node.properties.splice(index, 1);
@@ -126,6 +127,6 @@ export function proxifyObject<T extends object>(
           .map((prop) => getPropName(prop, true))
           .filter(Boolean) as string[];
       },
-    }
+    },
   ) as ProxifiedObject<T>;
 }

@@ -6,7 +6,7 @@ export function addNuxtModule(
   magicast: ProxifiedModule<any>,
   name: string,
   optionsKey?: string,
-  options?: any
+  options?: any,
 ) {
   const config = getDefaultExportOptions(magicast);
 

@@ -53,8 +53,8 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
         : (b.exportNamedDeclaration(
             b.variableDeclaration("const", [
               b.variableDeclarator(b.identifier(key), node),
-            ])
-          ) as any)
+            ]),
+          ) as any),
     );
   };
 
@@ -86,7 +86,7 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
               "declarations" in i.declaration
             ) {
               return i.declaration.declarations.map((d) =>
-                "name" in d.id ? d.id.name : ""
+                "name" in d.id ? d.id.name : "",
               );
             }
             return [];
@@ -117,6 +117,6 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
         }
         return false;
       },
-    }
+    },
   );
 }
