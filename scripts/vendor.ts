@@ -1,7 +1,6 @@
 /* eslint-disable unicorn/prefer-top-level-await */
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
-import { execa } from 'execa'
 import { downloadTemplate } from 'giget'
 
 // This script clones recast and patches, and then re-bundle it so we get rid of the unnecessary polyfills

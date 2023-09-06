@@ -53,7 +53,6 @@
     "eslint": "^8.48.0",
     "eslint-config-unjs": "^0.2.1",
     "esno": "^0.17.0",
-    "execa": "^8.0.1",
     "giget": "^1.1.2",
     "lint-staged": "^14.0.1",
     "magicast": "workspace:*",
