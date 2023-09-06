@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { parseModule } from "magicast";
 import { generate } from "./_utils";
+import { parseModule } from "magicast";
 
 describe("array", () => {
   it("array operations", async () => {
