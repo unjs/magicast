@@ -46,9 +46,13 @@ export function getConfigFromVariableDeclaration(
           declaration.id.name === configDecalarationId &&
           declaration.init
         ) {
-          const init = declaration.init;
+          const init =
+            declaration.init.type === "TSSatisfiesExpression"
+              ? declaration.init.expression
+              : declaration.init;
 
-          const configExpression = parseExpression(generateCode(init).code);
+          const code = generateCode(init).code;
+          const configExpression = parseExpression(code);
 
           return {
             declaration,
