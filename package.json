@@ -1,6 +1,6 @@
 {
   "name": "magicast",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "Modify a JS/TS file and write back magically just like JSON!",
   "repository": "unjs/magicast",
   "license": "MIT",
@@ -27,6 +27,7 @@
   ],
   "scripts": {
     "build": "unbuild",
+    "prepare": "esno ./scripts/vendor.ts",
     "dev": "vitest dev",
     "dev:ui": "vitest dev --ui",
     "lint": "eslint --cache --ext .ts,.js,.mjs,.cjs . && prettier -c src test",
@@ -34,26 +35,37 @@
     "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit",
     "release": "pnpm run test run && changelogen --release && npm publish && git push --follow-tags",
-    "test": "vitest"
+    "test": "vitest",
+    "test:build": "TEST_BUILD=true vitest",
+    "test:full": "pnpm run test && pnpm run build && pnpm run test:build"
   },
   "dependencies": {
-    "@babel/parser": "^7.22.13",
-    "@babel/types": "^7.22.11",
-    "recast": "^0.23.4"
+    "@babel/parser": "^7.22.16",
+    "@babel/types": "^7.22.19",
+    "source-map-js": "^1.0.2"
   },
   "devDependencies": {
-    "@types/node": "^20.5.7",
-    "@vitest/coverage-v8": "^0.34.3",
-    "@vitest/ui": "^0.34.3",
+    "@types/node": "^20.6.0",
+    "@vitest/coverage-v8": "^0.34.4",
+    "@vitest/ui": "^0.34.4",
+    "ast-types": "^0.16.1",
     "changelogen": "^0.5.5",
-    "eslint": "^8.48.0",
+    "eslint": "^8.49.0",
     "eslint-config-unjs": "^0.2.1",
-    "lint-staged": "^13.3.0",
-    "prettier": "^2.8.8",
+    "esno": "^0.17.0",
+    "giget": "^1.1.2",
+    "lint-staged": "^14.0.1",
+    "magicast": "workspace:*",
+    "prettier": "^3.0.3",
+    "recast": "^0.23.4",
     "simple-git-hooks": "^2.9.0",
+    "source-map": "npm:source-map-js@latest",
     "typescript": "^5.2.2",
-    "unbuild": "^1.2.1",
-    "vitest": "^0.34.3"
+    "unbuild": "^2.0.0",
+    "vitest": "^0.34.4"
+  },
+  "resolutions": {
+    "source-map": "npm:source-map-js@latest"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
@@ -64,5 +76,24 @@
       "prettier -w"
     ]
   },
-  "packageManager": "pnpm@8.7.0"
+  "packageManager": "pnpm@8.7.5",
+  "pnpm": {
+    "overrides": {
+      "array-includes": "npm:@nolyfill/array-includes@latest",
+      "array.prototype.flat": "npm:@nolyfill/array.prototype.flat@latest",
+      "array.prototype.flatmap": "npm:@nolyfill/array.prototype.flatmap@latest",
+      "available-typed-arrays": "npm:@nolyfill/available-typed-arrays@latest",
+      "define-properties": "npm:@nolyfill/define-properties@latest",
+      "function-bind": "npm:@nolyfill/function-bind@latest",
+      "gopd": "npm:@nolyfill/gopd@latest",
+      "has": "npm:@nolyfill/has@latest",
+      "has-symbols": "npm:@nolyfill/has-symbols@latest",
+      "has-tostringtag": "npm:@nolyfill/has-tostringtag@latest",
+      "is-arguments": "npm:@nolyfill/is-arguments@latest",
+      "is-generator-function": "npm:@nolyfill/is-generator-function@latest",
+      "object-is": "npm:@nolyfill/object-is@latest",
+      "object.values": "npm:@nolyfill/object.values@latest",
+      "which-typed-array": "npm:@nolyfill/which-typed-array@latest"
+    }
+  }
 }

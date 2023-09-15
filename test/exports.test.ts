@@ -1,18 +1,18 @@
 import { expect, it, describe } from "vitest";
-import { parseModule } from "../src";
+import { parseModule } from "magicast";
 import { generate } from "./_utils";
 
 describe("exports", () => {
-  it("manipulate exports", () => {
+  it("manipulate exports", async () => {
     const mod = parseModule("");
 
     expect(Object.keys(mod.exports)).toEqual([]);
     expect(mod.exports).toMatchInlineSnapshot(`{}`);
-    expect(generate(mod)).toMatchInlineSnapshot('""');
+    expect(await generate(mod)).toMatchInlineSnapshot('""');
 
     mod.exports.default = { foo: "1" };
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
     "export default {
       foo: \\"1\\",
     };"
@@ -20,7 +20,7 @@ describe("exports", () => {
 
     mod.exports.default.foo = 2;
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
     "export default {
       foo: 2,
     };"
@@ -31,7 +31,7 @@ describe("exports", () => {
 
     expect(Object.keys(mod.exports)).toEqual(["default", "named"]);
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
     "export default {
       foo: 2,
     };
@@ -57,14 +57,14 @@ describe("exports", () => {
     // delete
     delete mod.exports.default;
 
-    expect(generate(mod)).toMatchInlineSnapshot(
-      '"export const named = [\\"a\\"];"'
+    expect(await generate(mod)).toMatchInlineSnapshot(
+      '"export const named = [\\"a\\"];"',
     );
 
     delete mod.exports.named;
 
     expect(Object.keys(mod.exports)).toEqual([]);
 
-    expect(generate(mod)).toMatchInlineSnapshot('""');
+    expect(await generate(mod)).toMatchInlineSnapshot('""');
   });
 });

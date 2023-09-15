@@ -1,9 +1,9 @@
 import { expect, it, describe } from "vitest";
-import { parseModule } from "../src";
+import { parseModule } from "magicast";
 import { generate } from "./_utils";
 
 describe("imports", () => {
-  it("manipulate imports", () => {
+  it("manipulate imports", async () => {
     const mod = parseModule(`
 import { defineConfig, Plugin } from 'vite'
 import Vue from '@vitejs/plugin-vue'
@@ -64,7 +64,7 @@ foo: []
 
     delete mod.imports.Plugin;
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
     "import { defineConfig } from \\"vite\\";
     import VuePlugin from \\"@vitejs/plugin-vue\\";
     import * as path2 from \\"path\\";
@@ -74,7 +74,7 @@ foo: []
     });"
   `);
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
     "import { defineConfig } from \\"vite\\";
     import VuePlugin from \\"@vitejs/plugin-vue\\";
     import * as path2 from \\"path\\";
@@ -99,7 +99,7 @@ foo: []
       imported: "Good",
     });
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
     "import * as Star from \\"star\\";
     import Foo from \\"foo\\";
     import { defineConfig, Good } from \\"vite\\";
@@ -113,7 +113,7 @@ foo: []
 
     mod.imports.defineConfig.from = "vitest/config";
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
     "import { defineConfig } from \\"vitest/config\\";
     import * as Star from \\"star\\";
     import Foo from \\"foo\\";

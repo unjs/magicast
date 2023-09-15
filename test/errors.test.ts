@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest";
-import { parseExpression, parseModule } from "../src";
+import { parseExpression, parseModule } from "magicast";
 import { generate } from "./_utils";
 
 describe("errors", () => {
@@ -11,7 +11,7 @@ export default {
     ? 1
     : 2
 }
-    `.trim()
+    `.trim(),
     );
 
     expect(() => mod.exports.default.a).toThrowErrorMatchingInlineSnapshot(
@@ -25,7 +25,7 @@ export default {
         4 |     : 2
         5 | }
       "
-    `
+    `,
     );
   });
 
@@ -35,7 +35,7 @@ export default {
 export default {
   a: 1 + 1
 }
-    `.trim()
+    `.trim(),
     );
 
     expect(() => mod.exports.default.a).toThrowErrorMatchingInlineSnapshot(
@@ -47,11 +47,11 @@ export default {
                  ^
         3 | }
       "
-    `
+    `,
     );
   });
 
-  it("array destructuring", () => {
+  it("array destructuring", async () => {
     const mod = parseModule(
       `
 export default {
@@ -61,12 +61,12 @@ export default {
     ...foo
   ]
 }
-    `.trim()
+    `.trim(),
     );
 
     // Adding an item should work
     mod.exports.default.foo.push("foo");
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         foo: [1, 2, ...foo, \\"foo\\"],
       };"
@@ -86,11 +86,11 @@ export default {
         6 |   ]
         7 | }
       "
-    `
+    `,
     );
   });
 
-  it("object destructuring", () => {
+  it("object destructuring", async () => {
     const mod = parseModule(
       `
 export default {
@@ -99,12 +99,12 @@ export default {
     ...bar
   }
 }
-    `.trim()
+    `.trim(),
     );
 
     // Adding a property should work
     mod.exports.default.foo.extra = "foo";
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         foo: {
           a: 1,
@@ -128,7 +128,7 @@ export default {
         5 |   }
         6 | }
       "
-    `
+    `,
     );
   });
 

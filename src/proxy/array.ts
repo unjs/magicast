@@ -6,7 +6,7 @@ import { proxify } from "./proxify";
 export function proxifyArrayElements<T extends any[]>(
   node: ASTNode,
   elements: ASTNode[],
-  mod?: ProxifiedModule
+  mod?: ProxifiedModule,
 ): ProxifiedArray<T> {
   const getItem = (key: number) => {
     return elements[key];
@@ -36,7 +36,7 @@ export function proxifyArrayElements<T extends any[]>(
         const deleted = elements.splice(
           start,
           deleteCount,
-          ...items.map((n) => literalToAst(n))
+          ...items.map((n) => literalToAst(n)),
         );
         return deleted.map((n) => proxify(n as any, mod));
       },
@@ -104,13 +104,13 @@ export function proxifyArrayElements<T extends any[]>(
       ownKeys() {
         return ["length", ...elements.map((_, i) => i.toString())];
       },
-    }
+    },
   );
 }
 
 export function proxifyArray<T extends any[]>(
   node: ASTNode,
-  mod?: ProxifiedModule
+  mod?: ProxifiedModule,
 ): ProxifiedArray<T> {
   if (!("elements" in node)) {
     return undefined as any;

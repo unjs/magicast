@@ -19,7 +19,8 @@ jobs:
           node-version: 18
           cache: "pnpm"
       - run: pnpm install
-      - run: pnpm lint
       - run: pnpm build
-      - run: pnpm vitest --coverage
+      - run: pnpm lint
+      - run: pnpm run test --coverage
+      - run: pnpm run test:build
       - uses: codecov/codecov-action@v3

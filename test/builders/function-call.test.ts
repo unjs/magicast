@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { builders, parseModule } from "../../src";
+import { builders, parseModule } from "magicast";
 import { generate } from "../_utils";
 
 describe("builders/functionCall", () => {
-  it("new", () => {
+  it("new", async () => {
     const call = builders.functionCall("functionName", 1, "bar", {
       foo: "bar",
     });
@@ -22,7 +22,7 @@ describe("builders/functionCall", () => {
     const mod = parseModule("");
     mod.exports.a = call;
 
-    expect(generate(mod)).toMatchInlineSnapshot(`
+    expect(await generate(mod)).toMatchInlineSnapshot(`
       "export const a = functionName(1, \\"bar\\", {
         foo: \\"bar\\",
       });"

@@ -51,7 +51,7 @@ export interface UpdateVitePluginConfigOptions {
 
 export function addVitePlugin(
   magicast: ProxifiedModule<any>,
-  plugin: AddVitePluginOptions
+  plugin: AddVitePluginOptions,
 ) {
   const config: Proxified | undefined = getDefaultExportOptions(magicast);
 
@@ -72,7 +72,7 @@ export function addVitePlugin(
 
 export function findVitePluginCall(
   magicast: ProxifiedModule<any>,
-  plugin: UpdateVitePluginConfigOptions | string
+  plugin: UpdateVitePluginConfigOptions | string,
 ): ProxifiedFunctionCall | undefined {
   const _plugin =
     typeof plugin === "string" ? { from: plugin, imported: "default" } : plugin;
@@ -81,18 +81,18 @@ export function findVitePluginCall(
 
   const constructor = magicast.imports.$items.find(
     (i) =>
-      i.from === _plugin.from && i.imported === (_plugin.imported || "default")
+      i.from === _plugin.from && i.imported === (_plugin.imported || "default"),
   )?.local;
 
   return config.plugins?.find(
-    (p: any) => p && p.$type === "function-call" && p.$callee === constructor
+    (p: any) => p && p.$type === "function-call" && p.$callee === constructor,
   );
 }
 
 export function updateVitePluginConfig(
   magicast: ProxifiedModule<any>,
   plugin: UpdateVitePluginConfigOptions | string,
-  handler: Record<string, any> | ((args: any[]) => any[])
+  handler: Record<string, any> | ((args: any[]) => any[]),
 ) {
   const item = findVitePluginCall(magicast, plugin);
   if (!item) {
@@ -116,7 +116,7 @@ export function updateVitePluginConfig(
  */
 function insertPluginIntoVariableDeclarationConfig(
   magicast: ProxifiedModule<any>,
-  plugin: AddVitePluginOptions
+  plugin: AddVitePluginOptions,
 ) {
   const { config: configObject, declaration } =
     getConfigFromVariableDeclaration(magicast);
@@ -133,8 +133,25 @@ function insertPluginIntoVariableDeclarationConfig(
     ) {
       // @ts-ignore this works despite the type error because of recast
       declaration.init = generateCode(
-        builders.functionCall(declaration.init.callee.name, configObject)
+        builders.functionCall(declaration.init.callee.name, configObject),
       ).code;
+    } else if (declaration.init.type === "TSSatisfiesExpression") {
+      if (declaration.init.expression.type === "ObjectExpression") {
+        // @ts-ignore this works despite the type error because of recast
+        declaration.init.expression = generateCode(configObject).code;
+      }
+      if (
+        declaration.init.expression.type === "CallExpression" &&
+        declaration.init.expression.callee.type === "Identifier"
+      ) {
+        // @ts-ignore this works despite the type error because of recast
+        declaration.init.expression = generateCode(
+          builders.functionCall(
+            declaration.init.expression.callee.name,
+            configObject,
+          ),
+        ).code;
+      }
     }
   }
 }
@@ -149,6 +166,6 @@ function insertPluginIntoConfig(plugin: AddVitePluginOptions, config: any) {
     0,
     plugin.options
       ? builders.functionCall(plugin.constructor, plugin.options)
-      : builders.functionCall(plugin.constructor)
+      : builders.functionCall(plugin.constructor),
   );
 }

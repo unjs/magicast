@@ -13,7 +13,7 @@ export interface CodeFormatOptions {
 
 export function detectCodeFormat(
   code: string,
-  userStyles: CodeFormatOptions = {}
+  userStyles: CodeFormatOptions = {},
 ): CodeFormatOptions {
   // Detect features only user not specified
   const detect = {

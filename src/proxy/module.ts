@@ -9,7 +9,7 @@ import { createProxy } from "./_utils";
 
 export function proxifyModule<T extends object>(
   ast: ParsedFileNode,
-  code: string
+  code: string,
 ): ProxifiedModule<T> {
   const root = ast.program;
   if (root.type !== "Program") {

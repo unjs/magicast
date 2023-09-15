@@ -25,14 +25,14 @@ export function getDefaultExportOptions(magicast: ProxifiedModule<any>) {
  *          If no config declaration is found, undefined is returned.
  */
 export function getConfigFromVariableDeclaration(
-  magicast: ProxifiedModule<any>
+  magicast: ProxifiedModule<any>,
 ): {
   declaration: VariableDeclarator;
   config: ProxifiedObject<any> | undefined;
 } {
   if (magicast.exports.default.$type !== "identifier") {
     throw new MagicastError(
-      `Not supported: Cannot modify this kind of default export (${magicast.exports.default.$type})`
+      `Not supported: Cannot modify this kind of default export (${magicast.exports.default.$type})`,
     );
   }
 
@@ -46,9 +46,13 @@ export function getConfigFromVariableDeclaration(
           declaration.id.name === configDecalarationId &&
           declaration.init
         ) {
-          const init = declaration.init;
+          const init =
+            declaration.init.type === "TSSatisfiesExpression"
+              ? declaration.init.expression
+              : declaration.init;
 
-          const configExpression = parseExpression(generateCode(init).code);
+          const code = generateCode(init).code;
+          const configExpression = parseExpression(code);
 
           return {
             declaration,

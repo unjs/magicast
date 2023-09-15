@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v0.2.11
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.2.10...v0.2.11)
+
+### 🚀 Enhancements
+
+- **helpers:** Handle Vite config declarations with `satisfies` keyword ([#82](https://github.com/unjs/magicast/pull/82))
+
+### 🏡 Chore
+
+- **release:** V0.2.10 ([4faf487](https://github.com/unjs/magicast/commit/4faf487))
+- Use v8 coverage ([c1277a7](https://github.com/unjs/magicast/commit/c1277a7))
+- Update deps, lint with new prettier ([30df539](https://github.com/unjs/magicast/commit/30df539))
+- Update tsconfig ([02743d3](https://github.com/unjs/magicast/commit/02743d3))
+- Lint ([4601589](https://github.com/unjs/magicast/commit/4601589))
+
+### 🤖 CI
+
+- Update lint order ([5a5d49d](https://github.com/unjs/magicast/commit/5a5d49d))
+
+### ❤️ Contributors
+
+- Lukas Stracke <lukas.stracke@sentry.io>
+- Anthony Fu <anthonyfu117@hotmail.com>
+
 ## v0.2.10
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.2.9...v0.2.10)

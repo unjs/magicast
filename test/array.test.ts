@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { parseModule } from "../src";
+import { parseModule } from "magicast";
 import { generate } from "./_utils";
 
 describe("array", () => {
-  it("array operations", () => {
+  it("array operations", async () => {
     const mod = parseModule<{ default: (number | any | string)[] }>(
-      `export default [1, 2, 3, 4, 5]`
+      `export default [1, 2, 3, 4, 5]`,
     );
 
     expect(mod.exports.default.length).toBe(5);
@@ -16,7 +16,7 @@ describe("array", () => {
 
     expect(deleted).toEqual([2, 3, 4]);
 
-    expect(generate(mod)).toMatchInlineSnapshot(
+    expect(await generate(mod)).toMatchInlineSnapshot(
       `
       "export default [
         1,
@@ -26,11 +26,11 @@ describe("array", () => {
         \\"bar\\",
         5,
       ];"
-    `
+    `,
     );
 
     const foundIndex = mod.exports.default.findIndex(
-      (item) => item.foo === "bar"
+      (item) => item.foo === "bar",
     );
     const found = mod.exports.default.find((item) => item.foo === "bar");
 
