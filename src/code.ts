@@ -77,13 +77,12 @@ export async function loadFile<Exports extends object = any>(
 }
 
 export async function writeFile(
-  node: { ast: ASTNode } | ASTNode,
-  filename?: string,
+  node: { $ast: ASTNode } | ASTNode,
+  filename: string,
   options?: ParseOptions,
 ): Promise<void> {
-  const ast = "ast" in node ? node.ast : node;
+  const ast = "$ast" in node ? node.$ast : node;
   const { code, map } = generateCode(ast, options);
-  filename = filename || (ast as any).name || "output.js";
   await fsp.writeFile(filename as string, code);
   if (map) {
     await fsp.writeFile(filename + ".map", map);
