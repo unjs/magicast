@@ -1,6 +1,6 @@
 import { it, describe, expect } from "vitest";
-import { generate } from "../_utils";
 import { parseModule } from "magicast";
+import { generate } from "../_utils";
 import { addVitePlugin, updateVitePluginConfig } from "magicast/helpers";
 
 describe("helpers > vite", () => {
@@ -207,7 +207,7 @@ export default defineConfig({
     expect(await generate(mod)).toMatchInlineSnapshot(`
       "import { VitePWA } from \\"vite-plugin-pwa\\";
       import { somePlugin1, somePlugin2 } from \\"some-module\\";
-      
+
       import type { UserConfig } from \\"vite\\";
 
       const myConfig = {
@@ -243,7 +243,7 @@ export default defineConfig({
     expect(await generate(mod)).toMatchInlineSnapshot(`
       "import { VitePWA } from \\"vite-plugin-pwa\\";
       import { somePlugin1, somePlugin2 } from \\"some-module\\";
-      
+
       import type { UserConfig } from \\"vite\\";
 
       const myConfig = defineConfig({
