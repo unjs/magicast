@@ -21,8 +21,10 @@ async function cloneRecast() {
 
     // Remove the assert import and usage
     await Promise.all(fs.readdirSync('vendor/recast/lib', { withFileTypes: true }).map(async (file) => {
-      if (!file.isFile()) { return }
-      return filterLines(join(file.path, file.name), (line) => {
+      if (!file.isFile()) {
+        return
+      }
+      return await filterLines(join(file.path, file.name), (line) => {
         if (line.startsWith('import assert from')) {
           return false
         }

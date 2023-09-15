@@ -1,6 +1,6 @@
 import { it, describe, expect } from "vitest";
-import { generate } from "../_utils";
 import { parseModule } from "magicast";
+import { generate } from "../_utils";
 import { addNuxtModule } from "magicast/helpers";
 
 describe("helpers > nuxt", () => {

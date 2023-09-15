@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest";
-import { generate } from "./_utils";
 import { parseExpression, parseModule } from "magicast";
+import { generate } from "./_utils";
 
 describe("errors", () => {
   it("ternary", () => {
