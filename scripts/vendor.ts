@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/prefer-top-level-await */
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
+import { join } from 'node:path'
 import { downloadTemplate } from 'giget'
 
 // This script clones recast and patches, and then re-bundle it so we get rid of the unnecessary polyfills
@@ -19,24 +20,21 @@ async function cloneRecast() {
     await fsp.rm('vendor/recast/tsconfig.json')
 
     // Remove the assert import and usage
-    await filterLines('vendor/recast/lib/patcher.ts', (line) => {
-      if (line.startsWith('import assert from')) {
-        return false
-      }
-      if (/^\s*assert\./.test(line)) {
-        return `false && ` + line
-      }
-      return line
-    })
-    await filterLines('vendor/recast/lib/patcher.ts', (line) => {
-      if (line.startsWith('import assert from')) {
-        return false
-      }
-      if (/^\s*assert\./.test(line)) {
-        return `false && ` + line
-      }
-      return line
-    })
+    await Promise.all(fs.readdirSync('vendor/recast/lib', { withFileTypes: true }).map(async (file) => {
+      if (!file.isFile()) { return }
+      return filterLines(join(file.path, file.name), (line) => {
+        if (line.startsWith('import assert from')) {
+          return false
+        }
+        if (/^\s*assert\./.test(line)) {
+          if (line.endsWith(';')) {
+            return false
+          }
+          return `// @ts-ignore \n false && ` + line
+        }
+        return line
+      })
+    }))
 
     // Remove the require(), and since we are providing our own parser anyway
     await filterLines('vendor/recast/lib/options.ts', (line) => {
@@ -44,6 +42,10 @@ async function cloneRecast() {
         return false
       }
       return line
+    })
+
+    await filterLines('vendor/recast/lib/parser.ts', (line) => {
+      return line.replace('require("esprima")', `false && require("")`)
     })
 
     await filterLines('vendor/recast/lib/util.ts', (line) => {
