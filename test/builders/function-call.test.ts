@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { builders, parseModule } from "magicast";
 import { generate } from "../_utils";
+import { builders, parseModule } from "magicast";
 
 describe("builders/functionCall", () => {
   it("new", async () => {

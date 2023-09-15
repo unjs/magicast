@@ -135,6 +135,23 @@ function insertPluginIntoVariableDeclarationConfig(
       declaration.init = generateCode(
         builders.functionCall(declaration.init.callee.name, configObject),
       ).code;
+    } else if (declaration.init.type === "TSSatisfiesExpression") {
+      if (declaration.init.expression.type === "ObjectExpression") {
+        // @ts-ignore this works despite the type error because of recast
+        declaration.init.expression = generateCode(configObject).code;
+      }
+      if (
+        declaration.init.expression.type === "CallExpression" &&
+        declaration.init.expression.callee.type === "Identifier"
+      ) {
+        // @ts-ignore this works despite the type error because of recast
+        declaration.init.expression = generateCode(
+          builders.functionCall(
+            declaration.init.expression.callee.name,
+            configObject,
+          ),
+        ).code;
+      }
     }
   }
 }

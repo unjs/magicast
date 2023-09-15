@@ -1,6 +1,6 @@
 {
   "name": "magicast",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "Modify a JS/TS file and write back magically just like JSON!",
   "repository": "unjs/magicast",
   "license": "MIT",
@@ -40,17 +40,17 @@
     "test:full": "pnpm run test && pnpm run build && pnpm run test:build"
   },
   "dependencies": {
-    "@babel/parser": "^7.22.15",
-    "@babel/types": "^7.22.15",
+    "@babel/parser": "^7.22.16",
+    "@babel/types": "^7.22.19",
     "source-map-js": "^1.0.2"
   },
   "devDependencies": {
-    "@types/node": "^20.5.9",
-    "@vitest/coverage-v8": "^0.34.3",
-    "@vitest/ui": "^0.34.3",
+    "@types/node": "^20.6.0",
+    "@vitest/coverage-v8": "^0.34.4",
+    "@vitest/ui": "^0.34.4",
     "ast-types": "^0.16.1",
     "changelogen": "^0.5.5",
-    "eslint": "^8.48.0",
+    "eslint": "^8.49.0",
     "eslint-config-unjs": "^0.2.1",
     "esno": "^0.17.0",
     "giget": "^1.1.2",
@@ -62,7 +62,7 @@
     "source-map": "npm:source-map-js@latest",
     "typescript": "^5.2.2",
     "unbuild": "^2.0.0",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.4"
   },
   "resolutions": {
     "source-map": "npm:source-map-js@latest"
@@ -76,7 +76,7 @@
       "prettier -w"
     ]
   },
-  "packageManager": "pnpm@8.7.4",
+  "packageManager": "pnpm@8.7.5",
   "pnpm": {
     "overrides": {
       "array-includes": "npm:@nolyfill/array-includes@latest",

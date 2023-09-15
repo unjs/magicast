@@ -1,6 +1,6 @@
 import { it, describe, expect } from "vitest";
-import { parseModule } from "magicast";
 import { generate } from "../_utils";
+import { parseModule } from "magicast";
 import { addVitePlugin, updateVitePluginConfig } from "magicast/helpers";
 
 describe("helpers > vite", () => {
@@ -177,6 +177,78 @@ export default defineConfig({
       const myConfig = {
         plugins: [somePlugin1(), VitePWA(), somePlugin2()],
       };
+
+      export default myConfig;"
+    `);
+  });
+
+  it("handles default export from identifier (object with satisfies)", async () => {
+    const code = `
+      import { somePlugin1, somePlugin2 } from 'some-module'
+
+      import type { UserConfig } from 'vite';
+
+      const myConfig = {
+        plugins: [somePlugin1(), somePlugin2()]
+      } satisfies UserConfig;
+
+      export default myConfig;
+    `;
+
+    const mod = parseModule(code);
+
+    addVitePlugin(mod, {
+      index: 1,
+      from: "vite-plugin-pwa",
+      imported: "VitePWA",
+      constructor: "VitePWA",
+    });
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import { VitePWA } from \\"vite-plugin-pwa\\";
+      import { somePlugin1, somePlugin2 } from \\"some-module\\";
+      
+      import type { UserConfig } from \\"vite\\";
+
+      const myConfig = {
+        plugins: [somePlugin1(), VitePWA(), somePlugin2()],
+      } satisfies UserConfig;
+
+      export default myConfig;"
+    `);
+  });
+
+  it("handles default export from identifier (function with satisfies)", async () => {
+    const code = `
+      import { somePlugin1, somePlugin2 } from 'some-module'
+
+      import type { UserConfig } from 'vite';
+
+      const myConfig = defineConfig({
+        plugins: [somePlugin1(), somePlugin2()]
+      }) satisfies UserConfig;
+
+      export default myConfig;
+    `;
+
+    const mod = parseModule(code);
+
+    addVitePlugin(mod, {
+      index: 1,
+      from: "vite-plugin-pwa",
+      imported: "VitePWA",
+      constructor: "VitePWA",
+    });
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import { VitePWA } from \\"vite-plugin-pwa\\";
+      import { somePlugin1, somePlugin2 } from \\"some-module\\";
+      
+      import type { UserConfig } from \\"vite\\";
+
+      const myConfig = defineConfig({
+        plugins: [somePlugin1(), VitePWA(), somePlugin2()],
+      }) satisfies UserConfig;
 
       export default myConfig;"
     `);
