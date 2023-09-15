@@ -22,7 +22,7 @@ describe("code", () => {
       foo: ["a"],
     };
     `,
-      { sourceFileName: "./test/stubs/config.ts" }
+      { sourceFileName: "./test/stubs/config.ts" },
     );
 
     expect(stub.exports).toEqual(mod.exports);
@@ -35,7 +35,7 @@ describe("code", () => {
       foo: ["a"],
     };
     `,
-      { sourceFileName: "./test/stubs/config.ts" }
+      { sourceFileName: "./test/stubs/config.ts" },
     );
 
     await writeFile(mod, "./test/stubs/config2.ts");

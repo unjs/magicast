@@ -79,7 +79,7 @@ export async function loadFile<Exports extends object = any>(
 export async function writeFile(
   node: { $ast: ASTNode } | ASTNode,
   filename: string,
-  options?: ParseOptions
+  options?: ParseOptions,
 ): Promise<void> {
   const ast = "$ast" in node ? node.$ast : node;
   const { code, map } = generateCode(ast, options);
