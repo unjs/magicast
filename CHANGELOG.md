@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v0.3.0
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.2.11...v0.3.0)
+
+### 🩹 Fixes
+
+- ⚠️  `writeFile` now requires filename ([#79](https://github.com/unjs/magicast/pull/79))
+
+### 📦 Build
+
+- Bundle recast ([#81](https://github.com/unjs/magicast/pull/81))
+
+### 🏡 Chore
+
+- **release:** V0.2.11 ([0d65b23](https://github.com/unjs/magicast/commit/0d65b23))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  `writeFile` now requires filename ([#79](https://github.com/unjs/magicast/pull/79))
+
+### ❤️ Contributors
+
+- Estéban ([@Barbapapazes](http://github.com/Barbapapazes))
+- Anthony Fu <anthonyfu117@hotmail.com>
+
 ## v0.2.11
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.2.10...v0.2.11)
