@@ -45,12 +45,12 @@
     "source-map-js": "^1.0.2"
   },
   "devDependencies": {
-    "@types/node": "^20.8.7",
+    "@types/node": "^20.8.9",
     "@vitest/coverage-v8": "^0.34.6",
     "@vitest/ui": "^0.34.6",
     "ast-types": "^0.16.1",
     "changelogen": "^0.5.5",
-    "eslint": "^8.51.0",
+    "eslint": "^8.52.0",
     "eslint-config-unjs": "^0.2.1",
     "esno": "^0.17.0",
     "giget": "^1.1.3",
