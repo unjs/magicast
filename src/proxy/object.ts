@@ -26,7 +26,7 @@ export function proxifyObject<T extends object>(
         (prop.key.type === "StringLiteral" ||
           prop.key.type === "NumericLiteral" ||
           prop.key.type === "BooleanLiteral") &&
-        prop.key.value === key
+        prop.key.value.toString() === key
       ) {
         return (prop.value as any).value;
       }
