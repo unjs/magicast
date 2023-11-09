@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.3.1
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.3.0...v0.3.1)
+
+### 🩹 Fixes
+
+- Unable to get value using `NumericLiteral` or `BooleanLiteral` type keys ([#91](https://github.com/unjs/magicast/pull/91))
+
+### 🏡 Chore
+
+- Update deps ([71bd811](https://github.com/unjs/magicast/commit/71bd811))
+
+### ❤️ Contributors
+
+- Anthony Fu <anthonyfu117@hotmail.com>
+- Pink Champagne
+
 ## v0.3.0
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.2.11...v0.3.0)
