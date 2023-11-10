@@ -28,7 +28,7 @@ export function proxifyObject<T extends object>(
           prop.key.type === "BooleanLiteral") &&
         prop.key.value.toString() === key
       ) {
-        return (prop.value as any).value;
+        return (prop.value as any).value || prop.value;
       }
     }
   };
