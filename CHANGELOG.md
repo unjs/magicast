@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.3.2
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.3.1...v0.3.2)
+
+### 🩹 Fixes
+
+- Quoted properties of `ObjectExpression` not in exports proxy ([#94](https://github.com/unjs/magicast/pull/94))
+
+### 🏡 Chore
+
+- Rebuild lock ([32efceb](https://github.com/unjs/magicast/commit/32efceb))
+
+### ❤️ Contributors
+
+- Anthony Fu <anthonyfu117@hotmail.com>
+- Ari Perkkiö ([@AriPerkkio](http://github.com/AriPerkkio))
+
 ## v0.3.1
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.3.0...v0.3.1)
