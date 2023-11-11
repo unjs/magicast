@@ -14,6 +14,8 @@ export default {
     foo() {},
     1: 3,
     [true]: 4,
+    "c": { key: 5 },
+    'd': { key: 6 },
   }
 }
     `.trim(),
@@ -23,6 +25,8 @@ export default {
     expect(mod.exports.default.foo["a-b"]).toBe(2);
     expect(mod.exports.default.foo[1]).toBe(3);
     expect(mod.exports.default.foo.true).toBe(4);
+    expect(mod.exports.default.foo.c?.key).toBe(5);
+    expect(mod.exports.default.foo.d?.key).toBe(6);
     expect(Object.keys(mod.exports.default.foo)).toMatchInlineSnapshot(`
       [
         "a",
@@ -30,6 +34,8 @@ export default {
         "foo",
         "1",
         "true",
+        "c",
+        "d",
       ]
     `);
 
@@ -42,6 +48,8 @@ export default {
         "foo",
         "1",
         "true",
+        "c",
+        "d",
         "a-b-c",
       ]
     `);
@@ -56,6 +64,8 @@ export default {
           foo() {},
           1: 3,
           [true]: 4,
+          c: { key: 5 },
+          d: { key: 6 },
           \\"a-b-c\\": 3,
         },
       };"
