@@ -30,6 +30,13 @@ export type ProxifiedNewExpression<Args extends any[] = unknown[]> =
     $callee: string;
   };
 
+export type ProxifiedArrowFunctionExpression<Params extends any[] = unknown[]> =
+  ProxyBase & {
+    $type: "arrow-function-expression";
+    $params: ProxifiedArray<Params>;
+    $body: ProxifiedValue;
+  };
+
 export type ProxifiedObject<T extends object = object> = {
   [K in keyof T]: Proxified<T[K]>;
 } & ProxyBase & {
@@ -103,6 +110,7 @@ export type ProxifiedValue =
   | ProxifiedObject
   | ProxifiedModule
   | ProxifiedImportsMap
-  | ProxifiedImportItem;
+  | ProxifiedImportItem
+  | ProxifiedArrowFunctionExpression;
 
 export type ProxyType = ProxifiedValue["$type"];
