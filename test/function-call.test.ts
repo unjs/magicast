@@ -98,4 +98,16 @@ describe("function-calls", () => {
 
     expect(await generate(mod2)).toEqual(await generate(mod1));
   });
+
+  it("arrow function parameters", () => {
+    const mod = parseModule(`
+    import { defineConfig } from 'vite'
+
+    export default defineConfig((config) => ({ mode: "test" }))
+  `);
+
+    expect(mod.exports.default.$args[0].$params[0].$name).toBe("config");
+    expect(mod.exports.default.$args[0].$body.$type).toBe("object");
+    expect(mod.exports.default.$args[0].$body.mode).toBe("test");
+  });
 });

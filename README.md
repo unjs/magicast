@@ -109,7 +109,7 @@ const ast = mod.exports.default.$ast
 // do something with ast
 ```
 
-**Example:** Function parameters:
+**Example:** Function arguments:
 
 ```js
 import { parseModule, generateCode } from "magicast";
