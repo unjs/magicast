@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.3.3
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.3.2...v0.3.3)
+
+### 🚀 Enhancements
+
+- Support `ArrowFunctionExpression` ([#98](https://github.com/unjs/magicast/pull/98))
+
+### 🏡 Chore
+
+- Update deps and test snaps ([122409f](https://github.com/unjs/magicast/commit/122409f))
+
+### ❤️ Contributors
+
+- Anthony Fu <anthonyfu117@hotmail.com>
+- Ari Perkkiö ([@AriPerkkio](http://github.com/AriPerkkio))
+
 ## v0.3.2
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.3.1...v0.3.2)
