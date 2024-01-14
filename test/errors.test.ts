@@ -16,7 +16,7 @@ export default {
 
     expect(() => mod.exports.default.a).toThrowErrorMatchingInlineSnapshot(
       `
-      "Casting \\"ConditionalExpression\\" is not supported
+      [MagicastError: Casting "ConditionalExpression" is not supported
 
         1 | export default {
         2 |   a: 1 + 1 === 2
@@ -24,7 +24,7 @@ export default {
         3 |     ? 1
         4 |     : 2
         5 | }
-      "
+      ]
     `,
     );
   });
@@ -40,13 +40,13 @@ export default {
 
     expect(() => mod.exports.default.a).toThrowErrorMatchingInlineSnapshot(
       `
-      "Casting \\"BinaryExpression\\" is not supported
+      [MagicastError: Casting "BinaryExpression" is not supported
 
         1 | export default {
         2 |   a: 1 + 1
                  ^
         3 | }
-      "
+      ]
     `,
     );
   });
@@ -68,7 +68,7 @@ export default {
     mod.exports.default.foo.push("foo");
     expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
-        foo: [1, 2, ...foo, \\"foo\\"],
+        foo: [1, 2, ...foo, "foo"],
       };"
     `);
 
@@ -77,7 +77,7 @@ export default {
       ...mod.exports.default.foo,
     ]).toThrowErrorMatchingInlineSnapshot(
       `
-      "Casting \\"SpreadElement\\" is not supported
+      [MagicastError: Casting "SpreadElement" is not supported
 
         3 |     1,
         4 |     2,
@@ -85,7 +85,7 @@ export default {
                 ^
         6 |   ]
         7 | }
-      "
+      ]
     `,
     );
   });
@@ -109,7 +109,7 @@ export default {
         foo: {
           a: 1,
           ...bar,
-          extra: \\"foo\\",
+          extra: "foo",
         },
       };"
     `);
@@ -119,7 +119,7 @@ export default {
       ...mod.exports.default.foo,
     })).toThrowErrorMatchingInlineSnapshot(
       `
-      "Casting \\"SpreadElement\\" is not supported
+      [MagicastError: Casting "SpreadElement" is not supported
 
         2 |   foo: {
         3 |     a: 1,
@@ -127,7 +127,7 @@ export default {
                 ^
         5 |   }
         6 | }
-      "
+      ]
     `,
     );
   });
@@ -137,20 +137,20 @@ export default {
 
     expect(() => parseExpression<any>("foo ? {} : []"))
       .toThrowErrorMatchingInlineSnapshot(`
-        "Casting \\"ConditionalExpression\\" is not supported
+        [MagicastError: Casting "ConditionalExpression" is not supported
 
-          1 |  foo ? {} : []\u0020
+          1 |  foo ? {} : [] 
                ^
-        "
+        ]
       `);
 
     const exp = parseExpression<any>("{ a: foo ? {} : [] }");
     expect(() => exp.a).toThrowErrorMatchingInlineSnapshot(`
-        "Casting \\"ConditionalExpression\\" is not supported
+      [MagicastError: Casting "ConditionalExpression" is not supported
 
-          1 |  { a: foo ? {} : [] }\u0020
-                    ^
-        "
-      `);
+        1 |  { a: foo ? {} : [] } 
+                  ^
+      ]
+    `);
   });
 });

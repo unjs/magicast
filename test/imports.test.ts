@@ -65,24 +65,24 @@ foo: []
     delete mod.imports.Plugin;
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-    "import { defineConfig } from \\"vite\\";
-    import VuePlugin from \\"@vitejs/plugin-vue\\";
-    import * as path2 from \\"path\\";
+      "import { defineConfig } from "vite";
+      import VuePlugin from "@vitejs/plugin-vue";
+      import * as path2 from "path";
 
-    export default defineConfig({
-      foo: [],
-    });"
-  `);
+      export default defineConfig({
+        foo: [],
+      });"
+    `);
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-    "import { defineConfig } from \\"vite\\";
-    import VuePlugin from \\"@vitejs/plugin-vue\\";
-    import * as path2 from \\"path\\";
+      "import { defineConfig } from "vite";
+      import VuePlugin from "@vitejs/plugin-vue";
+      import * as path2 from "path";
 
-    export default defineConfig({
-      foo: [],
-    });"
-  `);
+      export default defineConfig({
+        foo: [],
+      });"
+    `);
 
     mod.imports.$add({
       from: "foo",
@@ -100,30 +100,30 @@ foo: []
     });
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-    "import * as Star from \\"star\\";
-    import Foo from \\"foo\\";
-    import { defineConfig, Good } from \\"vite\\";
-    import VuePlugin from \\"@vitejs/plugin-vue\\";
-    import * as path2 from \\"path\\";
+      "import * as Star from "star";
+      import Foo from "foo";
+      import { defineConfig, Good } from "vite";
+      import VuePlugin from "@vitejs/plugin-vue";
+      import * as path2 from "path";
 
-    export default defineConfig({
-      foo: [],
-    });"
-  `);
+      export default defineConfig({
+        foo: [],
+      });"
+    `);
 
     mod.imports.defineConfig.from = "vitest/config";
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-    "import { defineConfig } from \\"vitest/config\\";
-    import * as Star from \\"star\\";
-    import Foo from \\"foo\\";
-    import { Good } from \\"vite\\";
-    import VuePlugin from \\"@vitejs/plugin-vue\\";
-    import * as path2 from \\"path\\";
+      "import { defineConfig } from "vitest/config";
+      import * as Star from "star";
+      import Foo from "foo";
+      import { Good } from "vite";
+      import VuePlugin from "@vitejs/plugin-vue";
+      import * as path2 from "path";
 
-    export default defineConfig({
-      foo: [],
-    });"
-  `);
+      export default defineConfig({
+        foo: [],
+      });"
+    `);
   });
 });

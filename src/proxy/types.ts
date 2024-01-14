@@ -58,18 +58,18 @@ export type Proxified<T = any> = T extends
   | symbol
   ? T
   : T extends any[]
-  ? {
-      [K in keyof T]: Proxified<T[K]>;
-    } & ProxyBase & {
-        $type: "array";
-      }
-  : T extends object
-  ? ProxyBase & {
-      [K in keyof T]: Proxified<T[K]>;
-    } & {
-      $type: "object";
-    }
-  : T;
+    ? {
+        [K in keyof T]: Proxified<T[K]>;
+      } & ProxyBase & {
+          $type: "array";
+        }
+    : T extends object
+      ? ProxyBase & {
+          [K in keyof T]: Proxified<T[K]>;
+        } & {
+          $type: "object";
+        }
+      : T;
 
 export type ProxifiedModule<T extends object = Record<string, any>> =
   ProxyBase & {

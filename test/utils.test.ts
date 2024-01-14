@@ -16,25 +16,25 @@ describe("literalToAst", () => {
     expect(run(null)).toMatchInlineSnapshot('"null"');
     expect(run([undefined, 1, { foo: "bar" }])).toMatchInlineSnapshot(`
       "[undefined, 1, {
-          foo: \\"bar\\"
+          foo: "bar"
       }]"
     `);
   });
 
   it("built-in objects", () => {
     expect(run(new Set(["foo", 1]))).toMatchInlineSnapshot(
-      '"new Set([\\"foo\\", 1])"',
+      `"new Set(["foo", 1])"`,
     );
 
     expect(run(new Date("2010-01-01"))).toMatchInlineSnapshot(
-      '"new Date(\\"2010-01-01T00:00:00.000Z\\")"',
+      `"new Date("2010-01-01T00:00:00.000Z")"`,
     );
 
     const map = new Map();
     map.set(1, "foo");
     map.set(2, "bar");
     expect(run(map)).toMatchInlineSnapshot(
-      '"new Map([[1, \\"foo\\"], [2, \\"bar\\"]])"',
+      `"new Map([[1, "foo"], [2, "bar"]])"`,
     );
   });
 

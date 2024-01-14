@@ -23,8 +23,8 @@ describe("builders/expression", () => {
     mod.exports.a = call;
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-      "export const a = new Foo(1, \\"bar\\", {
-        foo: \\"bar\\",
+      "export const a = new Foo(1, "bar", {
+        foo: "bar",
       });"
     `);
   });

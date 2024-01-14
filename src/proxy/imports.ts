@@ -146,11 +146,15 @@ export function createImportsProxy(
       value.imported === "default"
         ? b.importDefaultSpecifier(b.identifier(local))
         : value.imported === "*"
-        ? b.importNamespaceSpecifier(b.identifier(local))
-        : b.importSpecifier(b.identifier(value.imported), b.identifier(local));
+          ? b.importNamespaceSpecifier(b.identifier(local))
+          : b.importSpecifier(
+              b.identifier(value.imported),
+              b.identifier(local),
+            );
 
-    const declaration = imports.find((i) => i.from === value.from)
-      ?.$declaration;
+    const declaration = imports.find(
+      (i) => i.from === value.from,
+    )?.$declaration;
     if (declaration) {
       // TODO: insert after the last import maybe?
       declaration.specifiers.push(specifier as any);

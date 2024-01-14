@@ -21,9 +21,9 @@ describe("array", () => {
       "export default [
         1,
         {
-          foo: \\"bar\\",
+          foo: "bar",
         },
-        \\"bar\\",
+        "bar",
         5,
       ];"
     `,

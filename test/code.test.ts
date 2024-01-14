@@ -11,10 +11,11 @@ describe("code", () => {
     expect(stub.$ast).toBeDefined();
 
     expect(stub.$code).toMatchInlineSnapshot(`
-    "export default {
-      foo: [\\"a\\"],
-    };
-    "`);
+      "export default {
+        foo: ["a"],
+      };
+      "
+    `);
 
     const mod = parseModule(
       `
@@ -43,8 +44,9 @@ describe("code", () => {
     const stub = await fsp.readFile("./test/stubs/config2.ts", "utf8");
 
     expect(stub).toMatchInlineSnapshot(`
-    "export default {
-      foo: [\\"a\\"],
-    };"`);
+      "export default {
+        foo: ["a"],
+      };"
+    `);
   });
 });

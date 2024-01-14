@@ -13,10 +13,10 @@ describe("exports", () => {
     mod.exports.default = { foo: "1" };
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-    "export default {
-      foo: \\"1\\",
-    };"
-  `);
+      "export default {
+        foo: "1",
+      };"
+    `);
 
     mod.exports.default.foo = 2;
 
@@ -32,23 +32,23 @@ describe("exports", () => {
     expect(Object.keys(mod.exports)).toEqual(["default", "named"]);
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-    "export default {
-      foo: 2,
-    };
+      "export default {
+        foo: 2,
+      };
 
-    export const named = [\\"a\\"];"
-  `);
+      export const named = ["a"];"
+    `);
 
     expect(Object.keys(mod)).toEqual(["imports", "exports", "generate"]);
     expect(JSON.stringify(mod, undefined, 2)).toMatchInlineSnapshot(`
       "{
-        \\"imports\\": {},
-        \\"exports\\": {
-          \\"default\\": {
-            \\"foo\\": 2
+        "imports": {},
+        "exports": {
+          "default": {
+            "foo": 2
           },
-          \\"named\\": [
-            \\"a\\"
+          "named": [
+            "a"
           ]
         }
       }"
@@ -58,7 +58,7 @@ describe("exports", () => {
     delete mod.exports.default;
 
     expect(await generate(mod)).toMatchInlineSnapshot(
-      '"export const named = [\\"a\\"];"',
+      `"export const named = ["a"];"`,
     );
 
     delete mod.exports.named;

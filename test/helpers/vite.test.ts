@@ -37,15 +37,15 @@ export default defineConfig({})
     updateVitePluginConfig(mod, "vite-plugin-inspect", { dev: false });
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-      "import { VitePWA } from \\"vite-plugin-pwa\\";
-      import Inspect from \\"vite-plugin-inspect\\";
-      import vuePlugin from \\"@vitejs/plugin-vue\\";
-      import { defineConfig } from \\"vite\\";
+      "import { VitePWA } from "vite-plugin-pwa";
+      import Inspect from "vite-plugin-inspect";
+      import vuePlugin from "@vitejs/plugin-vue";
+      import { defineConfig } from "vite";
 
       export default defineConfig({
         plugins: [
           vuePlugin({
-            include: [/\\\\\\\\.vue$/, /\\\\.md$/],
+            include: [/\\\\.vue$/, /\\.md$/],
           }),
           Inspect({
             build: true,
@@ -95,16 +95,16 @@ export default defineConfig({
     });
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-      "import { VitePWA } from \\"vite-plugin-pwa\\";
-      import Inspect from \\"vite-plugin-inspect\\";
-      import vuePlugin from \\"@vitejs/plugin-vue\\";
-      import { defineConfig } from \\"vite\\";
-      import { somePlugin1, somePlugin2 } from \\"some-module\\";
+      "import { VitePWA } from "vite-plugin-pwa";
+      import Inspect from "vite-plugin-inspect";
+      import vuePlugin from "@vitejs/plugin-vue";
+      import { defineConfig } from "vite";
+      import { somePlugin1, somePlugin2 } from "some-module";
 
       export default defineConfig({
         plugins: [
           vuePlugin({
-            include: [/\\\\\\\\.vue$/, /\\\\.md$/],
+            include: [/\\\\.vue$/, /\\.md$/],
           }),
           somePlugin1(),
           Inspect({
@@ -138,9 +138,9 @@ export default defineConfig({
     });
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-      "import { VitePWA } from \\"vite-plugin-pwa\\";
-      import { defineConfig } from \\"vite\\";
-      import { somePlugin1, somePlugin2 } from \\"some-module\\";
+      "import { VitePWA } from "vite-plugin-pwa";
+      import { defineConfig } from "vite";
+      import { somePlugin1, somePlugin2 } from "some-module";
 
       const config = defineConfig({
         plugins: [somePlugin1(), somePlugin2(), VitePWA()],
@@ -171,8 +171,8 @@ export default defineConfig({
     });
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-      "import { VitePWA } from \\"vite-plugin-pwa\\";
-      import { somePlugin1, somePlugin2 } from \\"some-module\\";
+      "import { VitePWA } from "vite-plugin-pwa";
+      import { somePlugin1, somePlugin2 } from "some-module";
 
       const myConfig = {
         plugins: [somePlugin1(), VitePWA(), somePlugin2()],
@@ -205,10 +205,10 @@ export default defineConfig({
     });
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-      "import { VitePWA } from \\"vite-plugin-pwa\\";
-      import { somePlugin1, somePlugin2 } from \\"some-module\\";
+      "import { VitePWA } from "vite-plugin-pwa";
+      import { somePlugin1, somePlugin2 } from "some-module";
 
-      import type { UserConfig } from \\"vite\\";
+      import type { UserConfig } from "vite";
 
       const myConfig = {
         plugins: [somePlugin1(), VitePWA(), somePlugin2()],
@@ -241,10 +241,10 @@ export default defineConfig({
     });
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
-      "import { VitePWA } from \\"vite-plugin-pwa\\";
-      import { somePlugin1, somePlugin2 } from \\"some-module\\";
+      "import { VitePWA } from "vite-plugin-pwa";
+      import { somePlugin1, somePlugin2 } from "some-module";
 
-      import type { UserConfig } from \\"vite\\";
+      import type { UserConfig } from "vite";
 
       const myConfig = defineConfig({
         plugins: [somePlugin1(), VitePWA(), somePlugin2()],

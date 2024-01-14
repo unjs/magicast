@@ -34,7 +34,7 @@ describe("function-calls", () => {
       "export const a: any = { foo: 1 };
       export default defineConfig({
         // Modules
-        modules: [\\"a\\", \\"b\\"],
+        modules: ["a", "b"],
       });"
     `);
   });
@@ -84,8 +84,8 @@ describe("function-calls", () => {
     installVuePlugin(mod2);
 
     expect(await generate(mod1)).toMatchInlineSnapshot(`
-      "import vuePlugin from \\"@vitejs/plugin-vue\\";
-      import { defineConfig } from \\"vite\\";
+      "import vuePlugin from "@vitejs/plugin-vue";
+      import { defineConfig } from "vite";
 
       export default defineConfig({
         plugins: [

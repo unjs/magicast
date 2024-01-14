@@ -13,14 +13,14 @@ describe("helpers > nuxt", () => {
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default defineNuxtConfig({
-        modules: [\\"@vueuse/nuxt\\", \\"@unocss/nuxt\\"],
+        modules: ["@vueuse/nuxt", "@unocss/nuxt"],
 
         vueuse: {
-          hello: \\"world\\",
+          hello: "world",
         },
 
         unocss: {
-          another: \\"config\\",
+          another: "config",
         },
       });"
     `);

@@ -60,9 +60,9 @@ describe("general", () => {
 
         modules: [
           {
-            foo: \\"bar\\",
+            foo: "bar",
           },
-          \\"a\\",
+          "a",
         ],
       };"
     `);
@@ -140,7 +140,7 @@ export const config = {
     mod.exports.config.array.push("b");
     expect(await generate(mod)).toMatchInlineSnapshot(`
       "export const config = {
-        array: [\\"a\\", \\"b\\"],
+        array: ["a", "b"],
       };"
     `);
   });
@@ -224,7 +224,7 @@ export const config = {
       exp[2] = "foo";
 
       expect(generateCode(exp).code).toMatchInlineSnapshot(
-        '"[1, { foo: 2 }, \\"foo\\"]"',
+        `"[1, { foo: 2 }, "foo"]"`,
       );
     });
   });

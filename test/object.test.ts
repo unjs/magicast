@@ -59,14 +59,14 @@ export default {
     expect(await generate(mod)).toMatchInlineSnapshot(`
       "export default {
         foo: {
-          [\\"a\\"]: 1,
-          [\\"a-b\\"]: \\"updated\\",
+          ["a"]: 1,
+          ["a-b"]: "updated",
           foo() {},
           1: 3,
           [true]: 4,
           c: { key: 5 },
           d: { key: 6 },
-          \\"a-b-c\\": 3,
+          "a-b-c": 3,
         },
       };"
     `);
@@ -100,7 +100,7 @@ export default {
 
         bar: {
           testValue: {
-            value: \\"a\\",
+            value: "a",
           },
         },
       };"
@@ -149,7 +149,7 @@ export default {
 
         bar: {
           testValue: {
-            value: \\"a\\",
+            value: "a",
           },
         },
       };"
@@ -224,7 +224,7 @@ export default {
           foo: 1,
         },
 
-        \\"kebab-case\\": 1,
+        "kebab-case": 1,
       });"
     `);
 
@@ -239,10 +239,10 @@ export default {
           foo: 1,
         },
 
-        \\"kebab-case\\": 1,
+        "kebab-case": 1,
 
-        \\"kebab-case-parent\\": {
-          \\"kebab-case-child\\": 1,
+        "kebab-case-parent": {
+          "kebab-case-child": 1,
         },
       });"
     `);
