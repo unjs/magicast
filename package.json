@@ -40,14 +40,14 @@
     "test:full": "pnpm run test --run && pnpm run build && pnpm run test:build--run"
   },
   "dependencies": {
-    "@babel/parser": "^7.23.6",
-    "@babel/types": "^7.23.6",
+    "@babel/parser": "^7.23.9",
+    "@babel/types": "^7.23.9",
     "source-map-js": "^1.0.2"
   },
   "devDependencies": {
-    "@types/node": "^20.11.5",
-    "@vitest/coverage-v8": "^1.2.1",
-    "@vitest/ui": "^1.2.1",
+    "@types/node": "^20.11.8",
+    "@vitest/coverage-v8": "^1.2.2",
+    "@vitest/ui": "^1.2.2",
     "ast-types": "^0.16.1",
     "changelogen": "^0.5.5",
     "eslint": "^8.56.0",
@@ -62,7 +62,7 @@
     "source-map": "npm:source-map-js@latest",
     "typescript": "^5.3.3",
     "unbuild": "^2.0.0",
-    "vitest": "^1.2.1"
+    "vitest": "^1.2.2"
   },
   "resolutions": {
     "source-map": "npm:source-map-js@latest"
@@ -76,7 +76,7 @@
       "prettier -w"
     ]
   },
-  "packageManager": "pnpm@8.14.1",
+  "packageManager": "pnpm@8.15.0",
   "pnpm": {
     "overrides": {
       "array-includes": "npm:@nolyfill/array-includes@latest",
