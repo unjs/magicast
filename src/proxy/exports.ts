@@ -1,5 +1,11 @@
 import * as recast from "recast";
-import { Program, CommentBlock, CommentLine } from "@babel/types";
+import {
+  Program,
+  CommentBlock,
+  CommentLine,
+  ExportDefaultDeclaration,
+  ExportNamedDeclaration,
+} from "@babel/types";
 import type { ProxifiedModule } from "./types";
 import { createProxy, literalToAst } from "./_utils";
 import { proxify } from "./proxify";
@@ -63,49 +69,31 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
   const proxifyComment = new Proxy(
     {},
     {
-      get(target, p, receiver) {
-        const node = findExport(p) as ASTNode;
-        switch (node.type) {
-          case "ObjectExpression": {
-            return new Proxy(
-              {},
-              {
-                set(_, key, value) {
-                  const prop = (node.properties as any[]).find(
-                    (p: any) => getPropName(p) === key,
-                  );
-                  prop.comments = [b.commentBlock(value, true, false)];
-                  return true;
-                },
-                get(_, key) {
-                  const prop = (node.properties as any[]).find(
-                    (p: any) => getPropName(p) === key,
-                  );
-                  if (!prop) {
-                    return;
-                  }
+      get(_, key) {
+        const type =
+          key === "default"
+            ? "ExportDefaultDeclaration"
+            : "ExportNamedDeclaration";
 
-                  if (
-                    [
-                      "ObjectExpression",
-                      "ObjectPattern",
-                      "ObjectTypeAnnotation",
-                      "RecordExpression",
-                    ].includes(prop.value.type)
-                  ) {
-                    return proxify(prop.value, mod);
-                    // return prop
-                  }
-                  return prop.comments
-                    ?.map(
-                      (comment: CommentBlock | CommentLine) => comment.value,
-                    )
-                    .join("\n");
-                },
-              },
-            );
-          }
-        }
+        const node = root.body.find((n) => n.type === type);
+        console.info(node);
+        return node?.leadingComments
+          ?.map((comment) => comment.value)
+          .join("\n");
+      },
+      set(_, key, value) {
+        const type =
+          key === "default"
+            ? "ExportDefaultDeclaration"
+            : "ExportNamedDeclaration";
+
+        const node = root.body.find((n) => n.type === type) as
+          | ExportDefaultDeclaration
+          | ExportNamedDeclaration;
+
+        // @ts-expect-error
+        node.comments = [b.commentBlock(value, true)];
+        return true;
       },
     },
   );
@@ -120,7 +108,6 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
       get(_, prop) {
         const node = findExport(prop as string);
         if (node) {
-          console.info(node.type, `export ${String(prop)}`);
           return proxify(node, mod);
         }
       },
