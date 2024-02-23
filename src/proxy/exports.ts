@@ -1,8 +1,16 @@
 import * as recast from "recast";
-import type { Program } from "@babel/types";
+import {
+  Program,
+  CommentBlock,
+  CommentLine,
+  ExportDefaultDeclaration,
+  ExportNamedDeclaration,
+} from "@babel/types";
 import type { ProxifiedModule } from "./types";
 import { createProxy, literalToAst } from "./_utils";
 import { proxify } from "./proxify";
+import { getPropName } from "./object";
+import { ASTNode } from "magicast";
 
 const b = recast.types.builders;
 
@@ -58,10 +66,43 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
     );
   };
 
+  const proxifyComment = new Proxy(
+    {},
+    {
+      get(_, key) {
+        const type =
+          key === "default"
+            ? "ExportDefaultDeclaration"
+            : "ExportNamedDeclaration";
+
+        const node = root.body.find((n) => n.type === type);
+        console.info(node);
+        return node?.leadingComments
+          ?.map((comment) => comment.value)
+          .join("\n");
+      },
+      set(_, key, value) {
+        const type =
+          key === "default"
+            ? "ExportDefaultDeclaration"
+            : "ExportNamedDeclaration";
+
+        const node = root.body.find((n) => n.type === type) as
+          | ExportDefaultDeclaration
+          | ExportNamedDeclaration;
+
+        // @ts-expect-error
+        node.comments = [b.commentBlock(value, true)];
+        return true;
+      },
+    },
+  );
+
   return createProxy(
     root,
     {
       $type: "exports",
+      $comment: proxifyComment,
     },
     {
       get(_, prop) {

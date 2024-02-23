@@ -41,7 +41,10 @@ export type ProxifiedObject<T extends object = object> = {
   [K in keyof T]: Proxified<T[K]>;
 } & ProxyBase & {
     $type: "object";
+    $comment: ProxifiedComment;
   };
+
+export type ProxifiedComment = any;
 
 export type ProxifiedIdentifier = ProxyBase & {
   $type: "identifier";
