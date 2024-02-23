@@ -28,8 +28,22 @@ describe("should have $comment", () => {
     mod.exports.default.$comment.d.$comment.e = "THIS IS E";
     expect(mod.exports.default.$comment.d.$comment.i).toBe(" i comment");
 
-    mod.exports.$comment.default = "AAA";
-
     console.info(generateCode(mod).code);
+    expect(generateCode(mod).code).toMatchInlineSnapshot(
+      `"export default {
+    /* THIS IS A */
+    a: 'A',
+    b: 1, // b comment
+    // c comment
+    c: true,
+    /*THIS IS D*/
+    d: {
+        /*THIS IS E*/
+        e: 'E',
+        // i comment
+        i: 'I'
+    }
+};"`,
+    );
   });
 });
