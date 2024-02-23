@@ -1,8 +1,10 @@
 import * as recast from "recast";
-import type { Program } from "@babel/types";
+import { Program, CommentBlock, CommentLine } from "@babel/types";
 import type { ProxifiedModule } from "./types";
 import { createProxy, literalToAst } from "./_utils";
 import { proxify } from "./proxify";
+import { getPropName } from "./object";
+import { ASTNode } from "magicast";
 
 const b = recast.types.builders;
 
@@ -58,15 +60,67 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
     );
   };
 
+  const proxifyComment = new Proxy(
+    {},
+    {
+      get(target, p, receiver) {
+        const node = findExport(p) as ASTNode;
+        switch (node.type) {
+          case "ObjectExpression": {
+            return new Proxy(
+              {},
+              {
+                set(_, key, value) {
+                  const prop = (node.properties as any[]).find(
+                    (p: any) => getPropName(p) === key,
+                  );
+                  prop.comments = [b.commentBlock(value, true, false)];
+                  return true;
+                },
+                get(_, key) {
+                  const prop = (node.properties as any[]).find(
+                    (p: any) => getPropName(p) === key,
+                  );
+                  if (!prop) {
+                    return;
+                  }
+
+                  if (
+                    [
+                      "ObjectExpression",
+                      "ObjectPattern",
+                      "ObjectTypeAnnotation",
+                      "RecordExpression",
+                    ].includes(prop.value.type)
+                  ) {
+                    return proxify(prop.value, mod);
+                    // return prop
+                  }
+                  return prop.comments
+                    ?.map(
+                      (comment: CommentBlock | CommentLine) => comment.value,
+                    )
+                    .join("\n");
+                },
+              },
+            );
+          }
+        }
+      },
+    },
+  );
+
   return createProxy(
     root,
     {
       $type: "exports",
+      $comment: proxifyComment,
     },
     {
       get(_, prop) {
         const node = findExport(prop as string);
         if (node) {
+          console.info(node.type, `export ${String(prop)}`);
           return proxify(node, mod);
         }
       },

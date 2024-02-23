@@ -20,6 +20,7 @@ export function parseModule<Exports extends object = any>(
     parser: options?.parser || getBabelParser(),
     ...options,
   });
+
   return proxifyModule(node, code);
 }
 
