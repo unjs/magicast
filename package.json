@@ -40,12 +40,12 @@
     "test:full": "pnpm run test --run && pnpm run build && pnpm run test:build--run"
   },
   "dependencies": {
-    "@babel/parser": "^7.24.0",
+    "@babel/parser": "^7.24.1",
     "@babel/types": "^7.24.0",
-    "source-map-js": "^1.0.2"
+    "source-map-js": "^1.2.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.28",
+    "@types/node": "^20.11.30",
     "@vitest/coverage-v8": "^1.4.0",
     "@vitest/ui": "^1.4.0",
     "ast-types": "^0.16.1",
@@ -53,14 +53,14 @@
     "eslint": "^8.57.0",
     "eslint-config-unjs": "^0.2.1",
     "esno": "^4.7.0",
-    "giget": "^1.2.1",
+    "giget": "^1.2.3",
     "lint-staged": "^15.2.2",
     "magicast": "workspace:*",
     "prettier": "^3.2.5",
     "recast": "^0.23.6",
-    "simple-git-hooks": "^2.10.0",
+    "simple-git-hooks": "^2.11.0",
     "source-map": "npm:source-map-js@latest",
-    "typescript": "^5.4.2",
+    "typescript": "^5.4.3",
     "unbuild": "^2.0.0",
     "vitest": "^1.4.0"
   },
@@ -76,7 +76,7 @@
       "prettier -w"
     ]
   },
-  "packageManager": "pnpm@8.15.4",
+  "packageManager": "pnpm@8.15.5",
   "pnpm": {
     "overrides": {
       "array-includes": "npm:@nolyfill/array-includes@latest",
