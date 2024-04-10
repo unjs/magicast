@@ -48,6 +48,14 @@ export type ProxifiedIdentifier = ProxyBase & {
   $name: string;
 };
 
+export type ProxifiedLogicalExpression = ProxyBase & {
+  $type: "logicalExpression";
+};
+
+export type ProxifiedMemberExpression = ProxyBase & {
+  $type: "memberExpression";
+};
+
 export type Proxified<T = any> = T extends
   | number
   | string
@@ -107,6 +115,8 @@ export type ProxifiedValue =
   | ProxifiedFunctionCall
   | ProxifiedNewExpression
   | ProxifiedIdentifier
+  | ProxifiedLogicalExpression
+  | ProxifiedMemberExpression
   | ProxifiedObject
   | ProxifiedModule
   | ProxifiedImportsMap
