@@ -40,14 +40,14 @@
     "test:full": "pnpm run test --run && pnpm run build && pnpm run test:build --run"
   },
   "dependencies": {
-    "@babel/parser": "^7.24.1",
+    "@babel/parser": "^7.24.4",
     "@babel/types": "^7.24.0",
     "source-map-js": "^1.2.0"
   },
   "devDependencies": {
-    "@types/node": "^20.12.2",
-    "@vitest/coverage-v8": "^1.4.0",
-    "@vitest/ui": "^1.4.0",
+    "@types/node": "^20.12.7",
+    "@vitest/coverage-v8": "^1.5.0",
+    "@vitest/ui": "^1.5.0",
     "ast-types": "^0.16.1",
     "changelogen": "^0.5.5",
     "eslint": "^8.57.0",
@@ -60,9 +60,9 @@
     "recast": "^0.23.6",
     "simple-git-hooks": "^2.11.1",
     "source-map": "npm:source-map-js@latest",
-    "typescript": "^5.4.3",
+    "typescript": "^5.4.5",
     "unbuild": "^2.0.0",
-    "vitest": "^1.4.0"
+    "vitest": "^1.5.0"
   },
   "resolutions": {
     "source-map": "npm:source-map-js@latest"
@@ -80,20 +80,13 @@
   "pnpm": {
     "overrides": {
       "array-includes": "npm:@nolyfill/array-includes@latest",
+      "array.prototype.findlastindex": "npm:@nolyfill/array.prototype.findlastindex@latest",
       "array.prototype.flat": "npm:@nolyfill/array.prototype.flat@latest",
       "array.prototype.flatmap": "npm:@nolyfill/array.prototype.flatmap@latest",
-      "available-typed-arrays": "npm:@nolyfill/available-typed-arrays@latest",
-      "define-properties": "npm:@nolyfill/define-properties@latest",
-      "function-bind": "npm:@nolyfill/function-bind@latest",
-      "gopd": "npm:@nolyfill/gopd@latest",
-      "has": "npm:@nolyfill/has@latest",
-      "has-symbols": "npm:@nolyfill/has-symbols@latest",
-      "has-tostringtag": "npm:@nolyfill/has-tostringtag@latest",
-      "is-arguments": "npm:@nolyfill/is-arguments@latest",
-      "is-generator-function": "npm:@nolyfill/is-generator-function@latest",
-      "object-is": "npm:@nolyfill/object-is@latest",
-      "object.values": "npm:@nolyfill/object.values@latest",
-      "which-typed-array": "npm:@nolyfill/which-typed-array@latest"
+      "hasown": "npm:@nolyfill/hasown@latest",
+      "object.fromentries": "npm:@nolyfill/object.fromentries@latest",
+      "object.groupby": "npm:@nolyfill/object.groupby@latest",
+      "object.values": "npm:@nolyfill/object.values@latest"
     }
   }
 }
