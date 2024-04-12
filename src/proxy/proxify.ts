@@ -7,6 +7,8 @@ import { proxifyArrowFunctionExpression } from "./arrow-function-expression";
 import { proxifyObject } from "./object";
 import { proxifyNewExpression } from "./new-expression";
 import { proxifyIdentifier } from "./identifier";
+import { proxifyLogicalExpression } from "./logical-expression";
+import { proxifyMemberExpression } from "./member-expression";
 import { LITERALS_AST, LITERALS_TYPEOF } from "./_utils";
 
 const _cache = new WeakMap<ASTNode, any>();
@@ -47,6 +49,14 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
     }
     case "Identifier": {
       proxy = proxifyIdentifier(node);
+      break;
+    }
+    case "LogicalExpression": {
+      proxy = proxifyLogicalExpression(node);
+      break;
+    }
+    case "MemberExpression": {
+      proxy = proxifyMemberExpression(node);
       break;
     }
     case "TSAsExpression":

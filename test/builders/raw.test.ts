@@ -40,4 +40,26 @@ describe("builders/raw", () => {
       };"
     `);
   });
+
+  it("logical expression", async () => {
+    const expression = builders.raw("foo || bar");
+    expect(expression.$type).toBe("logicalExpression");
+    const mod = parseModule("");
+    mod.exports.a = expression;
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "export const a = foo || bar;"
+    `);
+  });
+
+  it("member expression", async () => {
+    const expression = builders.raw("foo.bar");
+    expect(expression.$type).toBe("memberExpression");
+    const mod = parseModule("");
+    mod.exports.a = expression;
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "export const a = foo.bar;"
+    `);
+  });
 });
