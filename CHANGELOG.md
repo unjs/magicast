@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.3.4
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.3.3...v0.3.4)
+
+### 🚀 Enhancements
+
+- Support logical and member expression ([#111](https://github.com/unjs/magicast/pull/111))
+
+### 🏡 Chore
+
+- Update deps ([b37096a](https://github.com/unjs/magicast/commit/b37096a))
+
+### ❤️ Contributors
+
+- Anthony Fu <anthonyfu117@hotmail.com>
+- Lucie ([@lihbr](http://github.com/lihbr))
+
 ## v0.3.3
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.3.2...v0.3.3)
