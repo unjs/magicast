@@ -15,74 +15,72 @@ overrides:
   object.groupby: npm:@nolyfill/object.groupby@latest
   object.values: npm:@nolyfill/object.values@latest
 
-importers:
+dependencies:
+  '@babel/parser':
+    specifier: ^7.24.4
+    version: 7.24.4
+  '@babel/types':
+    specifier: ^7.24.0
+    version: 7.24.0
+  source-map-js:
+    specifier: ^1.2.0
+    version: 1.2.0
 
-  .:
-    dependencies:
-      '@babel/parser':
-        specifier: ^7.24.4
-        version: 7.24.4
-      '@babel/types':
-        specifier: ^7.24.0
-        version: 7.24.0
-      source-map-js:
-        specifier: ^1.2.0
-        version: 1.2.0
-    devDependencies:
-      '@types/node':
-        specifier: ^20.12.7
-        version: 20.12.7
-      '@vitest/coverage-v8':
-        specifier: ^1.5.0
-        version: 1.5.0(vitest@1.5.0)
-      '@vitest/ui':
-        specifier: ^1.5.0
-        version: 1.5.0(vitest@1.5.0)
-      ast-types:
-        specifier: ^0.16.1
-        version: 0.16.1
-      changelogen:
-        specifier: ^0.5.5
-        version: 0.5.5
-      eslint:
-        specifier: ^8.57.0
-        version: 8.57.0
-      eslint-config-unjs:
-        specifier: ^0.2.1
-        version: 0.2.1(eslint@8.57.0)(typescript@5.4.5)
-      esno:
-        specifier: ^4.7.0
-        version: 4.7.0
-      giget:
-        specifier: ^1.2.3
-        version: 1.2.3
-      lint-staged:
-        specifier: ^15.2.2
-        version: 15.2.2
-      magicast:
-        specifier: workspace:*
-        version: 'link:'
-      prettier:
-        specifier: ^3.2.5
-        version: 3.2.5
-      recast:
-        specifier: ^0.23.6
-        version: 0.23.6
-      simple-git-hooks:
-        specifier: ^2.11.1
-        version: 2.11.1
-      source-map:
-        specifier: npm:source-map-js@latest
-        version: /source-map-js@1.2.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.4.5
-      unbuild:
-        specifier: ^2.0.0
-        version: 2.0.0(typescript@5.4.5)
-      vitest:
-        specifier: ^1.5.0
-        version: 1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)
+devDependencies:
+  '@types/node':
+    specifier: ^20.12.7
+    version: 20.12.7
+  '@vitest/coverage-v8':
+    specifier: ^1.5.0
+    version: 1.5.0(vitest@1.5.0)
+  '@vitest/ui':
+    specifier: ^1.5.0
+    version: 1.5.0(vitest@1.5.0)
+  ast-types:
+    specifier: ^0.16.1
+    version: 0.16.1
+  changelogen:
+    specifier: ^0.5.5
+    version: 0.5.5
+  eslint:
+    specifier: ^8.57.0
+    version: 8.57.0
+  eslint-config-unjs:
+    specifier: ^0.2.1
+    version: 0.2.1(eslint@8.57.0)(typescript@5.4.5)
+  esno:
+    specifier: ^4.7.0
+    version: 4.7.0
+  giget:
+    specifier: ^1.2.3
+    version: 1.2.3
+  lint-staged:
+    specifier: ^15.2.2
+    version: 15.2.2
+  magicast:
+    specifier: workspace:*
+    version: 'link:'
+  prettier:
+    specifier: ^3.2.5
+    version: 3.2.5
+  recast:
+    specifier: ^0.23.6
+    version: 0.23.6
+  simple-git-hooks:
+    specifier: ^2.11.1
+    version: 2.11.1
+  source-map:
+    specifier: npm:source-map-js@latest
+    version: /source-map-js@1.2.0
+  typescript:
+    specifier: ^5.4.5
+    version: 5.4.5
+  unbuild:
+    specifier: ^2.0.0
+    version: 2.0.0(typescript@5.4.5)
+  vitest:
+    specifier: ^1.5.0
+    version: 1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)
 
 packages:
 
