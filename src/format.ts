@@ -50,9 +50,10 @@ export function detectCodeFormat(
     // Trim line
     // TODO: Trim comments
     const trimmitedLine = line.trim();
+    const lineLen = trimmitedLine.length;
 
     // Skip empty lines
-    if (trimmitedLine.length === 0) {
+    if (lineLen === 0) {
       continue;
     }
 
@@ -77,9 +78,9 @@ export function detectCodeFormat(
     }
 
     // Line ending analysis
-    if (trimmitedLine.at(-1) === ";") {
+    if (trimmitedLine[lineLen - 1] === ";") {
       semiUsages++;
-    } else if (trimmitedLine.length > 0) {
+    } else {
       semiUsages--;
     }
 
