@@ -50,7 +50,7 @@
     "@vitest/ui": "^1.5.3",
     "ast-types": "^0.16.1",
     "changelogen": "^0.5.5",
-    "eslint": "^8.57.0",
+    "eslint": "^9.9.1",
     "eslint-config-unjs": "^0.2.1",
     "esno": "^4.7.0",
     "giget": "^1.2.3",
