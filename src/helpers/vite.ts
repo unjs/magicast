@@ -61,7 +61,7 @@ export function addVitePlugin(
     insertPluginIntoConfig(plugin, config);
   }
 
-  magicast.imports.$add({
+  magicast.imports.$prepend({
     from: plugin.from,
     local: plugin.constructor,
     imported: plugin.imported || "default",

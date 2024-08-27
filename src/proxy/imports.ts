@@ -131,7 +131,11 @@ export function createImportsProxy(
     return imports;
   };
 
-  const updateImport = (key: string, value: ImportItemInput) => {
+  const updateImport = (
+    key: string,
+    value: ImportItemInput,
+    order: "prepend" | "append",
+  ) => {
     const imports = getAllImports();
     const item = imports.find((i) => i.local === key);
     const local = value.local || key;
@@ -156,10 +160,18 @@ export function createImportsProxy(
       (i) => i.from === value.from,
     )?.$declaration;
     if (declaration) {
-      // TODO: insert after the last import maybe?
       declaration.specifiers.push(specifier as any);
-    } else {
+    } else if (order === "prepend" || imports.length === 0) {
       root.body.unshift(
+        b.importDeclaration([specifier], b.stringLiteral(value.from)) as any,
+      );
+    } else {
+      // The `imports` length is already checked above, so `at(-1)` will exist
+      const lastImport = imports.at(-1)!.$declaration;
+      const lastImportIndex = root.body.indexOf(lastImport);
+      root.body.splice(
+        lastImportIndex + 1,
+        0,
         b.importDeclaration([specifier], b.stringLiteral(value.from)) as any,
       );
     }
@@ -185,7 +197,13 @@ export function createImportsProxy(
     {
       $type: "imports",
       $add(item: ImportItemInput) {
-        proxy[item.local || item.imported] = item as any;
+        updateImport(item.local || item.imported, item, "prepend");
+      },
+      $prepend(item: ImportItemInput) {
+        updateImport(item.local || item.imported, item, "prepend");
+      },
+      $append(item: ImportItemInput) {
+        updateImport(item.local || item.imported, item, "append");
       },
       get $items() {
         return getAllImports();
@@ -203,7 +221,7 @@ export function createImportsProxy(
         return getAllImports().find((i) => i.local === prop);
       },
       set(_, prop, value) {
-        return updateImport(prop as string, value);
+        return updateImport(prop as string, value, "prepend");
       },
       deleteProperty(_, prop) {
         return removeImport(prop as string);
