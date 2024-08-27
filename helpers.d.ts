@@ -1,1 +1,1 @@
-export * from "./dist/helpers.cjs";
+export * from "./dist/helpers.js";
