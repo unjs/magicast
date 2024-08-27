@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.3.5
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.3.4...v0.3.5)
+
+### 🚀 Enhancements
+
+- Add `$prepend` and `$append` APIs to `imports` ([#124](https://github.com/unjs/magicast/pull/124))
+
+### 📦 Build
+
+- Fix types exports ([#123](https://github.com/unjs/magicast/pull/123))
+
+### 🏡 Chore
+
+- Update deps ([d800ae3](https://github.com/unjs/magicast/commit/d800ae3))
+
+### ❤️ Contributors
+
+- Anthony Fu <github@antfu.me>
+- Bjorn Lu <bjornlu.dev@gmail.com>
+
 ## v0.3.4
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.3.3...v0.3.4)
