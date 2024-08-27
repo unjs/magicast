@@ -28,7 +28,6 @@ export function creatImportProxy(
   root: Program,
 ): ProxifiedImportItem {
   if (_importProxyCache.has(specifier)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return _importProxyCache.get(specifier)!;
   }
   const proxy = createProxy(

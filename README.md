@@ -105,7 +105,7 @@ import { parseModule, generateCode } from "magicast";
 
 const mod = parseModule(`export default { }`);
 
-const ast = mod.exports.default.$ast
+const ast = mod.exports.default.$ast;
 // do something with ast
 ```
 
@@ -117,13 +117,13 @@ import { parseModule, generateCode } from "magicast";
 const mod = parseModule(`export default defineConfig({ foo: 'bar' })`);
 
 // Support for both bare object export and `defineConfig` wrapper
-const options = mod.exports.default.$type === 'function-call'
-  ? mod.exports.default.$args[0]
-  : mod.exports.default;
+const options =
+  mod.exports.default.$type === "function-call"
+    ? mod.exports.default.$args[0]
+    : mod.exports.default;
 
-console.log(options.foo) // bar
+console.log(options.foo); // bar
 ```
-
 
 **Example:** Create a function call:
 
@@ -132,9 +132,12 @@ import { parseModule, generateCode, builders } from "magicast";
 
 const mod = parseModule(`export default {}`);
 
-const options = mod.exports.default.list = builders.functionCall('create', [1, 2, 3])
+const options = (mod.exports.default.list = builders.functionCall(
+  "create",
+  [1, 2, 3],
+));
 
-console.log(mod.generateCode()) // export default { list: create([1, 2, 3]) }
+console.log(mod.generateCode()); // export default { list: create([1, 2, 3]) }
 ```
 
 ## Notes
@@ -151,9 +154,11 @@ function updateConfig() {
     mod.exports.default.foo.push("b");
 
     await writeFile(mod);
-  } catch (e) {
-    console.error('Unable to update config.js')
-    console.error('Please update it manually with the following instructions: ...')
+  } catch {
+    console.error("Unable to update config.js");
+    console.error(
+      "Please update it manually with the following instructions: ...",
+    );
     // handle error
   }
 }
@@ -189,7 +194,6 @@ Made with 💛
 Published under [MIT License](./LICENSE).
 
 <!-- Badges -->
-
 
 [npm-version-src]: https://img.shields.io/npm/v/magicast?style=flat&colorA=18181B&colorB=F0DB4F
 [npm-version-href]: https://npmjs.com/package/magicast

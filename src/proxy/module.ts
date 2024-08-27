@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-nested-ternary */
 import type { ParsedFileNode } from "../types";
 import { MagicastError } from "../error";
 import { generateCode } from "../code";

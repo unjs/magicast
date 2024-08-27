@@ -7,16 +7,9 @@
     "esModuleInterop": true,
     "strict": true,
     "paths": {
-      "magicast/helpers": [
-        "./src/helpers/index.ts"
-      ],
-      "magicast": [
-        "./src/index.ts"
-      ]
+      "magicast/helpers": ["./src/helpers/index.ts"],
+      "magicast": ["./src/index.ts"]
     }
   },
-  "exclude": [
-    "dist",
-    "vendor"
-  ]
+  "exclude": ["dist", "vendor"]
 }

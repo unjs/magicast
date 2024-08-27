@@ -40,7 +40,6 @@ describe("function-calls", () => {
   });
 
   it("construct function call", async () => {
-    // eslint-disable-next-line unicorn/consistent-function-scoping
     const installVuePlugin = (mod: ProxifiedModule<any>) => {
       // Inject export default if not exists
       if (!mod.exports.default) {

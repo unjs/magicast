@@ -28,8 +28,8 @@
     "prepare": "esno ./scripts/vendor.ts",
     "dev": "vitest dev",
     "dev:ui": "vitest dev --ui",
-    "lint": "eslint --cache --ext .ts,.js,.mjs,.cjs . && prettier -c src test",
-    "lint:fix": "eslint --cache --ext .ts,.js,.mjs,.cjs . --fix && prettier -c src test -w",
+    "lint": "eslint --cache . && prettier -c .",
+    "lint:fix": "eslint --cache . --fix && prettier -c . -w",
     "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit",
     "release": "pnpm run test run && changelogen --release && npm publish && git push --follow-tags",
@@ -38,29 +38,29 @@
     "test:full": "pnpm run test --run && pnpm run build && pnpm run test:build --run"
   },
   "dependencies": {
-    "@babel/parser": "^7.24.5",
-    "@babel/types": "^7.24.5",
+    "@babel/parser": "^7.25.4",
+    "@babel/types": "^7.25.4",
     "source-map-js": "^1.2.0"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7",
-    "@vitest/coverage-v8": "^1.5.3",
-    "@vitest/ui": "^1.5.3",
+    "@types/node": "^20.16.1",
+    "@vitest/coverage-v8": "^1.6.0",
+    "@vitest/ui": "^1.6.0",
     "ast-types": "^0.16.1",
     "changelogen": "^0.5.5",
-    "eslint": "^8.57.0",
-    "eslint-config-unjs": "^0.2.1",
+    "eslint": "^9.9.1",
+    "eslint-config-unjs": "^0.3.2",
     "esno": "^4.7.0",
     "giget": "^1.2.3",
-    "lint-staged": "^15.2.2",
+    "lint-staged": "^15.2.9",
     "magicast": "workspace:*",
-    "prettier": "^3.2.5",
-    "recast": "^0.23.6",
+    "prettier": "^3.3.3",
+    "recast": "^0.23.9",
     "simple-git-hooks": "^2.11.1",
     "source-map": "npm:source-map-js@latest",
-    "typescript": "^5.4.5",
+    "typescript": "^5.5.4",
     "unbuild": "^2.0.0",
-    "vitest": "^1.5.3"
+    "vitest": "^1.6.0"
   },
   "resolutions": {
     "source-map": "npm:source-map-js@latest"
@@ -74,7 +74,7 @@
       "prettier -w"
     ]
   },
-  "packageManager": "pnpm@8.15.8",
+  "packageManager": "pnpm@8.15.9",
   "pnpm": {
     "overrides": {
       "array-includes": "npm:@nolyfill/array-includes@latest",

@@ -3,7 +3,6 @@ import { print } from "recast";
 import { parseModule, builders } from "magicast";
 
 describe("literalToAst", () => {
-  // eslint-disable-next-line unicorn/consistent-function-scoping
   function run(value: any) {
     return print(builders.literal(value)).code;
   }
