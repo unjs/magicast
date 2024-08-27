@@ -44,7 +44,7 @@ describe("function-calls", () => {
     const installVuePlugin = (mod: ProxifiedModule<any>) => {
       // Inject export default if not exists
       if (!mod.exports.default) {
-        mod.imports.$add({
+        mod.imports.$prepend({
           imported: "defineConfig",
           from: "vite",
         });
@@ -58,7 +58,7 @@ describe("function-calls", () => {
           : mod.exports.default;
 
       // Inject vue plugin import
-      mod.imports.$add({
+      mod.imports.$prepend({
         imported: "default",
         local: "vuePlugin",
         from: "@vitejs/plugin-vue",

@@ -84,27 +84,44 @@ foo: []
       });"
     `);
 
-    mod.imports.$add({
+    mod.imports.$prepend({
       from: "foo",
       imported: "default",
       local: "Foo",
     });
-    mod.imports.$add({
+    mod.imports.$prepend({
       from: "star",
       imported: "*",
       local: "Star",
     });
-    mod.imports.$add({
+    mod.imports.$prepend({
       from: "vite",
       imported: "Good",
+    });
+    mod.imports.$append({
+      from: "append-foo",
+      imported: "default",
+      local: "AppendFoo",
+    });
+    mod.imports.$append({
+      from: "append-star",
+      imported: "*",
+      local: "AppendStar",
+    });
+    mod.imports.$append({
+      from: "vite",
+      imported: "AppendGood",
     });
 
     expect(await generate(mod)).toMatchInlineSnapshot(`
       "import * as Star from "star";
       import Foo from "foo";
-      import { defineConfig, Good } from "vite";
+      import { defineConfig, Good, AppendGood } from "vite";
       import VuePlugin from "@vitejs/plugin-vue";
       import * as path2 from "path";
+
+      import AppendFoo from "append-foo";
+      import * as AppendStar from "append-star";
 
       export default defineConfig({
         foo: [],
@@ -117,9 +134,12 @@ foo: []
       "import { defineConfig } from "vitest/config";
       import * as Star from "star";
       import Foo from "foo";
-      import { Good } from "vite";
+      import { Good, AppendGood } from "vite";
       import VuePlugin from "@vitejs/plugin-vue";
       import * as path2 from "path";
+
+      import AppendFoo from "append-foo";
+      import * as AppendStar from "append-star";
 
       export default defineConfig({
         foo: [],

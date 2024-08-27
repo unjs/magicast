@@ -91,7 +91,10 @@ export type ProxifiedModule<T extends object = Record<string, any>> =
 export type ProxifiedImportsMap = Record<string, ProxifiedImportItem> &
   ProxyBase & {
     $type: "imports";
+    /** @deprecated Use `$prepend` instead  */
     $add: (item: ImportItemInput) => void;
+    $prepend: (item: ImportItemInput) => void;
+    $append: (item: ImportItemInput) => void;
     $items: ProxifiedImportItem[];
   };
 
