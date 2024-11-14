@@ -23,4 +23,4 @@ jobs:
       - run: pnpm lint
       - run: pnpm run test --coverage
       - run: pnpm run test:build
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
