@@ -59,7 +59,7 @@
     "simple-git-hooks": "^2.11.1",
     "source-map": "npm:source-map-js@latest",
     "typescript": "^5.5.4",
-    "unbuild": "^2.0.0",
+    "unbuild": "^3.6.1",
     "vitest": "^1.6.0"
   },
   "resolutions": {
