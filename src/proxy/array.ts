@@ -1,6 +1,6 @@
 import type { ASTNode } from "../types";
 import type { ProxifiedArray, ProxifiedModule } from "./types";
-import { literalToAst, createProxy } from "./_utils";
+import { literalToAst, makeProxyUtils } from "./_utils";
 import { proxify } from "./proxify";
 
 export function proxifyArrayElements<T extends any[]>(
@@ -8,104 +8,131 @@ export function proxifyArrayElements<T extends any[]>(
   elements: ASTNode[],
   mod?: ProxifiedModule,
 ): ProxifiedArray<T> {
-  const getItem = (key: number) => {
-    return elements[key];
-  };
-
-  const replaceItem = (key: number, value: ASTNode) => {
-    elements[key] = value as any;
-  };
-
-  return createProxy(
-    node,
-    {
-      $type: "array",
-      push(value: any) {
-        elements.push(literalToAst(value) as any);
-      },
-      pop() {
-        return proxify(elements.pop() as any, mod);
-      },
-      unshift(value: any) {
-        elements.unshift(literalToAst(value) as any);
-      },
-      shift() {
-        return proxify(elements.shift() as any, mod);
-      },
-      splice(start: number, deleteCount: number, ...items: any[]) {
-        const deleted = elements.splice(
-          start,
-          deleteCount,
-          ...items.map((n) => literalToAst(n)),
-        );
-        return deleted.map((n) => proxify(n as any, mod));
-      },
-      find(predicate: (value: any, index: number, arr: any[]) => boolean) {
-        // eslint-disable-next-line unicorn/no-array-callback-reference
-        return elements.map((n) => proxify(n as any, mod)).find(predicate);
-      },
-      findIndex(predicate: (value: any, index: number, arr: any[]) => boolean) {
-        // eslint-disable-next-line unicorn/no-array-callback-reference
-        return elements.map((n) => proxify(n as any, mod)).findIndex(predicate);
-      },
-      includes(value: any) {
-        return elements.map((n) => proxify(n as any, mod)).includes(value);
-      },
-      toJSON() {
-        return elements.map((n) => proxify(n as any, mod));
-      },
+  const utils = makeProxyUtils(node, {
+    $type: "array",
+    push(value: any) {
+      elements.push(literalToAst(value) as any);
     },
-    {
-      get(_, key) {
-        if (key === "length") {
-          return elements.length;
-        }
-        if (key === Symbol.iterator) {
-          return function* () {
-            for (const item of elements) {
-              yield proxify(item as any, mod);
-            }
-          };
-        }
-        if (typeof key === "symbol") {
-          return;
-        }
-        const index = +key;
-        if (Number.isNaN(index)) {
-          return;
-        }
-        const prop = getItem(index);
+    pop() {
+      return proxify(elements.pop() as any, mod);
+    },
+    unshift(value: any) {
+      elements.unshift(literalToAst(value) as any);
+    },
+    shift() {
+      return proxify(elements.shift() as any, mod);
+    },
+    splice(start: number, deleteCount: number, ...items: any[]) {
+      const deleted = elements.splice(
+        start,
+        deleteCount,
+        ...items.map((n) => literalToAst(n)),
+      );
+      return deleted.map((n) => proxify(n as any, mod));
+    },
+    find(predicate: (value: any, index: number, arr: any[]) => boolean) {
+      // eslint-disable-next-line unicorn/no-array-callback-reference
+      return elements.map((n) => proxify(n as any, mod)).find(predicate);
+    },
+    findIndex(predicate: (value: any, index: number, arr: any[]) => boolean) {
+      // eslint-disable-next-line unicorn/no-array-callback-reference
+      return elements.map((n) => proxify(n as any, mod)).findIndex(predicate);
+    },
+    includes(value: any) {
+      return elements.map((n) => proxify(n as any, mod)).includes(value);
+    },
+    toJSON() {
+      return elements.map((n) => proxify(n as any, mod));
+    },
+  });
+
+  return new Proxy([], {
+    get(target, key, receiver) {
+      if (key in utils) {
+        return (utils as any)[key];
+      }
+      if (key === "length") {
+        return elements.length;
+      }
+      if (key === Symbol.iterator) {
+        return function* () {
+          for (const item of elements) {
+            yield proxify(item as any, mod);
+          }
+        };
+      }
+      if (typeof key === "symbol") {
+        return Reflect.get(target, key, receiver);
+      }
+      const index = +key;
+      if (!Number.isNaN(index)) {
+        const prop = elements[index];
         if (prop) {
           return proxify(prop, mod);
         }
-      },
-      set(_, key, value) {
-        if (typeof key === "symbol") {
-          return false;
-        }
-        const index = +key;
-        if (Number.isNaN(index)) {
-          return false;
-        }
-        replaceItem(index, literalToAst(value));
+      }
+      return Reflect.get(target, key, receiver);
+    },
+    set(target, key, value, receiver) {
+      if (typeof key === "symbol") {
+        return Reflect.set(target, key, value, receiver);
+      }
+      const index = +key;
+      if (!Number.isNaN(index)) {
+        elements[index] = literalToAst(value);
         return true;
-      },
-      deleteProperty(_, key) {
-        if (typeof key === "symbol") {
-          return false;
-        }
-        const index = +key;
-        if (Number.isNaN(index)) {
-          return false;
-        }
+      }
+      return Reflect.set(target, key, value, receiver);
+    },
+    deleteProperty(target, key) {
+      if (typeof key === "symbol") {
+        return Reflect.deleteProperty(target, key);
+      }
+      const index = +key;
+      if (!Number.isNaN(index)) {
         elements[index] = literalToAst(undefined);
         return true;
-      },
-      ownKeys() {
-        return ["length", ...elements.map((_, i) => i.toString())];
-      },
+      }
+      return Reflect.deleteProperty(target, key);
     },
-  );
+    ownKeys() {
+      return ["length", ...elements.map((_, i) => i.toString())];
+    },
+    getOwnPropertyDescriptor(target, key) {
+      if (key in utils) {
+        return {
+          configurable: true,
+          enumerable: true,
+          value: (utils as any)[key],
+        };
+      }
+
+      if (key === "length") {
+        return {
+          value: elements.length,
+          writable: true,
+          enumerable: false,
+          configurable: false,
+        };
+      }
+
+      if (typeof key === "symbol") {
+        return Reflect.getOwnPropertyDescriptor(target, key);
+      }
+
+      const index = +key;
+      if (!Number.isNaN(index) && index < elements.length) {
+        return {
+          value: proxify(elements[index], mod),
+          writable: true,
+          enumerable: true,
+          configurable: true,
+        };
+      }
+
+      return Reflect.getOwnPropertyDescriptor(target, key);
+    },
+  }) as unknown as ProxifiedArray<T>;
 }
 
 export function proxifyArray<T extends any[]>(

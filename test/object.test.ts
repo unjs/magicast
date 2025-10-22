@@ -287,4 +287,17 @@ export default {
       `"export default { urlPattern: /\\/api\\/pwa\\/v1\\/.*/ };"`,
     );
   });
+
+  it("proxified array should be an array", async () => {
+    const mod = parseModule(`export default { myArray: [1, "a"] }`);
+
+    const myArray = mod.exports.default.myArray;
+    expect(Array.isArray(myArray)).toBe(true);
+
+    myArray.push(true);
+
+    expect(await generate(mod)).toMatchInlineSnapshot(
+      `"export default { myArray: [1, "a", true] };"`,
+    );
+  });
 });

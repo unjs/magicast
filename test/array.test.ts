@@ -8,6 +8,7 @@ describe("array", () => {
       `export default [1, 2, 3, 4, 5]`,
     );
 
+    expect(Array.isArray(mod.exports.default)).toBe(true);
     expect(mod.exports.default.length).toBe(5);
     expect(mod.exports.default.includes(5)).toBe(true);
     expect(mod.exports.default.includes(6)).toBe(false);
@@ -48,6 +49,7 @@ describe("array", () => {
         array: ['a']
       }
     `);
+    expect(Array.isArray(mod.exports.config.array)).toBe(true);
     const arr = [...mod.exports.config.array];
     expect(arr).toMatchInlineSnapshot(`
       [
