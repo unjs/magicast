@@ -67,16 +67,20 @@ describe("exports", () => {
 
     expect(await generate(mod)).toMatchInlineSnapshot('""');
   });
-  it('export function', async () => {
-    let mod = parseModule(`export function greet(name: string) { return "Hello " + name; }`);
+  it("export function", async () => {
+    let mod = parseModule(
+      `export function greet(name: string) { return "Hello " + name; }`,
+    );
 
     expect(typeof mod.exports.greet).toBe("function");
     expect(() => mod.exports.greet("World")).toThrow(MagicastError);
 
     // add async test
-    mod = parseModule(`export async function fetchData() { return Promise.resolve(42); }`);
+    mod = parseModule(
+      `export async function fetchData() { return Promise.resolve(42); }`,
+    );
 
     expect(typeof mod.exports.fetchData).toBe("function");
     expect(() => mod.exports.fetchData()).toThrow(MagicastError);
-  })
+  });
 });

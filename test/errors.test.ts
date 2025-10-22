@@ -43,7 +43,9 @@ export default {
         a: 1 + 1;
       }"
     `);
-    expect(await generate(mod.exports.default.a)).toMatchInlineSnapshot(`"1 + 1;"`);
+    expect(await generate(mod.exports.default.a)).toMatchInlineSnapshot(
+      `"1 + 1;"`,
+    );
   });
 
   it("array destructuring", async () => {
