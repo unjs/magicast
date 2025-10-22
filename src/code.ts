@@ -1,5 +1,5 @@
 import { promises as fsp } from "node:fs";
-import { print, parse, Options as ParseOptions } from "recast";
+import { print, parse, Options as ParseOptions, types } from "recast";
 import { getBabelParser } from "./babel";
 import {
   ASTNode,
@@ -11,6 +11,8 @@ import {
 import { proxifyModule } from "./proxy/module";
 import { detectCodeFormat } from "./format";
 import { proxify } from "./proxy/proxify";
+
+const b = types.builders;
 
 export function parseModule<Exports extends object = any>(
   code: string,
@@ -52,7 +54,11 @@ export function generateCode(
   node: { $ast: ASTNode } | ASTNode | ProxifiedModule<any>,
   options: GenerateOptions = {},
 ): { code: string; map?: any } {
-  const ast = (node as Proxified).$ast || node;
+  let ast = (node as Proxified).$ast || node;
+
+  if (ast.type === "FunctionExpression") {
+    ast = b.expressionStatement(ast);
+  }
 
   const formatOptions =
     options.format === false || !("$code" in node)

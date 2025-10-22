@@ -29,7 +29,7 @@ export default {
     );
   });
 
-  it("expression", () => {
+  it("expression", async () => {
     const mod = parseModule(
       `
 export default {
@@ -38,17 +38,12 @@ export default {
     `.trim(),
     );
 
-    expect(() => mod.exports.default.a).toThrowErrorMatchingInlineSnapshot(
-      `
-      [MagicastError: Casting "BinaryExpression" is not supported
-
-        1 | export default {
-        2 |   a: 1 + 1
-                 ^
-        3 | }
-      ]
-    `,
-    );
+    expect(await generate(mod.exports.default)).toMatchInlineSnapshot(`
+      "{
+        a: 1 + 1;
+      }"
+    `);
+    expect(await generate(mod.exports.default.a)).toMatchInlineSnapshot(`"1 + 1;"`);
   });
 
   it("array destructuring", async () => {
@@ -139,7 +134,7 @@ export default {
       .toThrowErrorMatchingInlineSnapshot(`
         [MagicastError: Casting "ConditionalExpression" is not supported
 
-          1 |  foo ? {} : [] 
+          1 |  foo ? {} : []\u0020
                ^
         ]
       `);
@@ -148,7 +143,7 @@ export default {
     expect(() => exp.a).toThrowErrorMatchingInlineSnapshot(`
       [MagicastError: Casting "ConditionalExpression" is not supported
 
-        1 |  { a: foo ? {} : [] } 
+        1 |  { a: foo ? {} : [] }\u0020
                   ^
       ]
     `);

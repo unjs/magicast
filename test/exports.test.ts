@@ -67,4 +67,10 @@ describe("exports", () => {
 
     expect(await generate(mod)).toMatchInlineSnapshot('""');
   });
+  it('export function', async () => {
+    const mod = parseModule(`export function greet(name: string) { return "Hello " + name; }`);
+
+    expect(typeof mod.exports.greet).toBe("function");
+    expect(mod.exports.greet("World")).toBe("Hello World");
+  })
 });

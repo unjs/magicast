@@ -247,4 +247,24 @@ export default {
       });"
     `);
   });
+  it("binary expressions inside functions and arrow functions inside object array", async () => {
+    const mod = parseModule(`
+        export default {
+          x: [{
+            pattern: ({ req }) => req.method === 'GET'
+          },{
+            pattern({ req }) { return req.method === 'GET' }
+          }]
+      }
+      `);
+    expect(
+      await generate(mod.exports.default.x[0].pattern),
+    ).toMatchInlineSnapshot(`"({ req }) => req.method === "GET";"`);
+    expect(await generate(mod.exports.default.x[1].pattern))
+      .toMatchInlineSnapshot(`
+        "(function ({ req }) {
+          return req.method === "GET";
+        });"
+      `);
+  });
 });

@@ -9,6 +9,9 @@ import { proxifyNewExpression } from "./new-expression";
 import { proxifyIdentifier } from "./identifier";
 import { proxifyLogicalExpression } from "./logical-expression";
 import { proxifyMemberExpression } from "./member-expression";
+import { proxifyBinaryExpression } from "./binary-expression";
+import { proxifyBlockStatement } from "./block-statement";
+import { proxifyFunctionExpression } from "./function-expression";
 import { LITERALS_AST, LITERALS_TYPEOF } from "./_utils";
 
 const _cache = new WeakMap<ASTNode, any>();
@@ -43,6 +46,10 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
       proxy = proxifyArrowFunctionExpression(node, mod);
       break;
     }
+    case "FunctionExpression": {
+      proxy = proxifyFunctionExpression(node, mod);
+      break;
+    }
     case "NewExpression": {
       proxy = proxifyNewExpression(node, mod);
       break;
@@ -59,13 +66,21 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
       proxy = proxifyMemberExpression(node);
       break;
     }
+    case "BinaryExpression": {
+      proxy = proxifyBinaryExpression(node, mod);
+      break;
+    }
+    case "BlockStatement": {
+      proxy = proxifyBlockStatement(node, mod);
+      break;
+    }
     case "TSAsExpression":
     case "TSSatisfiesExpression": {
       proxy = proxify(node.expression, mod) as ProxifiedValue;
       break;
     }
     default: {
-      throw new MagicastError(`Casting "${node.type}" is not supported`, {
+      throw new MagicastError(`Casting "${(node as any).type}" is not supported`, {
         ast: node,
         code: mod?.$code,
       });
