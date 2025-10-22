@@ -71,10 +71,13 @@ describe("exports", () => {
     let mod = parseModule(
       `export function greet(name: string) { return "Hello " + name; }`,
     );
-
     expect(typeof mod.exports.greet).toBe("function");
     expect(() => mod.exports.greet("World")).toThrow(MagicastError);
-
+    expect(await generate(mod.exports.greet)).toMatchInlineSnapshot(`
+      "(function greet(name: string) {
+        return "Hello " + name;
+      });"
+    `);
     // add async test
     mod = parseModule(
       `export async function fetchData() { return Promise.resolve(42); }`,
@@ -82,5 +85,10 @@ describe("exports", () => {
 
     expect(typeof mod.exports.fetchData).toBe("function");
     expect(() => mod.exports.fetchData()).toThrow(MagicastError);
+    expect(await generate(mod.exports.fetchData)).toMatchInlineSnapshot(`
+      "(function fetchData() {
+        return Promise.resolve(42);
+      });"
+    `);
   });
 });

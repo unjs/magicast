@@ -8,7 +8,7 @@ export const LITERALS_AST = new Set([
   "NumericLiteral",
   "BooleanLiteral",
   "NullLiteral",
-  "RegExpLiteral",
+  // "RegExpLiteral" is handled separately in proxify
   "BigIntLiteral",
 ]);
 

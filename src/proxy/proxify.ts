@@ -20,6 +20,12 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
   if (LITERALS_TYPEOF.has(typeof node)) {
     return node as any;
   }
+
+  if (node.type === "RegExpLiteral") {
+    const { pattern, flags } = node;
+    return new RegExp(pattern, flags) as any;
+  }
+
   if (LITERALS_AST.has(node.type)) {
     return (node as any).value as any;
   }
@@ -80,10 +86,13 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
       break;
     }
     default: {
-      throw new MagicastError(`Casting "${(node as any).type}" is not supported`, {
-        ast: node,
-        code: mod?.$code,
-      });
+      throw new MagicastError(
+        `Casting "${(node as any).type}" is not supported`,
+        {
+          ast: node,
+          code: mod?.$code,
+        },
+      );
     }
   }
 

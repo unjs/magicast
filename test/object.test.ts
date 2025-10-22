@@ -269,4 +269,22 @@ export default {
         });"
       `);
   });
+
+  it("object property with RegExp", async () => {
+    const mod = parseModule(
+      `export default { urlPattern: /\\/api\\/pwa\\/.*/ }`,
+    );
+
+    const urlPattern = mod.exports.default.urlPattern;
+    expect(typeof urlPattern).toBe("object");
+    expect(urlPattern).toBeInstanceOf(RegExp);
+    // eslint-disable-next-line unicorn/prefer-string-raw
+    expect(urlPattern.source).toBe("\\/api\\/pwa\\/.*");
+
+    mod.exports.default.urlPattern = /\/api\/pwa\/v1\/.*/;
+
+    expect(await generate(mod)).toMatchInlineSnapshot(
+      `"export default { urlPattern: /\\/api\\/pwa\\/v1\\/.*/ };"`,
+    );
+  });
 });
