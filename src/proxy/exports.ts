@@ -16,10 +16,31 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
         if (key === "default") {
           return n.declaration;
         }
-        if (n.declaration && "declarations" in n.declaration) {
-          const dec = n.declaration.declarations[0];
-          if ("name" in dec.id && dec.id.name === key) {
-            return dec.init as any;
+        if (n.declaration) {
+          // `export const greet = 'hi'`
+          if (n.declaration.type === "VariableDeclaration") {
+            const dec = n.declaration.declarations[0];
+            if ("name" in dec.id && dec.id.name === key) {
+              return dec.init as any;
+            }
+          }
+          // `export function greet() {}`
+          if (
+            n.declaration.type === "FunctionDeclaration" &&
+            n.declaration.id &&
+            n.declaration.id.name === key
+          ) {
+            const decl = n.declaration;
+            // Convert FunctionDeclaration to FunctionExpression to make it proxifiable as a callable function
+            const funcExpr = b.functionExpression(
+              decl.id as any,
+              decl.params as any,
+              decl.body as any,
+              decl.generator,
+              decl.async,
+            );
+            funcExpr.loc = decl.loc;
+            return funcExpr;
           }
         }
       }
@@ -37,10 +58,29 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
           n.declaration = node;
           return;
         }
-        if (n.declaration && "declarations" in n.declaration) {
-          const dec = n.declaration.declarations[0];
-          if ("name" in dec.id && dec.id.name === key) {
-            dec.init = node;
+        if (n.declaration) {
+          if (n.declaration.type === "VariableDeclaration") {
+            const dec = n.declaration.declarations[0];
+            if ("name" in dec.id && dec.id.name === key) {
+              dec.init = node;
+              return;
+            }
+          }
+          if (
+            n.declaration.type === "FunctionDeclaration" &&
+            n.declaration.id &&
+            n.declaration.id.name === key
+          ) {
+            // Replace `export function` with `export const`
+            const newExport = b.exportNamedDeclaration(
+              b.variableDeclaration("const", [
+                b.variableDeclarator(b.identifier(key), node),
+              ]),
+            );
+            const index = root.body.indexOf(n);
+            if (index !== -1) {
+              root.body[index] = newExport as any;
+            }
             return;
           }
         }
@@ -80,14 +120,15 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
             if (i.type === "ExportDefaultDeclaration") {
               return ["default"];
             }
-            if (
-              i.type === "ExportNamedDeclaration" &&
-              i.declaration &&
-              "declarations" in i.declaration
-            ) {
-              return i.declaration.declarations.map((d) =>
-                "name" in d.id ? d.id.name : "",
-              );
+            if (i.type === "ExportNamedDeclaration" && i.declaration) {
+              if (i.declaration.type === "VariableDeclaration") {
+                return i.declaration.declarations.map((d) =>
+                  "name" in d.id ? d.id.name : "",
+                );
+              }
+              if (i.declaration.type === "FunctionDeclaration") {
+                return i.declaration.id ? [i.declaration.id.name] : [];
+              }
             }
             return [];
           })
@@ -106,9 +147,19 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
               root.body.splice(i, 1);
               return true;
             }
-            if (n.declaration && "declarations" in n.declaration) {
-              const dec = n.declaration.declarations[0];
-              if ("name" in dec.id && dec.id.name === prop) {
+            if (n.declaration) {
+              if (n.declaration.type === "VariableDeclaration") {
+                const dec = n.declaration.declarations[0];
+                if ("name" in dec.id && dec.id.name === prop) {
+                  root.body.splice(i, 1);
+                  return true;
+                }
+              }
+              if (
+                n.declaration.type === "FunctionDeclaration" &&
+                n.declaration.id &&
+                n.declaration.id.name === prop
+              ) {
                 root.body.splice(i, 1);
                 return true;
               }

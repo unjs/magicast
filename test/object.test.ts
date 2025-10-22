@@ -257,9 +257,11 @@ export default {
           }]
       }
       `);
+    expect(typeof mod.exports.default.x[0].pattern).toBe("function");
     expect(
       await generate(mod.exports.default.x[0].pattern),
     ).toMatchInlineSnapshot(`"({ req }) => req.method === "GET";"`);
+    expect(typeof mod.exports.default.x[1].pattern).toBe("function");
     expect(await generate(mod.exports.default.x[1].pattern))
       .toMatchInlineSnapshot(`
         "(function ({ req }) {
