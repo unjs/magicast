@@ -1,4 +1,4 @@
-import type { ASTNode, RegExpLiteral } from "../types";
+import type { ASTNode } from "../types";
 import { MagicastError } from "../error";
 import type { Proxified, ProxifiedModule, ProxifiedValue } from "./types";
 import { proxifyArray } from "./array";
@@ -27,7 +27,7 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
   }
 
   if (node.type === "RegExpLiteral") {
-    const { pattern, flags } = node as RegExpLiteral;
+    const { pattern, flags } = node;
     return new RegExp(pattern, flags) as any;
   }
 
@@ -91,10 +91,13 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
       break;
     }
     default: {
-      throw new MagicastError(`Casting "${(node as any).type}" is not supported`, {
-        ast: node,
-        code: mod?.$code,
-      });
+      throw new MagicastError(
+        `Casting "${(node as any).type}" is not supported`,
+        {
+          ast: node,
+          code: mod?.$code,
+        },
+      );
     }
   }
 
