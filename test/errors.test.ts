@@ -87,48 +87,6 @@ export default {
     );
   });
 
-  it("object destructuring", async () => {
-    const mod = parseModule(
-      `
-export default {
-  foo: {
-    a: 1,
-    ...bar
-  }
-}
-    `.trim(),
-    );
-
-    // Adding a property should work
-    mod.exports.default.foo.extra = "foo";
-    expect(await generate(mod)).toMatchInlineSnapshot(`
-      "export default {
-        foo: {
-          a: 1,
-          ...bar,
-          extra: "foo",
-        },
-      };"
-    `);
-
-    // Iterating should throw
-    expect(() => ({
-      ...mod.exports.default.foo,
-    })).toThrowErrorMatchingInlineSnapshot(
-      `
-      [MagicastError: Casting "SpreadElement" is not supported
-
-        2 |   foo: {
-        3 |     a: 1,
-        4 |     ...bar
-                ^
-        5 |   }
-        6 | }
-      ]
-    `,
-    );
-  });
-
   it("parseExpression", () => {
     // \u0020 is used to prevent IDEs from removing the trailing space
 

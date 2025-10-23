@@ -143,8 +143,10 @@ export function proxifyObject<T extends object>(
         return true;
       },
       deleteProperty(_, key) {
-        const sKey = String(key);
-        const index = node.properties.findIndex((p) => getPropName(p) === sKey);
+        if (typeof key !== "string") {
+          key = String(key);
+        }
+        const index = node.properties.findIndex((p) => getPropName(p) === key);
         if (index !== -1) {
           node.properties.splice(index, 1);
         }
@@ -152,8 +154,28 @@ export function proxifyObject<T extends object>(
       },
       ownKeys() {
         return node.properties
-          .map((p) => getPropName(p, true))
+          .map((p) => getPropName(p))
           .filter(Boolean) as string[];
+      },
+      getOwnPropertyDescriptor(target, key) {
+        if (
+          typeof key === "string" &&
+          // eslint-disable-next-line unicorn/prefer-spread
+          Array.from(this.ownKeys!(target)).includes(key)
+        ) {
+          return {
+            enumerable: true,
+            configurable: true,
+          };
+        }
+        return undefined;
+      },
+      has(_, key) {
+        if (typeof key === "string") {
+          // eslint-disable-next-line unicorn/prefer-spread
+          return Array.from(this.ownKeys!(_)).includes(key);
+        }
+        return false;
       },
     },
   ) as ProxifiedObject<T>;

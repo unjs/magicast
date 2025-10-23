@@ -300,4 +300,29 @@ export default {
       `"export default { myArray: [1, "a", true] };"`,
     );
   });
+
+  it("object destructuring", () => {
+    const mod = parseModule(
+      `
+export default {
+  foo: {
+    a: 1,
+    ...bar
+  }
+}
+    `.trim(),
+    );
+
+    // Destructuring should now work and only copy own properties
+    const newObj = { ...mod.exports.default.foo };
+    expect(newObj).toEqual({ a: 1 });
+  });
+  it("object introspection with Object.keys and in operator", () => {
+     const mod = parseModule(`export default { a: 1, b: 'foo' }`);
+     const proxy = mod.exports.default;
+
+     expect(Object.keys(proxy)).toEqual(["a", "b"]);
+     expect("a" in proxy).toBe(true);
+     expect("c" in proxy).toBe(false);
+   });
 });
