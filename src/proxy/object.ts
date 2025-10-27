@@ -67,6 +67,8 @@ export function proxifyObject<T extends object>(
             prop.generator,
             prop.async,
           );
+          // WORKAROUND: Recast builder doesn't seem to preserve the async property
+          funcExpr.async = prop.async;
           funcExpr.loc = prop.loc;
           return funcExpr;
         }
@@ -120,6 +122,8 @@ export function proxifyObject<T extends object>(
                 prop.generator,
                 prop.async,
               );
+              // WORKAROUND: Recast builder doesn't seem to preserve the async property
+              funcExpr.async = prop.async;
               funcExpr.loc = prop.loc;
               acc[propName] = proxify(funcExpr as any, mod);
             }

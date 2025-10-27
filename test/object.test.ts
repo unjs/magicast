@@ -254,6 +254,10 @@ export default {
             pattern: ({ req }) => req.method === 'GET'
           },{
             pattern({ req }) { return req.method === 'GET' }
+          },{
+            pattern: async ({ req }) => req.method === 'GET'
+          },{
+            async pattern({ req }) { return req.method === 'GET' }
           }]
       }
       `);
@@ -268,6 +272,18 @@ export default {
           return req.method === "GET";
         });"
       `);
+    expect(typeof mod.exports.default.x[2].pattern).toBe("function");
+    expect(
+      await generate(mod.exports.default.x[2].pattern),
+    ).toMatchInlineSnapshot(`"async ({ req }) => req.method === "GET";"`);
+    expect(typeof mod.exports.default.x[2].pattern).toBe("function");
+    expect(
+      await generate(mod.exports.default.x[3].pattern),
+    ).toMatchInlineSnapshot(`
+      "(async function ({ req }) {
+        return req.method === "GET";
+      });"
+    `);
   });
 
   it("object property with RegExp", async () => {
