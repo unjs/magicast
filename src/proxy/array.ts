@@ -6,7 +6,7 @@ import { proxify } from "./proxify";
 export function proxifyArrayElements<T extends any[]>(
   node: ASTNode,
   elements: ASTNode[],
-  mod?: ProxifiedModule
+  mod?: ProxifiedModule,
 ): ProxifiedArray<T> {
   const utils = makeProxyUtils(node, {
     $type: "array",
@@ -27,7 +27,7 @@ export function proxifyArrayElements<T extends any[]>(
       const deleted = elements.splice(
         start,
         deleteCount,
-        ...items.map((n) => literalToAst(n))
+        ...items.map((n) => literalToAst(n)),
       );
       return deleted.map((n) => proxify(n as any, mod));
     },
@@ -44,7 +44,7 @@ export function proxifyArrayElements<T extends any[]>(
 
       // Emulated non-mutating methods - they operate on the proxified elements
       const self = receiver as any[];
-      if (key === 'map') {
+      if (key === "map") {
         return (callback: (value: any, index: number, array: any[]) => any) => {
           const results = [];
           let index = 0;
@@ -55,8 +55,10 @@ export function proxifyArrayElements<T extends any[]>(
           return results;
         };
       }
-      if (key === 'filter') {
-        return (callback: (value: any, index: number, array: any[]) => boolean) => {
+      if (key === "filter") {
+        return (
+          callback: (value: any, index: number, array: any[]) => boolean,
+        ) => {
           const results = [];
           let index = 0;
           for (const item of self) {
@@ -68,8 +70,10 @@ export function proxifyArrayElements<T extends any[]>(
           return results;
         };
       }
-      if (key === 'forEach') {
-        return (callback: (value: any, index: number, array: any[]) => void) => {
+      if (key === "forEach") {
+        return (
+          callback: (value: any, index: number, array: any[]) => void,
+        ) => {
           let index = 0;
           for (const item of self) {
             callback(item, index, self);
@@ -77,8 +81,16 @@ export function proxifyArrayElements<T extends any[]>(
           }
         };
       }
-      if (key === 'reduce') {
-        return (callback: (previousValue: any, currentValue: any, currentIndex: number, array: any[]) => any, ...initialValue: [any?]) => {
+      if (key === "reduce") {
+        return (
+          callback: (
+            previousValue: any,
+            currentValue: any,
+            currentIndex: number,
+            array: any[],
+          ) => any,
+          ...initialValue: [any?]
+        ) => {
           const array = [...self];
           if (array.length === 0 && initialValue.length === 0) {
             throw new TypeError("Reduce of empty array with no initial value");
@@ -101,8 +113,10 @@ export function proxifyArrayElements<T extends any[]>(
           return accumulator;
         };
       }
-      if (key === 'find') {
-        return (callback: (value: any, index: number, obj: any[]) => boolean) => {
+      if (key === "find") {
+        return (
+          callback: (value: any, index: number, obj: any[]) => boolean,
+        ) => {
           let index = 0;
           for (const item of self) {
             if (callback(item, index, self)) {
@@ -112,8 +126,10 @@ export function proxifyArrayElements<T extends any[]>(
           }
         };
       }
-      if (key === 'findIndex') {
-        return (callback: (value: any, index: number, obj: any[]) => boolean) => {
+      if (key === "findIndex") {
+        return (
+          callback: (value: any, index: number, obj: any[]) => boolean,
+        ) => {
           let index = 0;
           for (const item of self) {
             if (callback(item, index, self)) {
@@ -124,10 +140,10 @@ export function proxifyArrayElements<T extends any[]>(
           return -1;
         };
       }
-      if (key === 'includes') {
+      if (key === "includes") {
         return (searchElement: any, fromIndex?: number) => {
-            return [...self].includes(searchElement, fromIndex);
-        }
+          return [...self].includes(searchElement, fromIndex);
+        };
       }
 
       // Property access
@@ -180,7 +196,11 @@ export function proxifyArrayElements<T extends any[]>(
     },
     getOwnPropertyDescriptor(target, key) {
       if (key in utils) {
-        return { configurable: true, enumerable: true, value: (utils as any)[key] };
+        return {
+          configurable: true,
+          enumerable: true,
+          value: (utils as any)[key],
+        };
       }
 
       if (key === "length") {
@@ -213,7 +233,7 @@ export function proxifyArrayElements<T extends any[]>(
 
 export function proxifyArray<T extends any[]>(
   node: ASTNode,
-  mod?: ProxifiedModule
+  mod?: ProxifiedModule,
 ): ProxifiedArray<T> {
   if (!("elements" in node)) {
     return undefined as any;

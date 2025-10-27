@@ -318,11 +318,11 @@ export default {
     expect(newObj).toEqual({ a: 1 });
   });
   it("object introspection with Object.keys and in operator", () => {
-     const mod = parseModule(`export default { a: 1, b: 'foo' }`);
-     const proxy = mod.exports.default;
+    const mod = parseModule(`export default { a: 1, b: 'foo' }`);
+    const proxy = mod.exports.default;
 
-     expect(Object.keys(proxy)).toEqual(["a", "b"]);
-     expect("a" in proxy).toBe(true);
-     expect("c" in proxy).toBe(false);
-   });
+    expect(Object.keys(proxy)).toEqual(["a", "b"]);
+    expect("a" in proxy).toBe(true);
+    expect("c" in proxy).toBe(false);
+  });
 });

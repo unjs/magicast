@@ -11,7 +11,7 @@ import { MagicastError } from "../error";
 
 export function proxifyFunctionExpression(
   node: FunctionExpression,
-  mod?: ProxifiedModule
+  mod?: ProxifiedModule,
 ): ProxifiedFunctionExpression {
   const utils = makeProxyUtils(node, {
     $type: "function-expression",
@@ -28,7 +28,7 @@ export function proxifyFunctionExpression(
     },
     apply() {
       throw new MagicastError(
-        "Calling proxified functions is not supported. Use `generateCode` to get the code string."
+        "Calling proxified functions is not supported. Use `generateCode` to get the code string.",
       );
     },
   }) as unknown as ProxifiedFunctionExpression;

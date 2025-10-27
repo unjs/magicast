@@ -31,7 +31,7 @@ export function proxifyArrowFunctionExpression<T extends []>(
     },
     apply() {
       throw new MagicastError(
-        "Calling proxified functions is not supported. Use `generateCode` to get the code string."
+        "Calling proxified functions is not supported. Use `generateCode` to get the code string.",
       );
     },
   }) as unknown as ProxifiedArrowFunctionExpression;
