@@ -19,7 +19,7 @@ import { createProxy } from "./_utils";
 const b = recast.types.builders;
 const _importProxyCache = new WeakMap<any, ProxifiedImportItem>();
 
-export function creatImportProxy(
+export function createImportProxy(
   node: ImportDeclaration,
   specifier:
     | ImportSpecifier
@@ -119,11 +119,11 @@ export function createImportsProxy(
 ): ProxifiedImportsMap {
   // TODO: cache
   const getAllImports = () => {
-    const imports: ReturnType<typeof creatImportProxy>[] = [];
+    const imports: ReturnType<typeof createImportProxy>[] = [];
     for (const n of root.body) {
       if (n.type === "ImportDeclaration") {
         for (const specifier of n.specifiers) {
-          imports.push(creatImportProxy(n, specifier, root));
+          imports.push(createImportProxy(n, specifier, root));
         }
       }
     }
