@@ -37,6 +37,13 @@ export type ProxifiedArrowFunctionExpression<Params extends any[] = unknown[]> =
     $body: ProxifiedValue;
   };
 
+export type ProxifiedFunctionExpression<Params extends any[] = unknown[]> =
+  ProxyBase & {
+    $type: "function-expression";
+    $params: ProxifiedArray<Params>;
+    $body: ProxifiedBlockStatement;
+  };
+
 export type ProxifiedObject<T extends object = object> = {
   [K in keyof T]: Proxified<T[K]>;
 } & ProxyBase & {
@@ -54,6 +61,43 @@ export type ProxifiedLogicalExpression = ProxyBase & {
 
 export type ProxifiedMemberExpression = ProxyBase & {
   $type: "memberExpression";
+};
+
+export type BinaryOperator =
+  | "+"
+  | "-"
+  | "/"
+  | "%"
+  | "*"
+  | "**"
+  | "&"
+  | "|"
+  | ">>"
+  | ">>>"
+  | "<<"
+  | "^"
+  | "=="
+  | "==="
+  | "!="
+  | "!=="
+  | "in"
+  | "instanceof"
+  | ">"
+  | "<"
+  | ">="
+  | "<="
+  | "|>";
+
+export type ProxifiedBinaryExpression = ProxyBase & {
+  $type: "binaryExpression";
+  $left: Proxified;
+  $right: Proxified;
+  $operator: BinaryOperator;
+};
+
+export type ProxifiedBlockStatement = ProxyBase & {
+  $type: "blockStatement";
+  $body: ProxifiedArray;
 };
 
 export type Proxified<T = any> = T extends
@@ -124,6 +168,9 @@ export type ProxifiedValue =
   | ProxifiedModule
   | ProxifiedImportsMap
   | ProxifiedImportItem
-  | ProxifiedArrowFunctionExpression;
+  | ProxifiedArrowFunctionExpression
+  | ProxifiedFunctionExpression
+  | ProxifiedBinaryExpression
+  | ProxifiedBlockStatement;
 
 export type ProxyType = ProxifiedValue["$type"];

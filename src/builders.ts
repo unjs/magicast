@@ -4,6 +4,7 @@ import { proxifyNewExpression } from "./proxy/new-expression";
 import { literalToAst } from "./proxy/_utils";
 import type { Proxified } from "./types";
 import { parseExpression } from "./code";
+import { proxifyBinaryExpression } from "./proxy/binary-expression";
 
 const b = recast.types.builders;
 
@@ -27,6 +28,43 @@ export const builders = {
       args.map((i) => literalToAst(i) as any),
     );
     return proxifyNewExpression(node as any);
+  },
+  /**
+   * Create a binary expression node.
+   */
+  binaryExpression(
+    left: any,
+    operator:
+      | "=="
+      | "!="
+      | "==="
+      | "!=="
+      | "<"
+      | "<="
+      | ">"
+      | ">="
+      | "<<"
+      | ">>"
+      | ">>>"
+      | "+"
+      | "-"
+      | "*"
+      | "/"
+      | "%"
+      | "&"
+      | "|"
+      | "^"
+      | "in"
+      | "instanceof"
+      | "**",
+    right: any,
+  ): Proxified {
+    const node = b.binaryExpression(
+      operator,
+      literalToAst(left) as any,
+      literalToAst(right) as any,
+    );
+    return proxifyBinaryExpression(node as any);
   },
   /**
    * Create a proxified version of a literal value.

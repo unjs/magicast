@@ -1,5 +1,5 @@
 import { expect, it, describe } from "vitest";
-import { parseModule } from "magicast";
+import { MagicastError, parseModule } from "magicast";
 import { generate } from "./_utils";
 
 describe("exports", () => {
@@ -66,5 +66,29 @@ describe("exports", () => {
     expect(Object.keys(mod.exports)).toEqual([]);
 
     expect(await generate(mod)).toMatchInlineSnapshot('""');
+  });
+  it("export function", async () => {
+    let mod = parseModule(
+      `export function greet(name: string) { return "Hello " + name; }`,
+    );
+    expect(typeof mod.exports.greet).toBe("function");
+    expect(() => mod.exports.greet("World")).toThrow(MagicastError);
+    expect(await generate(mod.exports.greet)).toMatchInlineSnapshot(`
+      "(function greet(name: string) {
+        return "Hello " + name;
+      });"
+    `);
+    // add async test
+    mod = parseModule(
+      `export async function fetchData() { return Promise.resolve(42); }`,
+    );
+
+    expect(typeof mod.exports.fetchData).toBe("function");
+    expect(() => mod.exports.fetchData()).toThrow(MagicastError);
+    expect(await generate(mod.exports.fetchData)).toMatchInlineSnapshot(`
+      "(function fetchData() {
+        return Promise.resolve(42);
+      });"
+    `);
   });
 });

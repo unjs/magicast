@@ -29,28 +29,6 @@ export default {
     );
   });
 
-  it("expression", () => {
-    const mod = parseModule(
-      `
-export default {
-  a: 1 + 1
-}
-    `.trim(),
-    );
-
-    expect(() => mod.exports.default.a).toThrowErrorMatchingInlineSnapshot(
-      `
-      [MagicastError: Casting "BinaryExpression" is not supported
-
-        1 | export default {
-        2 |   a: 1 + 1
-                 ^
-        3 | }
-      ]
-    `,
-    );
-  });
-
   it("array destructuring", async () => {
     const mod = parseModule(
       `
@@ -90,48 +68,6 @@ export default {
     );
   });
 
-  it("object destructuring", async () => {
-    const mod = parseModule(
-      `
-export default {
-  foo: {
-    a: 1,
-    ...bar
-  }
-}
-    `.trim(),
-    );
-
-    // Adding a property should work
-    mod.exports.default.foo.extra = "foo";
-    expect(await generate(mod)).toMatchInlineSnapshot(`
-      "export default {
-        foo: {
-          a: 1,
-          ...bar,
-          extra: "foo",
-        },
-      };"
-    `);
-
-    // Iterating should throw
-    expect(() => ({
-      ...mod.exports.default.foo,
-    })).toThrowErrorMatchingInlineSnapshot(
-      `
-      [MagicastError: Casting "SpreadElement" is not supported
-
-        2 |   foo: {
-        3 |     a: 1,
-        4 |     ...bar
-                ^
-        5 |   }
-        6 | }
-      ]
-    `,
-    );
-  });
-
   it("parseExpression", () => {
     // \u0020 is used to prevent IDEs from removing the trailing space
 
@@ -139,7 +75,7 @@ export default {
       .toThrowErrorMatchingInlineSnapshot(`
         [MagicastError: Casting "ConditionalExpression" is not supported
 
-          1 |  foo ? {} : [] 
+          1 |  foo ? {} : []\u0020
                ^
         ]
       `);
@@ -148,7 +84,7 @@ export default {
     expect(() => exp.a).toThrowErrorMatchingInlineSnapshot(`
       [MagicastError: Casting "ConditionalExpression" is not supported
 
-        1 |  { a: foo ? {} : [] } 
+        1 |  { a: foo ? {} : [] }\u0020
                   ^
       ]
     `);

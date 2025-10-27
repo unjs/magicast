@@ -247,4 +247,82 @@ export default {
       });"
     `);
   });
+  it("binary expressions inside functions and arrow functions inside object array", async () => {
+    const mod = parseModule(`
+        export default {
+          x: [{
+            pattern: ({ req }) => req.method === 'GET'
+          },{
+            pattern({ req }) { return req.method === 'GET' }
+          }]
+      }
+      `);
+    expect(typeof mod.exports.default.x[0].pattern).toBe("function");
+    expect(
+      await generate(mod.exports.default.x[0].pattern),
+    ).toMatchInlineSnapshot(`"({ req }) => req.method === "GET";"`);
+    expect(typeof mod.exports.default.x[1].pattern).toBe("function");
+    expect(await generate(mod.exports.default.x[1].pattern))
+      .toMatchInlineSnapshot(`
+        "(function ({ req }) {
+          return req.method === "GET";
+        });"
+      `);
+  });
+
+  it("object property with RegExp", async () => {
+    const mod = parseModule(
+      `export default { urlPattern: /\\/api\\/pwa\\/.*/ }`,
+    );
+
+    const urlPattern = mod.exports.default.urlPattern;
+    expect(typeof urlPattern).toBe("object");
+    expect(urlPattern).toBeInstanceOf(RegExp);
+    // eslint-disable-next-line unicorn/prefer-string-raw
+    expect(urlPattern.source).toBe("\\/api\\/pwa\\/.*");
+
+    mod.exports.default.urlPattern = /\/api\/pwa\/v1\/.*/;
+
+    expect(await generate(mod)).toMatchInlineSnapshot(
+      `"export default { urlPattern: /\\/api\\/pwa\\/v1\\/.*/ };"`,
+    );
+  });
+
+  it("proxified array should be an array", async () => {
+    const mod = parseModule(`export default { myArray: [1, "a"] }`);
+
+    const myArray = mod.exports.default.myArray;
+    expect(Array.isArray(myArray)).toBe(true);
+
+    myArray.push(true);
+
+    expect(await generate(mod)).toMatchInlineSnapshot(
+      `"export default { myArray: [1, "a", true] };"`,
+    );
+  });
+
+  it("object destructuring", () => {
+    const mod = parseModule(
+      `
+export default {
+  foo: {
+    a: 1,
+    ...bar
+  }
+}
+    `.trim(),
+    );
+
+    // Destructuring should now work and only copy own properties
+    const newObj = { ...mod.exports.default.foo };
+    expect(newObj).toEqual({ a: 1 });
+  });
+  it("object introspection with Object.keys and in operator", () => {
+    const mod = parseModule(`export default { a: 1, b: 'foo' }`);
+    const proxy = mod.exports.default;
+
+    expect(Object.keys(proxy)).toEqual(["a", "b"]);
+    expect("a" in proxy).toBe(true);
+    expect("c" in proxy).toBe(false);
+  });
 });

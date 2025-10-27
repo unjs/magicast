@@ -15,68 +15,87 @@ export function proxifyObject<T extends object>(
     return undefined as any;
   }
 
-  const getProp = (key: string | symbol) => {
-    for (const prop of node.properties) {
-      if ("key" in prop && "name" in prop.key && prop.key.name === key) {
-        // TODO:
-        return (prop as any).value;
-      }
-      if (
-        prop.type === "ObjectProperty" &&
-        (prop.key.type === "StringLiteral" ||
-          prop.key.type === "NumericLiteral" ||
-          prop.key.type === "BooleanLiteral") &&
-        prop.key.value.toString() === key
-      ) {
-        return (prop.value as any).value ?? prop.value;
-      }
-    }
-  };
-
   const getPropName = (
     prop: (typeof node.properties)[0],
     throwError = false,
   ) => {
-    if ("key" in prop && "name" in prop.key) {
-      return prop.key.name;
-    }
+    // Cast to any to handle type mismatch between recast and @babel/types
+    const propType = (prop as any).type;
     if (
-      prop.type === "ObjectProperty" &&
-      (prop.key.type === "StringLiteral" ||
-        prop.key.type === "NumericLiteral" ||
-        prop.key.type === "BooleanLiteral")
+      propType === "Property" ||
+      propType === "ObjectProperty" ||
+      propType === "ObjectMethod"
     ) {
-      return prop.key.value.toString();
+      const propKey = (prop as any).key;
+      if (propKey.type === "Identifier") {
+        return propKey.name;
+      }
+      if (
+        propKey.type === "StringLiteral" ||
+        propKey.type === "NumericLiteral" ||
+        propKey.type === "BooleanLiteral"
+      ) {
+        return propKey.value.toString();
+      }
     }
     if (throwError) {
-      throw new MagicastError(`Casting "${prop.type}" is not supported`, {
-        ast: prop,
-        code: mod?.$code,
-      });
+      throw new MagicastError(
+        `Casting "${(prop as any).type}" is not supported`,
+        {
+          ast: prop,
+          code: mod?.$code,
+        },
+      );
+    }
+    return undefined;
+  };
+
+  const getProp = (key: string | symbol) => {
+    const stringKey = String(key);
+    for (const prop of node.properties) {
+      if (getPropName(prop) === stringKey) {
+        const propType = (prop as any).type;
+        if (propType === "Property" || propType === "ObjectProperty") {
+          return (prop as any).value;
+        }
+        if (prop.type === "ObjectMethod") {
+          const funcExpr = b.functionExpression(
+            // eslint-disable-next-line unicorn/no-null
+            null, // id must be null, not undefined
+            prop.params as any,
+            prop.body as any,
+            prop.generator,
+            prop.async,
+          );
+          funcExpr.loc = prop.loc;
+          return funcExpr;
+        }
+      }
     }
   };
 
   const replaceOrAddProp = (key: string, value: ASTNode) => {
     const prop = (node.properties as any[]).find(
-      (prop: any) => getPropName(prop) === key,
+      (p: any) => getPropName(p) === key,
     );
     if (prop) {
-      prop.value = value;
-    } else if (isValidPropName(key)) {
-      node.properties.push({
-        type: "Property",
-        key: {
-          type: "Identifier",
-          name: key,
-        },
-        value,
-      } as any);
+      const propType = (prop as any).type;
+      if (propType === "Property" || propType === "ObjectProperty") {
+        (prop as any).value = value;
+      } else if (prop.type === "ObjectMethod") {
+        const newProp = b.property("init", b.identifier(key), value as any);
+        const index = node.properties.indexOf(prop);
+        if (index !== -1) {
+          node.properties[index] = newProp as any;
+        }
+      }
     } else {
-      node.properties.push({
-        type: "ObjectProperty",
-        key: b.stringLiteral(key),
-        value,
-      } as any);
+      const newProp = b.property(
+        "init",
+        isValidPropName(key) ? b.identifier(key) : b.stringLiteral(key),
+        value as any,
+      );
+      node.properties.push(newProp as any);
     }
   };
 
@@ -85,11 +104,25 @@ export function proxifyObject<T extends object>(
     {
       $type: "object",
       toJSON() {
-        // @ts-expect-error
         // eslint-disable-next-line unicorn/no-array-reduce
         return node.properties.reduce((acc, prop) => {
-          if ("key" in prop && "name" in prop.key) {
-            acc[prop.key.name] = proxify(prop.value, mod);
+          const propName = getPropName(prop);
+          if (propName) {
+            const propType = (prop as any).type;
+            if (propType === "Property" || propType === "ObjectProperty") {
+              acc[propName] = proxify((prop as any).value, mod);
+            } else if (prop.type === "ObjectMethod") {
+              const funcExpr = b.functionExpression(
+                // eslint-disable-next-line unicorn/no-null
+                null, // id must be null, not undefined
+                prop.params as any,
+                prop.body as any,
+                prop.generator,
+                prop.async,
+              );
+              funcExpr.loc = prop.loc;
+              acc[propName] = proxify(funcExpr as any, mod);
+            }
           }
           return acc;
         }, {} as any);
@@ -113,10 +146,7 @@ export function proxifyObject<T extends object>(
         if (typeof key !== "string") {
           key = String(key);
         }
-        const index = node.properties.findIndex(
-          (prop) =>
-            "key" in prop && "name" in prop.key && prop.key.name === key,
-        );
+        const index = node.properties.findIndex((p) => getPropName(p) === key);
         if (index !== -1) {
           node.properties.splice(index, 1);
         }
@@ -124,8 +154,28 @@ export function proxifyObject<T extends object>(
       },
       ownKeys() {
         return node.properties
-          .map((prop) => getPropName(prop, true))
+          .map((p) => getPropName(p))
           .filter(Boolean) as string[];
+      },
+      getOwnPropertyDescriptor(target, key) {
+        if (
+          typeof key === "string" &&
+          // eslint-disable-next-line unicorn/prefer-spread
+          Array.from(this.ownKeys!(target)).includes(key)
+        ) {
+          return {
+            enumerable: true,
+            configurable: true,
+          };
+        }
+        return undefined;
+      },
+      has(_, key) {
+        if (typeof key === "string") {
+          // eslint-disable-next-line unicorn/prefer-spread
+          return Array.from(this.ownKeys!(_)).includes(key);
+        }
+        return false;
       },
     },
   ) as ProxifiedObject<T>;
