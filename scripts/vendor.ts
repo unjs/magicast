@@ -25,7 +25,7 @@ async function cloneRecast() {
           if (!file.isFile()) {
             return;
           }
-          return await filterLines(join(file.path, file.name), (line) => {
+          return await filterLines(join(file.parentPath, file.name), (line) => {
             if (line.startsWith("import assert from")) {
               return false;
             }

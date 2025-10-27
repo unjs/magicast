@@ -28,4 +28,19 @@ describe("builders/expression", () => {
       });"
     `);
   });
+
+  it("binary expression", async () => {
+    const call = builders.binaryExpression(1, "+", 2);
+    expect(call.$type).toBe("binary-expression");
+    expect(call.$left).toBe(1);
+    expect(call.$right).toBe(2);
+    expect(call.$operator).toBe("+");
+
+    const mod = parseModule("");
+    mod.exports.a = call;
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "export const a = 1 + 2;"
+    `);
+  });
 });

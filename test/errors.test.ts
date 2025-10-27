@@ -29,25 +29,6 @@ export default {
     );
   });
 
-  it("expression", async () => {
-    const mod = parseModule(
-      `
-export default {
-  a: 1 + 1
-}
-    `.trim(),
-    );
-
-    expect(await generate(mod.exports.default)).toMatchInlineSnapshot(`
-      "{
-        a: 1 + 1;
-      }"
-    `);
-    expect(await generate(mod.exports.default.a)).toMatchInlineSnapshot(
-      `"1 + 1;"`,
-    );
-  });
-
   it("array destructuring", async () => {
     const mod = parseModule(
       `

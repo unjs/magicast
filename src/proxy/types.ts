@@ -63,11 +63,36 @@ export type ProxifiedMemberExpression = ProxyBase & {
   $type: "memberExpression";
 };
 
+export type BinaryOperator =
+  | "+"
+  | "-"
+  | "/"
+  | "%"
+  | "*"
+  | "**"
+  | "&"
+  | "|"
+  | ">>"
+  | ">>>"
+  | "<<"
+  | "^"
+  | "=="
+  | "==="
+  | "!="
+  | "!=="
+  | "in"
+  | "instanceof"
+  | ">"
+  | "<"
+  | ">="
+  | "<="
+  | "|>";
+
 export type ProxifiedBinaryExpression = ProxyBase & {
   $type: "binaryExpression";
-  left: Proxified;
-  right: Proxified;
-  operator: string;
+  $left: Proxified;
+  $right: Proxified;
+  $operator: BinaryOperator;
 };
 
 export type ProxifiedBlockStatement = ProxyBase & {

@@ -54,7 +54,7 @@ describe("builders/raw", () => {
 
   it("member expression", async () => {
     const expression = builders.raw("foo.bar");
-    expect(expression.$type).toBe("memberExpression");
+    expect(expression.$type).toBe("member-expression");
     const mod = parseModule("");
     mod.exports.a = expression;
 
