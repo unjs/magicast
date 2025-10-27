@@ -78,7 +78,19 @@ async function cloneAstTypes() {
     // Add import type
     await filterLines("vendor/ast-types/src/main.ts", (line) => {
       if (/^import\s*{\s*(ASTNode|Visitor)/.test(line)) {
-        return line.replace(/^import /, "import type ");
+        const result = line.replace(/^import /, "import type ");
+        if (result.includes(", Type")) {
+          return result.replace(", Type", "/*, Type*/");
+        }
+        return result;
+      }
+      // ./gen/builders exports an interface, it is not a namespace like namedTypes
+      if (line.startsWith("import { builders } from")) {
+        return `// ${line}`;
+      }
+      // ./gen/node-path exports an interface, it is not a namespace like namedTypes
+      if (line.startsWith("import { NodePath } from")) {
+        return `// ${line}`;
       }
       return line;
     });
