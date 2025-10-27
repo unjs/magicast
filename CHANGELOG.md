@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.4.0
+
+[compare changes](https://github.com/unjs/magicast/compare/v0.3.5...v0.4.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Add introspection and improve proxy behavior ([#136](https://github.com/unjs/magicast/pull/136))
+
+### 🏡 Chore
+
+- **release:** V0.3.5 ([2212670](https://github.com/unjs/magicast/commit/2212670))
+- Format ([50e2207](https://github.com/unjs/magicast/commit/50e2207))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Add introspection and improve proxy behavior ([#136](https://github.com/unjs/magicast/pull/136))
+
+### ❤️ Contributors
+
+- Joaquín Sánchez ([@userquin](http://github.com/userquin))
+- Anthony Fu <github@antfu.me>
+
 ## v0.3.5
 
 [compare changes](https://github.com/unjs/magicast/compare/v0.3.4...v0.3.5)
