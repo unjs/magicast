@@ -74,6 +74,9 @@ importers:
       source-map:
         specifier: npm:source-map-js@latest
         version: source-map-js@1.2.1
+      taze:
+        specifier: ^19.8.1
+        version: 19.8.1
       tsdown:
         specifier: ^0.15.11
         version: 0.15.11(typescript@5.9.3)
@@ -88,6 +91,11 @@ importers:
         version: 4.0.4(@types/node@24.9.1)(@vitest/ui@4.0.4)(jiti@2.6.1)(tsx@4.20.6)(yaml@2.8.1)
 
 packages:
+
+  '@antfu/ni@27.0.1':
+    resolution: {integrity: sha512-I6SOlwJ0MN73ECYcr7VJHpqSseyd7bpshx6JAaD0zNowS4kSWzFsqg8ikQT7DnCLiD4AZ+FaQJQ8WAk0Qi89Vw==}
+    engines: {node: '>=20'}
+    hasBin: true
 
   '@babel/generator@7.28.5':
     resolution: {integrity: sha512-3EwLFhZ38J4VyIP6WNtt2kUdW9dokXA9Cr4IVIFHuCpZ3H8/YFOl5JjZHisrn1fATPBmKKqXzDFvh9fUwHz6CQ==}
@@ -1093,6 +1101,9 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
+  fzf@0.5.2:
+    resolution: {integrity: sha512-Tt4kuxLXFKHy8KT40zwsUPUkg1CrsgY25FxA2U/j/0WgEDCk3ddc/zLTCCcbSHX9FcKtLuVaDGtGE/STWC+j3Q==}
+
   get-east-asian-width@1.4.0:
     resolution: {integrity: sha512-QZjmEOC+IT1uk6Rx0sX22V6uHWVwbdbxf1faPqJ1QhLdGgsRGCZoyaQBm/piRdJy/D2um6hM1UP7ZEeQ4EkP+Q==}
     engines: {node: '>=18'}
@@ -1398,6 +1409,9 @@ packages:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
 
+  pnpm-workspace-yaml@1.3.0:
+    resolution: {integrity: sha512-Krb5q8Totd5mVuLx7we+EFHq/AfxA75nbfTm25Q1pIf606+RlaKUG+PXH8SDihfe5b5k4H09gE+sL47L1t5lbw==}
+
   postcss@8.5.6:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
@@ -1563,6 +1577,10 @@ packages:
   synckit@0.11.11:
     resolution: {integrity: sha512-MeQTA1r0litLUf0Rp/iisCaL8761lKAZHaimlbGK4j0HysC4PLfqygQj9srcs0m2RdtDYnF8UuYyKpbjHYp7Jw==}
     engines: {node: ^14.18.0 || >=16.0.0}
+
+  taze@19.8.1:
+    resolution: {integrity: sha512-0VqUKZZQuF1WIhTNpvtePt5/P+mecJs/Wy80O2LilceN9z3mX28k/ku/wQhehGkHyHxPJz/vbYHIC6+dlPgdmQ==}
+    hasBin: true
 
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
@@ -1773,6 +1791,14 @@ packages:
     engines: {node: '>=10'}
 
 snapshots:
+
+  '@antfu/ni@27.0.1':
+    dependencies:
+      ansis: 4.2.0
+      fzf: 0.5.2
+      package-manager-detector: 1.5.0
+      tinyexec: 1.0.1
+      tinyglobby: 0.2.15
 
   '@babel/generator@7.28.5':
     dependencies:
@@ -2710,6 +2736,8 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
+  fzf@0.5.2: {}
+
   get-east-asian-width@1.4.0: {}
 
   get-tsconfig@4.13.0:
@@ -3004,6 +3032,10 @@ snapshots:
 
   pluralize@8.0.0: {}
 
+  pnpm-workspace-yaml@1.3.0:
+    dependencies:
+      yaml: 2.8.1
+
   postcss@8.5.6:
     dependencies:
       nanoid: 3.3.11
@@ -3183,6 +3215,20 @@ snapshots:
   synckit@0.11.11:
     dependencies:
       '@pkgr/core': 0.2.9
+
+  taze@19.8.1:
+    dependencies:
+      '@antfu/ni': 27.0.1
+      cac: 6.7.14
+      find-up-simple: 1.0.1
+      ofetch: 1.4.1
+      package-manager-detector: 1.5.0
+      pathe: 2.0.3
+      pnpm-workspace-yaml: 1.3.0
+      restore-cursor: 5.1.0
+      tinyexec: 1.0.1
+      tinyglobby: 0.2.15
+      unconfig: 7.3.3
 
   tiny-invariant@1.3.3: {}
 

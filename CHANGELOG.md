@@ -6,7 +6,7 @@
 
 ### 🚀 Enhancements
 
-- ⚠️  Add introspection and improve proxy behavior ([#136](https://github.com/unjs/magicast/pull/136))
+- ⚠️ Add introspection and improve proxy behavior ([#136](https://github.com/unjs/magicast/pull/136))
 
 ### 🏡 Chore
 
@@ -15,7 +15,7 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Add introspection and improve proxy behavior ([#136](https://github.com/unjs/magicast/pull/136))
+- ⚠️ Add introspection and improve proxy behavior ([#136](https://github.com/unjs/magicast/pull/136))
 
 ### ❤️ Contributors
 

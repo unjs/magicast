@@ -53,6 +53,7 @@
     "recast": "^0.23.11",
     "simple-git-hooks": "^2.13.1",
     "source-map": "npm:source-map-js@latest",
+    "taze": "^19.8.1",
     "tsdown": "^0.15.11",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
