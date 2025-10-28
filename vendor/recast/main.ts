@@ -34,7 +34,7 @@ export { visit } from "ast-types";
 /**
  * Options shared between parsing and printing.
  */
-export { Options } from "./lib/options";
+export type { Options } from "./lib/options";
 
 /**
  * Reprint a modified syntax tree using as much of the original source

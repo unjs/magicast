@@ -84,35 +84,35 @@ interface NodeModule {
 export function maybeSetModuleExports(
     moduleGetter: () => NodeModule,
 ) {
-    try {
-        var nodeModule = moduleGetter();
-        var originalExports = nodeModule.exports;
-        var defaultExport = originalExports["default"];
-    } catch {
-        // It's normal/acceptable for this code to throw a ReferenceError due to
-        // the moduleGetter function attempting to access a non-existent global
-        // `module` variable. That's the reason we use a getter function here:
-        // so the calling code doesn't have to do its own typeof module ===
-        // "object" checking (because it's always safe to pass `() => module` as
-        // an argument, even when `module` is not defined in the calling scope).
-        return;
-    }
+    // try {
+    //     var nodeModule = moduleGetter();
+    //     var originalExports = nodeModule.exports;
+    //     var defaultExport = originalExports["default"];
+    // } catch {
+    //     // It's normal/acceptable for this code to throw a ReferenceError due to
+    //     // the moduleGetter function attempting to access a non-existent global
+    //     // `module` variable. That's the reason we use a getter function here:
+    //     // so the calling code doesn't have to do its own typeof module ===
+    //     // "object" checking (because it's always safe to pass `() => module` as
+    //     // an argument, even when `module` is not defined in the calling scope).
+    //     return;
+    // }
 
-    if (defaultExport &&
-        defaultExport !== originalExports &&
-        typeof originalExports === "object"
-    ) {
-        // Make all properties found in originalExports properties of the
-        // default export, including the default property itself, so that
-        // require(nodeModule.id).default === require(nodeModule.id).
-        Object.assign(defaultExport, originalExports, { "default": defaultExport });
-        // Object.assign only transfers enumerable properties, and
-        // __esModule is (and should remain) non-enumerable.
-        if (originalExports.__esModule) {
-            Object.defineProperty(defaultExport, "__esModule", { value: true });
-        }
-        // This line allows require(nodeModule.id) === defaultExport, rather
-        // than (only) require(nodeModule.id).default === defaultExport.
-        nodeModule.exports = defaultExport;
-    }
+    // if (defaultExport &&
+    //     defaultExport !== originalExports &&
+    //     typeof originalExports === "object"
+    // ) {
+    //     // Make all properties found in originalExports properties of the
+    //     // default export, including the default property itself, so that
+    //     // require(nodeModule.id).default === require(nodeModule.id).
+    //     Object.assign(defaultExport, originalExports, { "default": defaultExport });
+    //     // Object.assign only transfers enumerable properties, and
+    //     // __esModule is (and should remain) non-enumerable.
+    //     if (originalExports.__esModule) {
+    //         Object.defineProperty(defaultExport, "__esModule", { value: true });
+    //     }
+    //     // This line allows require(nodeModule.id) === defaultExport, rather
+    //     // than (only) require(nodeModule.id).default === defaultExport.
+    //     nodeModule.exports = defaultExport;
+    // }
 }
