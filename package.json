@@ -7,25 +7,20 @@
   "sideEffects": false,
   "type": "module",
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    },
-    "./helpers": {
-      "import": "./dist/helpers.mjs",
-      "require": "./dist/helpers.cjs"
-    }
+    ".": "./dist/index.js",
+    "./helpers": "./dist/helpers/index.js",
+    "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "*.d.ts"
   ],
   "scripts": {
-    "build": "unbuild",
-    "prepare": "esno ./scripts/vendor.ts",
+    "build": "tsdown",
+    "prepare": "tsx ./scripts/vendor.ts",
     "dev": "vitest dev",
     "dev:ui": "vitest dev --ui",
     "lint": "eslint --cache . && prettier -c .",
@@ -50,7 +45,6 @@
     "changelogen": "^0.5.7",
     "eslint": "^9.38.0",
     "eslint-config-unjs": "^0.5.0",
-    "esno": "^4.8.0",
     "giget": "^1.2.5",
     "jiti": "^2.6.1",
     "lint-staged": "^15.5.2",
@@ -59,8 +53,9 @@
     "recast": "^0.23.11",
     "simple-git-hooks": "^2.13.1",
     "source-map": "npm:source-map-js@latest",
+    "tsdown": "^0.15.11",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "vitest": "^1.6.1"
   },
   "resolutions": {
