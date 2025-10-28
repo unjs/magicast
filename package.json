@@ -38,7 +38,7 @@
     "source-map-js": "^1.2.1"
   },
   "devDependencies": {
-    "@types/node": "^20.19.23",
+    "@types/node": "^24.9.1",
     "@vitest/coverage-v8": "^1.6.1",
     "@vitest/ui": "^1.6.1",
     "ast-types": "^0.16.1",

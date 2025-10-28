@@ -30,8 +30,8 @@ importers:
         version: 1.2.1
     devDependencies:
       '@types/node':
-        specifier: ^20.19.23
-        version: 20.19.23
+        specifier: ^24.9.1
+        version: 24.9.1
       '@vitest/coverage-v8':
         specifier: ^1.6.1
         version: 1.6.1(vitest@1.6.1)
@@ -85,7 +85,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^1.6.1
-        version: 1.6.1(@types/node@20.19.23)(@vitest/ui@1.6.1)
+        version: 1.6.1(@types/node@24.9.1)(@vitest/ui@1.6.1)
 
 packages:
 
@@ -1103,10 +1103,10 @@ packages:
       '@types/unist': 2.0.11
     dev: true
 
-  /@types/node@20.19.23:
-    resolution: {integrity: sha512-yIdlVVVHXpmqRhtyovZAcSy0MiPcYWGkoO4CGe/+jpP0hmNuihm4XhHbADpK++MsiLHP5MVlv+bcgdF99kSiFQ==}
+  /@types/node@24.9.1:
+    resolution: {integrity: sha512-QoiaXANRkSXK6p0Duvt56W208du4P9Uye9hWLWgGMDTEoKPhuenzNcC4vGUmrNkiOKTlIrBoyNQYNpSwfEZXSg==}
     dependencies:
-      undici-types: 6.21.0
+      undici-types: 7.16.0
     dev: true
 
   /@types/unist@2.0.11:
@@ -1273,7 +1273,7 @@ packages:
       std-env: 3.7.0
       strip-literal: 2.0.0
       test-exclude: 6.0.0
-      vitest: 1.6.1(@types/node@20.19.23)(@vitest/ui@1.6.1)
+      vitest: 1.6.1(@types/node@24.9.1)(@vitest/ui@1.6.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1320,7 +1320,7 @@ packages:
       pathe: 1.1.2
       picocolors: 1.0.1
       sirv: 2.0.4
-      vitest: 1.6.1(@types/node@20.19.23)(@vitest/ui@1.6.1)
+      vitest: 1.6.1(@types/node@24.9.1)(@vitest/ui@1.6.1)
     dev: true
 
   /@vitest/utils@1.6.1:
@@ -3512,8 +3512,8 @@ packages:
       quansync: 0.2.11
     dev: true
 
-  /undici-types@6.21.0:
-    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+  /undici-types@7.16.0:
+    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
     dev: true
 
   /unist-util-stringify-position@2.0.3:
@@ -3549,7 +3549,7 @@ packages:
       punycode: 2.3.1
     dev: true
 
-  /vite-node@1.6.1(@types/node@20.19.23):
+  /vite-node@1.6.1(@types/node@24.9.1):
     resolution: {integrity: sha512-YAXkfvGtuTzwWbDSACdJSg4A4DZiAqckWe90Zapc/sEX3XvHcw1NdurM/6od8J207tSDqNbSsgdCacBgvJKFuA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -3558,7 +3558,7 @@ packages:
       debug: 4.3.6
       pathe: 1.1.2
       picocolors: 1.0.1
-      vite: 5.0.11(@types/node@20.19.23)
+      vite: 5.0.11(@types/node@24.9.1)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -3570,7 +3570,7 @@ packages:
       - terser
     dev: true
 
-  /vite@5.0.11(@types/node@20.19.23):
+  /vite@5.0.11(@types/node@24.9.1):
     resolution: {integrity: sha512-XBMnDjZcNAw/G1gEiskiM1v6yzM4GE5aMGvhWTlHAYYhxb7S3/V1s3m2LDHa8Vh6yIWYYB0iJwsEaS523c4oYA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -3598,7 +3598,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.19.23
+      '@types/node': 24.9.1
       esbuild: 0.19.11
       postcss: 8.4.33
       rollup: 4.9.5
@@ -3606,7 +3606,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@1.6.1(@types/node@20.19.23)(@vitest/ui@1.6.1):
+  /vitest@1.6.1(@types/node@24.9.1)(@vitest/ui@1.6.1):
     resolution: {integrity: sha512-Ljb1cnSJSivGN0LqXd/zmDbWEM0RNNg2t1QW/XUhYl/qPqyu7CsqeWtqQXHVaJsecLPuDoak2oJcZN2QoRIOag==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -3631,7 +3631,7 @@ packages:
       jsdom:
         optional: true
     dependencies:
-      '@types/node': 20.19.23
+      '@types/node': 24.9.1
       '@vitest/expect': 1.6.1
       '@vitest/runner': 1.6.1
       '@vitest/snapshot': 1.6.1
@@ -3650,8 +3650,8 @@ packages:
       strip-literal: 2.0.0
       tinybench: 2.5.1
       tinypool: 0.8.3
-      vite: 5.0.11(@types/node@20.19.23)
-      vite-node: 1.6.1(@types/node@20.19.23)
+      vite: 5.0.11(@types/node@24.9.1)
+      vite-node: 1.6.1(@types/node@24.9.1)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
