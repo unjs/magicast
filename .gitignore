@@ -9,4 +9,3 @@ types
 *.env*
 .idea
 .history
-vendor
