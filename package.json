@@ -45,7 +45,7 @@
     "changelogen": "^0.5.7",
     "eslint": "^9.38.0",
     "eslint-config-unjs": "^0.5.0",
-    "giget": "^1.2.5",
+    "giget": "^2.0.0",
     "jiti": "^2.6.1",
     "lint-staged": "^15.5.2",
     "magicast": "workspace:*",
