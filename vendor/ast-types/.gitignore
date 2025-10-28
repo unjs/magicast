@@ -1,0 +1,14 @@
+/node_modules
+/lib
+/src/test/data/babel-parser
+/src/test/data/typescript-compiler
+
+# Ignore "npm pack" output
+/*.tgz
+
+# Ignore TypeScript-emitted files
+lib/
+*.js
+*.d.ts
+# Except...
+!/types/**/*.d.ts

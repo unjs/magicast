@@ -27,7 +27,7 @@
     "lint:fix": "eslint --cache . --fix && prettier -c . -w",
     "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit",
-    "release": "pnpm run test run && changelogen --release && npm publish && git push --follow-tags",
+    "release": "pnpm run test run && bumpp",
     "test": "vitest",
     "test:build": "TEST_BUILD=true vitest",
     "test:full": "pnpm run test --run && pnpm run build && pnpm run test:build --run"
@@ -38,16 +38,16 @@
     "source-map-js": "^1.2.1"
   },
   "devDependencies": {
-    "@types/node": "^20.19.23",
-    "@vitest/coverage-v8": "^1.6.1",
-    "@vitest/ui": "^1.6.1",
+    "@types/node": "^24.9.1",
+    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/ui": "^4.0.4",
     "ast-types": "^0.16.1",
-    "changelogen": "^0.5.7",
+    "bumpp": "^10.3.1",
     "eslint": "^9.38.0",
     "eslint-config-unjs": "^0.5.0",
-    "giget": "^1.2.5",
+    "giget": "^2.0.0",
     "jiti": "^2.6.1",
-    "lint-staged": "^15.5.2",
+    "lint-staged": "^16.2.6",
     "magicast": "workspace:*",
     "prettier": "^3.6.2",
     "recast": "^0.23.11",
@@ -56,7 +56,7 @@
     "tsdown": "^0.15.11",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "vitest": "^1.6.1"
+    "vitest": "^4.0.4"
   },
   "resolutions": {
     "source-map": "npm:source-map-js@latest"
@@ -70,7 +70,7 @@
       "prettier -w"
     ]
   },
-  "packageManager": "pnpm@8.15.9",
+  "packageManager": "pnpm@10.19.0",
   "pnpm": {
     "overrides": {
       "array-includes": "npm:@nolyfill/array-includes@latest",
@@ -81,6 +81,10 @@
       "object.fromentries": "npm:@nolyfill/object.fromentries@latest",
       "object.groupby": "npm:@nolyfill/object.groupby@latest",
       "object.values": "npm:@nolyfill/object.values@latest"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "simple-git-hooks"
+    ]
   }
 }

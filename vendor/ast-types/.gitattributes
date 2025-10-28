@@ -1,0 +1,2 @@
+# Windows Bash complains if the script contains \r characters
+*.sh text eol=lf
