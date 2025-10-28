@@ -39,6 +39,8 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
               decl.generator,
               decl.async,
             );
+            // WORKAROUND: Recast builder doesn't seem to preserve the async property
+            funcExpr.async = decl.async;
             funcExpr.loc = decl.loc;
             return funcExpr;
           }

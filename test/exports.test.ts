@@ -86,7 +86,7 @@ describe("exports", () => {
     expect(typeof mod.exports.fetchData).toBe("function");
     expect(() => mod.exports.fetchData()).toThrow(MagicastError);
     expect(await generate(mod.exports.fetchData)).toMatchInlineSnapshot(`
-      "(function fetchData() {
+      "(async function fetchData() {
         return Promise.resolve(42);
       });"
     `);
