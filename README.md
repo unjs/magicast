@@ -20,24 +20,17 @@ Programmatically modify JavaScript and TypeScript source codes with a simplified
 Install npm package:
 
 ```sh
-# using yarn
 yarn add --dev magicast
 
-# using npm
 npm install -D magicast
 
-# using pnpm
 pnpm add -D magicast
 ```
 
 Import utilities:
 
 ```js
-// ESM / Bundler
 import { parseModule, generateCode, builders, createNode } from "magicast";
-
-// CommonJS
-const { parseModule, generateCode, builders, createNode } = require("magicast");
 ```
 
 ## Examples
