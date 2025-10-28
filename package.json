@@ -39,8 +39,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.23",
-    "@vitest/coverage-v8": "^1.6.1",
-    "@vitest/ui": "^1.6.1",
+    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/ui": "^4.0.4",
     "ast-types": "^0.16.1",
     "changelogen": "^0.5.7",
     "eslint": "^9.38.0",
@@ -56,7 +56,7 @@
     "tsdown": "^0.15.11",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "vitest": "^1.6.1"
+    "vitest": "^4.0.4"
   },
   "resolutions": {
     "source-map": "npm:source-map-js@latest"
