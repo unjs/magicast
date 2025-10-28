@@ -277,9 +277,8 @@ export default {
       await generate(mod.exports.default.x[2].pattern),
     ).toMatchInlineSnapshot(`"async ({ req }) => req.method === "GET";"`);
     expect(typeof mod.exports.default.x[2].pattern).toBe("function");
-    expect(
-      await generate(mod.exports.default.x[3].pattern),
-    ).toMatchInlineSnapshot(`
+    expect(await generate(mod.exports.default.x[3].pattern))
+      .toMatchInlineSnapshot(`
       "(async function ({ req }) {
         return req.method === "GET";
       });"
