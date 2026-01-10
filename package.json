@@ -37,26 +37,26 @@
     "source-map-js": "^1.2.1"
   },
   "devDependencies": {
-    "@types/node": "^24.9.1",
-    "@vitest/coverage-v8": "^4.0.4",
-    "@vitest/ui": "^4.0.4",
+    "@types/node": "^24.10.7",
+    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/ui": "^4.0.16",
     "ast-types": "^0.16.1",
-    "bumpp": "^10.3.1",
-    "eslint": "^9.38.0",
-    "eslint-config-unjs": "^0.5.0",
+    "bumpp": "^10.3.2",
+    "eslint": "^9.39.2",
+    "eslint-config-unjs": "^0.6.2",
     "giget": "^2.0.0",
     "jiti": "^2.6.1",
-    "lint-staged": "^16.2.6",
+    "lint-staged": "^16.2.7",
     "magicast": "workspace:*",
-    "prettier": "^3.6.2",
+    "prettier": "^3.7.4",
     "recast": "^0.23.11",
     "simple-git-hooks": "^2.13.1",
     "source-map": "npm:source-map-js@latest",
-    "taze": "^19.8.1",
-    "tsdown": "^0.15.11",
-    "tsx": "^4.20.6",
+    "taze": "^19.9.2",
+    "tsdown": "^0.19.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.4"
+    "vitest": "^4.0.16"
   },
   "resolutions": {
     "source-map": "npm:source-map-js@latest"
@@ -70,7 +70,7 @@
       "prettier -w"
     ]
   },
-  "packageManager": "pnpm@10.19.0",
+  "packageManager": "pnpm@10.28.0",
   "pnpm": {
     "overrides": {
       "array-includes": "npm:@nolyfill/array-includes@latest",
