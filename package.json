@@ -44,7 +44,7 @@
     "bumpp": "^10.3.2",
     "eslint": "^9.39.2",
     "eslint-config-unjs": "^0.6.2",
-    "giget": "^2.0.0",
+    "giget": "^3.1.1",
     "jiti": "^2.6.1",
     "lint-staged": "^16.2.7",
     "magicast": "workspace:*",
