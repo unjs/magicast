@@ -1,5 +1,5 @@
 import { Program, VariableDeclarator } from "@babel/types";
-import { generateCode, parseExpression } from "../code";
+import { generateCode, parseExpression } from "../core";
 import { MagicastError } from "../error";
 import type { Proxified, ProxifiedModule, ProxifiedObject } from "../types";
 
