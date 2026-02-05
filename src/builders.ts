@@ -3,7 +3,7 @@ import { proxifyFunctionCall } from "./proxy/function-call";
 import { proxifyNewExpression } from "./proxy/new-expression";
 import { literalToAst } from "./proxy/_utils";
 import type { Proxified } from "./types";
-import { parseExpression } from "./core";
+import { parseExpression } from "./code";
 import { proxifyBinaryExpression } from "./proxy/binary-expression";
 
 const b = recast.types.builders;

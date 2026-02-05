@@ -1,6 +1,6 @@
 import type { ParsedFileNode } from "../types";
 import { MagicastError } from "../error";
-import { generateCode } from "../core";
+import { generateCode } from "../code";
 import type { ProxifiedModule } from "./types";
 import { createImportsProxy } from "./imports";
 import { createExportsProxy } from "./exports";

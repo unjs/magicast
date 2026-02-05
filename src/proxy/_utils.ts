@@ -34,7 +34,6 @@ export function literalToAst(value: any, seen = new Set()): ASTNode {
     return b.identifier("undefined") as any;
   }
   if (value === null) {
-    // eslint-disable-next-line unicorn/no-null
     return b.literal(null) as any;
   }
   if (LITERALS_TYPEOF.has(typeof value)) {

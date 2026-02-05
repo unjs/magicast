@@ -4,7 +4,7 @@ import type {
   ProxifiedModule,
 } from "../proxy/types";
 import { builders } from "../builders";
-import { generateCode } from "../core";
+import { generateCode } from "../code";
 import {
   getConfigFromVariableDeclaration,
   getDefaultExportOptions,

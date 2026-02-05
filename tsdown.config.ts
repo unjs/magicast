@@ -2,7 +2,11 @@ import { defineConfig } from "tsdown";
 import { resolve } from "node:path";
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/helpers/index.ts", "src/browser.ts"],
+  entry: {
+    core: "src/core.ts",
+    index: "src/index.ts",
+    helpers: "src/helpers/index.ts",
+  },
   alias: {
     "source-map": "source-map-js",
     recast: resolve(import.meta.dirname, "vendor/recast/main.ts"),

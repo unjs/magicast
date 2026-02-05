@@ -8,8 +8,8 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
-    "./browser": "./dist/browser.js",
-    "./helpers": "./dist/helpers/index.js",
+    "./core": "./dist/core.js",
+    "./helpers": "./dist/helpers.js",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",

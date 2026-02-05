@@ -18,7 +18,6 @@ describe("deepMergeObject", () => {
     const mod = parseModule(`export default { a: 1, b: { c: 2 } }`);
     const proxifiedObject = mod.exports.default;
 
-    // eslint-disable-next-line unicorn/no-null
     const sourceWithNull = { a: null, d: null };
     deepMergeObject(proxifiedObject, sourceWithNull);
     expect(proxifiedObject.a).toBeNull();
