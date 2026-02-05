@@ -157,6 +157,14 @@ function updateConfig() {
 }
 ```
 
+## Browser / Worker Support
+
+The main export of `magicast` contains filesystem utilities. If you want to use it in a browser or worker, import from `magicast/core` instead.
+
+```js
+import { parseModule } from "magicast/core";
+```
+
 ## High Level Helpers
 
 We also experiment to provide a few high level helpers to make common tasks easier. You could import them from `magicast/helpers`. They might be moved to a separate package in the future.

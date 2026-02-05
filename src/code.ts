@@ -1,4 +1,3 @@
-import { promises as fsp } from "node:fs";
 import { print, parse, Options as ParseOptions, types } from "recast";
 import { getBabelParser } from "./babel";
 import {
@@ -71,26 +70,4 @@ export function generateCode(
   });
 
   return { code, map };
-}
-
-export async function loadFile<Exports extends object = any>(
-  filename: string,
-  options: ParseOptions = {},
-): Promise<ProxifiedModule<Exports>> {
-  const contents = await fsp.readFile(filename, "utf8");
-  options.sourceFileName = options.sourceFileName ?? filename;
-  return parseModule(contents, options);
-}
-
-export async function writeFile(
-  node: { $ast: ASTNode } | ASTNode,
-  filename: string,
-  options?: ParseOptions,
-): Promise<void> {
-  const ast = "$ast" in node ? node.$ast : node;
-  const { code, map } = generateCode(ast, options);
-  await fsp.writeFile(filename as string, code);
-  if (map) {
-    await fsp.writeFile(filename + ".map", map);
-  }
 }

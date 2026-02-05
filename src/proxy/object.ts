@@ -60,7 +60,6 @@ export function proxifyObject<T extends object>(
         }
         if (prop.type === "ObjectMethod") {
           const funcExpr = b.functionExpression(
-            // eslint-disable-next-line unicorn/no-null
             null, // id must be null, not undefined
             prop.params as any,
             prop.body as any,
@@ -115,7 +114,6 @@ export function proxifyObject<T extends object>(
               acc[propName] = proxify((prop as any).value, mod);
             } else if (prop.type === "ObjectMethod") {
               const funcExpr = b.functionExpression(
-                // eslint-disable-next-line unicorn/no-null
                 null, // id must be null, not undefined
                 prop.params as any,
                 prop.body as any,
