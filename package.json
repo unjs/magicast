@@ -33,23 +33,23 @@
     "test:full": "pnpm run test --run && pnpm run build && pnpm run test:build --run"
   },
   "dependencies": {
-    "@babel/parser": "^7.28.5",
-    "@babel/types": "^7.28.5",
+    "@babel/parser": "^7.29.0",
+    "@babel/types": "^7.29.0",
     "source-map-js": "^1.2.1"
   },
   "devDependencies": {
-    "@types/node": "^24.10.7",
-    "@vitest/coverage-v8": "^4.0.16",
-    "@vitest/ui": "^4.0.16",
+    "@types/node": "^24.10.10",
+    "@vitest/coverage-v8": "^4.0.18",
+    "@vitest/ui": "^4.0.18",
     "ast-types": "^0.16.1",
-    "bumpp": "^10.3.2",
+    "bumpp": "^10.4.0",
     "eslint": "^9.39.2",
     "eslint-config-unjs": "^0.6.2",
-    "giget": "^2.0.0",
+    "giget": "^3.1.1",
     "jiti": "^2.6.1",
     "lint-staged": "^16.2.7",
     "magicast": "workspace:*",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.1",
     "recast": "^0.23.11",
     "simple-git-hooks": "^2.13.1",
     "source-map": "npm:source-map-js@latest",
@@ -57,7 +57,7 @@
     "tsdown": "^0.19.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.18"
   },
   "resolutions": {
     "source-map": "npm:source-map-js@latest"
@@ -71,7 +71,7 @@
       "prettier -w"
     ]
   },
-  "packageManager": "pnpm@10.28.0",
+  "packageManager": "pnpm@10.28.2",
   "pnpm": {
     "overrides": {
       "array-includes": "npm:@nolyfill/array-includes@latest",
