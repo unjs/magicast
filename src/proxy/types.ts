@@ -95,6 +95,13 @@ export type ProxifiedBinaryExpression = ProxyBase & {
   $operator: BinaryOperator;
 };
 
+export type ProxifiedConditionalExpression = ProxyBase & {
+  $type: "conditional-expression";
+  $test: Proxified;
+  $consequent: Proxified;
+  $alternate: Proxified;
+};
+
 export type ProxifiedBlockStatement = ProxyBase & {
   $type: "blockStatement";
   $body: ProxifiedArray;
@@ -157,6 +164,10 @@ export interface ImportItemInput {
   from: string;
 }
 
+export type ProxifiedUnknownAstNode = ProxyBase & {
+  $type: "unknown-ast-node";
+};
+
 export type ProxifiedValue =
   | ProxifiedArray
   | ProxifiedFunctionCall
@@ -171,6 +182,8 @@ export type ProxifiedValue =
   | ProxifiedArrowFunctionExpression
   | ProxifiedFunctionExpression
   | ProxifiedBinaryExpression
-  | ProxifiedBlockStatement;
+  | ProxifiedConditionalExpression
+  | ProxifiedBlockStatement
+  | ProxifiedUnknownAstNode;
 
 export type ProxyType = ProxifiedValue["$type"];
