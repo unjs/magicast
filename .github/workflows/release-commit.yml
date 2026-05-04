@@ -8,6 +8,6 @@ concurrency:
 
 jobs:
   release:
-    uses: sxzz/workflows/.github/workflows/release-commit.yml@v1
+    uses: sxzz/workflows/.github/workflows/release-commit.yml@v2.0.0
     with:
       compact: true
