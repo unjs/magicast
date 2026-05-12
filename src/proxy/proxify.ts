@@ -13,6 +13,7 @@ import { proxifyBinaryExpression } from "./binary-expression";
 import { proxifyBlockStatement } from "./block-statement";
 import { proxifyFunctionExpression } from "./function-expression";
 import { LITERALS_AST, LITERALS_TYPEOF } from "./_utils";
+import { proxifyAwaitExpression } from "./await-expression";
 
 const _cache = new WeakMap<ASTNode, any>();
 
@@ -79,6 +80,10 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
     }
     case "BinaryExpression": {
       proxy = proxifyBinaryExpression(node, mod);
+      break;
+    }
+    case "AwaitExpression":{
+      proxy = proxifyAwaitExpression(node, mod);
       break;
     }
     case "BlockStatement": {

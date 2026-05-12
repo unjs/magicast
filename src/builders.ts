@@ -5,6 +5,7 @@ import { literalToAst } from "./proxy/_utils";
 import type { Proxified } from "./types";
 import { parseExpression } from "./code";
 import { proxifyBinaryExpression } from "./proxy/binary-expression";
+import { proxifyAwaitExpression } from "./proxy/await-expression";
 
 const b = recast.types.builders;
 
@@ -66,6 +67,15 @@ export const builders = {
     );
     return proxifyBinaryExpression(node as any);
   },
+  /**
+  * Create an await expression node.
+  */
+ awaitExpression(argument: any): Proxified {
+  
+   const argAst = argument?.$ast || literalToAst(argument);
+   const node = b.awaitExpression(argAst as any);
+   return proxifyAwaitExpression(node as any);
+ },
   /**
    * Create a proxified version of a literal value.
    */

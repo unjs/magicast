@@ -95,6 +95,11 @@ export type ProxifiedBinaryExpression = ProxyBase & {
   $operator: BinaryOperator;
 };
 
+export type ProxifiedAwaitExpression = ProxyBase & {
+  $type: "await-expression";
+  $argument: Proxified;
+}
+
 export type ProxifiedBlockStatement = ProxyBase & {
   $type: "blockStatement";
   $body: ProxifiedArray;
@@ -171,6 +176,7 @@ export type ProxifiedValue =
   | ProxifiedArrowFunctionExpression
   | ProxifiedFunctionExpression
   | ProxifiedBinaryExpression
+  | ProxifiedAwaitExpression
   | ProxifiedBlockStatement;
 
 export type ProxyType = ProxifiedValue["$type"];
