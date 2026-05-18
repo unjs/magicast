@@ -38,7 +38,7 @@
     "source-map-js": "^1.2.1"
   },
   "devDependencies": {
-    "@types/node": "^25.7.0",
+    "@types/node": "^25.9.0",
     "@vitest/coverage-v8": "^4.1.6",
     "@vitest/ui": "^4.1.6",
     "ast-types": "^0.16.1",
@@ -53,9 +53,9 @@
     "recast": "^0.23.11",
     "simple-git-hooks": "^2.13.1",
     "source-map": "npm:source-map-js@latest",
-    "taze": "^19.11.0",
+    "taze": "^19.12.0",
     "tsdown": "^0.22.0",
-    "tsx": "^4.21.0",
+    "tsx": "^4.22.1",
     "typescript": "^6.0.3",
     "vitest": "^4.1.6"
   },
