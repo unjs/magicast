@@ -43,7 +43,7 @@
     "@vitest/ui": "^4.1.6",
     "ast-types": "^0.16.1",
     "bumpp": "^11.1.0",
-    "eslint": "^9.39.4",
+    "eslint": "^10.4.0",
     "eslint-config-unjs": "^0.6.2",
     "giget": "^3.2.0",
     "jiti": "^2.7.0",
