@@ -30,64 +30,64 @@ importers:
         version: 1.2.1
     devDependencies:
       '@types/node':
-        specifier: ^25.7.0
+        specifier: 25.7.0
         version: 25.7.0
       '@vitest/coverage-v8':
-        specifier: ^4.1.6
+        specifier: 4.1.6
         version: 4.1.6(vitest@4.1.6)
       '@vitest/ui':
-        specifier: ^4.1.6
+        specifier: 4.1.6
         version: 4.1.6(vitest@4.1.6)
       ast-types:
-        specifier: ^0.16.1
+        specifier: 0.16.1
         version: 0.16.1
       bumpp:
-        specifier: ^11.1.0
+        specifier: 11.1.0
         version: 11.1.0
       eslint:
-        specifier: ^9.39.4
+        specifier: 9.39.4
         version: 9.39.4(jiti@2.7.0)
       eslint-config-unjs:
-        specifier: ^0.6.2
+        specifier: 0.6.2
         version: 0.6.2(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3)
       giget:
-        specifier: ^3.2.0
+        specifier: 3.2.0
         version: 3.2.0
       jiti:
-        specifier: ^2.7.0
+        specifier: 2.7.0
         version: 2.7.0
       magicast:
         specifier: workspace:*
         version: 'link:'
       nano-staged:
-        specifier: ^1.0.2
+        specifier: 1.0.2
         version: 1.0.2
       prettier:
-        specifier: ^3.8.3
+        specifier: 3.8.3
         version: 3.8.3
       recast:
-        specifier: ^0.23.11
+        specifier: 0.23.11
         version: 0.23.11
       simple-git-hooks:
-        specifier: ^2.13.1
+        specifier: 2.13.1
         version: 2.13.1
       source-map:
         specifier: npm:source-map-js@latest
         version: source-map-js@1.2.1
       taze:
-        specifier: ^19.11.0
+        specifier: 19.11.0
         version: 19.11.0
       tsdown:
-        specifier: ^0.22.0
+        specifier: 0.22.0
         version: 0.22.0(tsx@4.21.0)(typescript@6.0.3)(unrun@0.2.24(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(synckit@0.11.11))
       tsx:
-        specifier: ^4.21.0
+        specifier: 4.21.0
         version: 4.21.0
       typescript:
-        specifier: ^6.0.3
+        specifier: 6.0.3
         version: 6.0.3
       vitest:
-        specifier: ^4.1.6
+        specifier: 4.1.6
         version: 4.1.6(@types/node@25.7.0)(@vitest/coverage-v8@4.1.6)(@vitest/ui@4.1.6)(vite@7.1.12(@types/node@25.7.0)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
 packages:
@@ -464,12 +464,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@eslint-community/eslint-utils@4.9.0':
-    resolution: {integrity: sha512-ayVFHdtZ+hsq1t2Dy24wCmGXGe4q9Gu3smhLYALJrr473ZH27MsnSL+LKUlimp4BWJqMDMLmPpx/Q9R3OAlL4g==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
-
   '@eslint-community/eslint-utils@4.9.1':
     resolution: {integrity: sha512-phrYmNiYppR7znFEdqgfWHXR6NCkZEK7hwWDHZUjit/2/U0r6XvkDl0SYnoM51Hq7FhCGdLDT6zxCCOY1hexsQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -488,20 +482,12 @@ packages:
     resolution: {integrity: sha512-gBrxN88gOIf3R7ja5K9slwNayVcZgK6SOUORm2uBzTeIEfeVaIhOpCtTox3P6R7o2jLFwLFTLnC7kU/RGcYEgw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/core@0.16.0':
-    resolution: {integrity: sha512-nmC8/totwobIiFcGkDza3GIKfAw1+hLiYVrh3I1nIomQ8PEr5cxg34jnkmGawul/ep52wGRAcyeDCNtWKSOj4Q==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
   '@eslint/core@0.17.0':
     resolution: {integrity: sha512-yL/sLrpmtDaFEiUj1osRP4TI2MDz1AddJL+jZ7KSqvBuliN4xqYY54IfdN8qD8Toa6g1iloph1fxQNkjOxrrpQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/eslintrc@3.3.5':
     resolution: {integrity: sha512-4IlJx0X0qftVsN5E+/vGujTRIFtwuLbNsVUe7TO6zYPDR1O6nFwvwhIKEKSrl6dZchmYBITazxKoUYOjdtjlRg==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@eslint/js@9.39.2':
-    resolution: {integrity: sha512-q1mjIoW1VX4IvSocvM/vbTiveKC4k9eLrajNEuSsmjymSDEbpGddtpfOoN7YGAqBK3NG+uqo8ia4PDTt8buCYA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/js@9.39.4':
@@ -514,10 +500,6 @@ packages:
 
   '@eslint/object-schema@2.1.7':
     resolution: {integrity: sha512-VtAOaymWVfZcmZbp6E2mympDIHvyjXs/12LqWYjVw6qjrfF+VK+fyG33kChz3nnK+SU5/NeHOqrTEHS8sXO3OA==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@eslint/plugin-kit@0.4.0':
-    resolution: {integrity: sha512-sB5uyeq+dwCWyPi31B2gQlVlo+j5brPlWx4yZBrEaRo/nhdDE8Xke1gsGgtiBdaBTxuTkceLVuVt/pclrasb0A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/plugin-kit@0.4.1':
@@ -914,9 +896,6 @@ packages:
   '@types/node@25.7.0':
     resolution: {integrity: sha512-z+pdZyxE+RTQE9AcboAZCb4otwcrvgHD+GlBpPgn0emDVt0ohrTMhAwlr2Wd9nZ+nihhYFxO2pThz3C5qSu2Eg==}
 
-  '@types/unist@2.0.11':
-    resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
-
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
 
@@ -1165,9 +1144,6 @@ packages:
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
 
-  defu@6.1.4:
-    resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
-
   defu@6.1.7:
     resolution: {integrity: sha512-7z22QmUWiQ/2d0KkdYmANbRUVABpZ9SNYyH5vx6PZ+nE5bcC0l7uFvEfHlyld/HcGBFTL536ClDt3DEcSlEJAQ==}
 
@@ -1268,10 +1244,6 @@ packages:
     resolution: {integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==}
     engines: {node: '>=4'}
     hasBin: true
-
-  esquery@1.6.0:
-    resolution: {integrity: sha512-ca9pw9fomFcKPvFLXhBKUK90ZvGibiGOvRJNbjljY7s7uq/5YO4BOzcYtJqExdx99rF6aAcnRxHmcUHcz6sQsg==}
-    engines: {node: '>=0.10'}
 
   esquery@1.7.0:
     resolution: {integrity: sha512-Ap6G0WQwcU/LHsvLwON1fAQX9Zp0A2Y6Y/cJBl9r/JbW90Zyg4/zbG6zzKa2OTALELarYHmKu0GhpM5EO+7T0g==}
@@ -1703,10 +1675,6 @@ packages:
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
-  picomatch@4.0.3:
-    resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
-    engines: {node: '>=12'}
-
   picomatch@4.0.4:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
     engines: {node: '>=12'}
@@ -1795,11 +1763,6 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  semver@7.7.3:
-    resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.8.0:
     resolution: {integrity: sha512-AcM7dV/5ul4EekoQ29Agm5vri8JNqRyj39o0qpX6vDF2GZrtutZl5RwgD1XnZjiTAfncsJhMI48QQH3sN87YNA==}
     engines: {node: '>=10'}
@@ -1864,17 +1827,9 @@ packages:
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
-  tinyexec@1.0.2:
-    resolution: {integrity: sha512-W/KYk+NFhkmsYpuHq5JykngiOCnxeVL8v8dFnqxSD8qEEdRfXk1SDM6JzNqcERbcGYj9tMrDQBYV9cjgnunFIg==}
-    engines: {node: '>=18'}
-
   tinyexec@1.1.2:
     resolution: {integrity: sha512-dAqSqE/RabpBKI8+h26GfLq6Vb3JVXs30XYQjdMjaj/c2tS8IYYMbIzP599KtRj7c57/wYApb3QjgRgXmrCukA==}
     engines: {node: '>=18'}
-
-  tinyglobby@0.2.15:
-    resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
-    engines: {node: '>=12.0.0'}
 
   tinyglobby@0.2.16:
     resolution: {integrity: sha512-pn99VhoACYR8nFHhxqix+uvsbXineAasWm5ojXoN8xEwK5Kd3/TrhNn1wByuD52UxWRLy8pu+kRMniEi6Eq9Zg==}
@@ -2113,7 +2068,7 @@ snapshots:
       fzf: 0.5.2
       package-manager-detector: 1.6.0
       tinyexec: 1.1.2
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
 
   '@babel/generator@8.0.0-rc.4':
     dependencies:
@@ -2326,11 +2281,6 @@ snapshots:
   '@esbuild/win32-x64@0.27.2':
     optional: true
 
-  '@eslint-community/eslint-utils@4.9.0(eslint@9.39.4(jiti@2.7.0))':
-    dependencies:
-      eslint: 9.39.4(jiti@2.7.0)
-      eslint-visitor-keys: 3.4.3
-
   '@eslint-community/eslint-utils@4.9.1(eslint@9.39.4(jiti@2.7.0))':
     dependencies:
       eslint: 9.39.4(jiti@2.7.0)
@@ -2350,10 +2300,6 @@ snapshots:
     dependencies:
       '@eslint/core': 0.17.0
 
-  '@eslint/core@0.16.0':
-    dependencies:
-      '@types/json-schema': 7.0.15
-
   '@eslint/core@0.17.0':
     dependencies:
       '@types/json-schema': 7.0.15
@@ -2372,8 +2318,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/js@9.39.2': {}
-
   '@eslint/js@9.39.4': {}
 
   '@eslint/markdown@7.5.1':
@@ -2391,11 +2335,6 @@ snapshots:
       - supports-color
 
   '@eslint/object-schema@2.1.7': {}
-
-  '@eslint/plugin-kit@0.4.0':
-    dependencies:
-      '@eslint/core': 0.16.0
-      levn: 0.4.1
 
   '@eslint/plugin-kit@0.4.1':
     dependencies:
@@ -2640,15 +2579,13 @@ snapshots:
 
   '@types/mdast@4.0.4':
     dependencies:
-      '@types/unist': 2.0.11
+      '@types/unist': 3.0.3
 
   '@types/ms@2.1.0': {}
 
   '@types/node@25.7.0':
     dependencies:
       undici-types: 7.21.0
-
-  '@types/unist@2.0.11': {}
 
   '@types/unist@3.0.3': {}
 
@@ -2720,8 +2657,8 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.52.0
       debug: 4.4.3
       minimatch: 9.0.5
-      semver: 7.7.3
-      tinyglobby: 0.2.15
+      semver: 7.8.0
+      tinyglobby: 0.2.16
       ts-api-utils: 2.4.0(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -2799,7 +2736,7 @@ snapshots:
       flatted: 3.4.2
       pathe: 2.0.3
       sirv: 3.0.2
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
       vitest: 4.1.6(@types/node@25.7.0)(@vitest/coverage-v8@4.1.6)(@vitest/ui@4.1.6)(vite@7.1.12(@types/node@25.7.0)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
@@ -2942,8 +2879,6 @@ snapshots:
 
   deep-is@0.1.4: {}
 
-  defu@6.1.4: {}
-
   defu@6.1.7: {}
 
   dequal@2.0.3: {}
@@ -3030,7 +2965,7 @@ snapshots:
 
   eslint-config-unjs@0.6.2(eslint@9.39.4(jiti@2.7.0))(typescript@6.0.3):
     dependencies:
-      '@eslint/js': 9.39.2
+      '@eslint/js': 9.39.4
       '@eslint/markdown': 7.5.1
       eslint: 9.39.4(jiti@2.7.0)
       eslint-plugin-unicorn: 62.0.0(eslint@9.39.4(jiti@2.7.0))
@@ -3043,14 +2978,14 @@ snapshots:
   eslint-plugin-unicorn@62.0.0(eslint@9.39.4(jiti@2.7.0)):
     dependencies:
       '@babel/helper-validator-identifier': 7.28.5
-      '@eslint-community/eslint-utils': 4.9.0(eslint@9.39.4(jiti@2.7.0))
-      '@eslint/plugin-kit': 0.4.0
+      '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.4(jiti@2.7.0))
+      '@eslint/plugin-kit': 0.4.1
       change-case: 5.4.4
       ci-info: 4.3.1
       clean-regexp: 1.0.0
       core-js-compat: 3.46.0
       eslint: 9.39.4(jiti@2.7.0)
-      esquery: 1.6.0
+      esquery: 1.7.0
       find-up-simple: 1.0.1
       globals: 16.4.0
       indent-string: 5.0.0
@@ -3059,7 +2994,7 @@ snapshots:
       pluralize: 8.0.0
       regexp-tree: 0.1.27
       regjsparser: 0.13.0
-      semver: 7.7.3
+      semver: 7.8.0
       strip-indent: 4.1.1
 
   eslint-scope@8.4.0:
@@ -3120,10 +3055,6 @@ snapshots:
 
   esprima@4.0.1: {}
 
-  esquery@1.6.0:
-    dependencies:
-      estraverse: 5.3.0
-
   esquery@1.7.0:
     dependencies:
       estraverse: 5.3.0
@@ -3151,10 +3082,6 @@ snapshots:
   fault@2.0.1:
     dependencies:
       format: 0.2.2
-
-  fdir@6.5.0(picomatch@4.0.3):
-    optionalDependencies:
-      picomatch: 4.0.3
 
   fdir@6.5.0(picomatch@4.0.4):
     optionalDependencies:
@@ -3302,7 +3229,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.3
+      semver: 7.8.0
 
   markdown-table@3.0.4: {}
 
@@ -3684,8 +3611,6 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  picomatch@4.0.3: {}
-
   picomatch@4.0.4: {}
 
   pluralize@8.0.0: {}
@@ -3819,8 +3744,6 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.52.5
       fsevents: 2.3.3
 
-  semver@7.7.3: {}
-
   semver@7.8.0: {}
 
   shebang-command@2.0.0:
@@ -3872,7 +3795,7 @@ snapshots:
       pnpm-workspace-yaml: 1.6.0
       restore-cursor: 5.1.0
       tinyexec: 1.1.2
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       unconfig: 7.5.0
       yaml: 2.9.0
 
@@ -3880,14 +3803,7 @@ snapshots:
 
   tinybench@2.9.0: {}
 
-  tinyexec@1.0.2: {}
-
   tinyexec@1.1.2: {}
-
-  tinyglobby@0.2.15:
-    dependencies:
-      fdir: 6.5.0(picomatch@4.0.3)
-      picomatch: 4.0.3
 
   tinyglobby@0.2.16:
     dependencies:
@@ -3967,7 +3883,7 @@ snapshots:
   unconfig@7.5.0:
     dependencies:
       '@quansync/fs': 1.0.0
-      defu: 6.1.4
+      defu: 6.1.7
       jiti: 2.7.0
       quansync: 1.0.0
       unconfig-core: 7.5.0
@@ -4042,11 +3958,11 @@ snapshots:
       magic-string: 0.30.21
       obug: 2.1.1
       pathe: 2.0.3
-      picomatch: 4.0.3
+      picomatch: 4.0.4
       std-env: 4.1.0
       tinybench: 2.9.0
-      tinyexec: 1.0.2
-      tinyglobby: 0.2.15
+      tinyexec: 1.1.2
+      tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
       vite: 7.1.12(@types/node@25.7.0)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0)
       why-is-node-running: 2.3.0
