@@ -8,7 +8,7 @@ import {
   ProxifiedModule,
 } from "./types";
 import { proxifyModule } from "./proxy/module";
-import { detectCodeFormat } from "./format";
+import { detectCodeFormat, applyFormatToCode } from "./format";
 import { proxify } from "./proxy/proxify";
 
 const b = types.builders;
@@ -64,10 +64,15 @@ export function generateCode(
       ? {}
       : detectCodeFormat(node.$code, options.format);
 
-  const { code, map } = print(ast, {
+  const { code: printedCode, map } = print(ast, {
     ...options,
     ...formatOptions,
   });
+
+  const code =
+    formatOptions.useSemi === false
+      ? applyFormatToCode(printedCode, formatOptions)
+      : printedCode;
 
   return { code, map };
 }

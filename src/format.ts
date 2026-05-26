@@ -126,3 +126,13 @@ export function detectCodeFormat(
     ...userStyles,
   };
 }
+
+export function applyFormatToCode(
+  code: string,
+  format: CodeFormatOptions,
+): string {
+  if (format.useSemi === false) {
+    return code.replace(/^(import\b[^\n]*);$/gm, "$1");
+  }
+  return code;
+}

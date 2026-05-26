@@ -146,4 +146,16 @@ foo: []
       });"
     `);
   });
+
+  it("respects useSemi: false for new imports", () => {
+    const mod = parseModule("export default {}");
+    mod.imports.VitePWA = { imported: "VitePWA", from: "vite-plugin-pwa" };
+
+    const { code } = mod.generate({ format: { useSemi: false } });
+
+    expect(code).toMatchInlineSnapshot(`
+      "import {VitePWA} from "vite-plugin-pwa"
+      export default {}"
+    `);
+  });
 });
