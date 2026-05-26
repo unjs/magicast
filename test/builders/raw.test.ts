@@ -62,4 +62,14 @@ describe("builders/raw", () => {
       "export const a = foo.bar;"
     `);
   });
+
+  it("block comment", () => {
+    expect(() => builders.raw("/** foo */")).not.toThrow();
+    expect(builders.raw("/** foo */")).toBe(0);
+  });
+
+  it("line comment", () => {
+    expect(() => builders.raw("// bar")).not.toThrow();
+    expect(builders.raw("// bar")).toBe(0);
+  });
 });

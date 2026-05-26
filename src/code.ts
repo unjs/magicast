@@ -13,6 +13,11 @@ import { proxify } from "./proxy/proxify";
 
 const b = types.builders;
 
+function isCommentOnly(code: string): boolean {
+  const trimmed = code.trim();
+  return /^\/\*[\s\S]*\*\/$/.test(trimmed) || /^\/\/[^\n]*$/.test(trimmed);
+}
+
 export function parseModule<Exports extends object = any>(
   code: string,
   options?: ParseOptions,
@@ -28,6 +33,25 @@ export function parseExpression<T>(
   code: string,
   options?: ParseOptions,
 ): Proxified<T> {
+  if (isCommentOnly(code)) {
+    const root: ParsedFileNode = parse(`${code}\n0`, {
+      parser: options?.parser || getBabelParser(),
+      ...options,
+    });
+    let body: ASTNode = root.program.body[0];
+    if (body.type === "ExpressionStatement") {
+      body = body.expression;
+    }
+
+    const mod = {
+      $ast: root,
+      $code: `${code}\n0`,
+      $type: "module",
+    } as any as ProxifiedModule;
+
+    return proxify(body, mod);
+  }
+
   const root: ParsedFileNode = parse("(" + code + ")", {
     parser: options?.parser || getBabelParser(),
     ...options,
