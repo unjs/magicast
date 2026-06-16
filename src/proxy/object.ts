@@ -96,6 +96,19 @@ export function proxifyObject<T extends object>(
         isValidPropName(key) ? b.identifier(key) : b.stringLiteral(key),
         value as any,
       );
+      // Babel attaches comments inside an otherwise-empty object (e.g.
+      // `{ /* keep me */ }`) as `innerComments`, which recast's printer
+      // ignores when the node is reprinted after being modified. Move them
+      // onto the first inserted property as leading comments so they survive.
+      const innerComments = (node as any).innerComments;
+      if (innerComments?.length) {
+        (newProp as any).comments = innerComments.map((comment: any) => ({
+          ...comment,
+          leading: true,
+          trailing: false,
+        }));
+        (node as any).innerComments = [];
+      }
       node.properties.push(newProp as any);
     }
   };

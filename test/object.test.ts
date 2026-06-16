@@ -339,4 +339,37 @@ export default {
     expect("a" in proxy).toBe(true);
     expect("c" in proxy).toBe(false);
   });
+
+  it("preserves inner comment when adding a property to an empty object", async () => {
+    const mod = parseModule(
+      `
+export default {
+  /* inner comment */
+}
+    `.trim(),
+    );
+
+    mod.exports.default.foo = 1;
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        /* inner comment */
+        foo: 1,
+      };"
+    `);
+  });
+
+  it("preserves inner line comment when adding a property to an empty object", async () => {
+    const mod = parseModule(
+      `
+export default {
+  // inner comment
+}
+    `.trim(),
+    );
+
+    mod.exports.default.foo = 1;
+
+    expect(await generate(mod)).toContain("// inner comment");
+  });
 });
