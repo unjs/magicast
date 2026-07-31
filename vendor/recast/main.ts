@@ -2,7 +2,7 @@ import fs from "fs";
 import * as types from "ast-types";
 import { parse } from "./lib/parser";
 import { Printer } from "./lib/printer";
-import { Options } from "./lib/options";
+import type { Options } from "./lib/options";
 
 export {
   /**

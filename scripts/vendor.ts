@@ -10,14 +10,20 @@ async function cloneRecast() {
     console.log("vendor/recast already exists");
   } else {
     // Clone recast
-    await downloadTemplate("github:benjamn/recast#v0.23.4", {
+    await downloadTemplate("github:benjamn/recast#v0.23.18", {
       dir: "vendor/recast",
     });
 
     // Remove the tsconfig.json so it's targeting newer node versions
     await fsp.rm("vendor/recast/tsconfig.json");
 
-    // Remove the assert import and usage
+    // Neutralize the internal consistency assertions. recast asserts things
+    // like `lines instanceof Lines`, which don't survive bundling (class
+    // identity gets duplicated across chunks) and would throw at runtime.
+    // Replace the `tiny-invariant` import with a local no-op so the assertion
+    // never throws, while still evaluating its arguments (some carry side
+    // effects, e.g. `sourceLines.nextPos(...)`). Also strip the legacy `assert`
+    // import/usage kept for older recast revisions.
     await Promise.all(
       fs
         .readdirSync("vendor/recast/lib", { withFileTypes: true })
@@ -26,6 +32,9 @@ async function cloneRecast() {
             return;
           }
           return await filterLines(join(file.parentPath, file.name), (line) => {
+            if (line.startsWith('import invariant from "tiny-invariant"')) {
+              return "const invariant = (_condition?: unknown, _message?: string): void => {};";
+            }
             if (line.startsWith("import assert from")) {
               return false;
             }
@@ -59,6 +68,17 @@ async function cloneRecast() {
       return line;
     });
 
+    // `Options` is a type-only interface; import/export it as a type so the
+    // bundler doesn't treat it as a missing value export after type stripping
+    await filterLines("vendor/recast/main.ts", (line) => {
+      if (
+        /^(import|export) \{ Options \} from "\.\/lib\/options";/.test(line)
+      ) {
+        return line.replace(/^(import|export) /, "$1 type ");
+      }
+      return line;
+    });
+
     console.log("vendor/recast cloned");
   }
 }
@@ -79,6 +99,36 @@ async function cloneAstTypes() {
     await filterLines("vendor/ast-types/src/main.ts", (line) => {
       if (/^import\s*{\s*(ASTNode|Visitor)/.test(line)) {
         return line.replace(/^import /, "import type ");
+      }
+      return line;
+    });
+
+    // Comment out the body of `maybeSetModuleExports`: it reassigns
+    // `module.exports`, which throws when the vendored ESM source is executed
+    // directly (e.g. by vitest) because the module namespace is read-only.
+    let inMaybeSetModuleExports = false;
+    let inMaybeSetModuleExportsBody = false;
+    await filterLines("vendor/ast-types/src/shared.ts", (line) => {
+      if (line.startsWith("export function maybeSetModuleExports(")) {
+        inMaybeSetModuleExports = true;
+        return line;
+      }
+      if (inMaybeSetModuleExports && !inMaybeSetModuleExportsBody) {
+        if (line === ") {") {
+          inMaybeSetModuleExportsBody = true;
+        }
+        return line;
+      }
+      if (inMaybeSetModuleExportsBody) {
+        if (line === "}") {
+          inMaybeSetModuleExports = false;
+          inMaybeSetModuleExportsBody = false;
+          return line;
+        }
+        if (line.trim() === "") {
+          return line;
+        }
+        return line.replace(/^ {4}/, "    // ");
       }
       return line;
     });

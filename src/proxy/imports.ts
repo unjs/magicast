@@ -22,9 +22,7 @@ const _importProxyCache = new WeakMap<any, ProxifiedImportItem>();
 export function createImportProxy(
   node: ImportDeclaration,
   specifier:
-    | ImportSpecifier
-    | ImportNamespaceSpecifier
-    | ImportDefaultSpecifier,
+    ImportSpecifier | ImportNamespaceSpecifier | ImportDefaultSpecifier,
   root: Program,
 ): ProxifiedImportItem {
   if (_importProxyCache.has(specifier)) {

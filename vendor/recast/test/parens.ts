@@ -64,6 +64,17 @@ describe("parens", function () {
     });
   });
 
+  it("Exponentiation", function () {
+    // `**` is right-associative: `a ** b ** c` parses as `a ** (b ** c)`, so the
+    // left operand needs parentheses to override that while the right does not.
+    check("a ** b ** c");
+    check("a ** b ** c ** d");
+    check("(a ** b) ** c");
+    check("(a ** b ** c) ** d");
+    check("a ** b * c");
+    check("a * b ** c");
+  });
+
   it("Unary", function () {
     check("(-a).b");
     check("(+a).b");
@@ -72,6 +83,15 @@ describe("parens", function () {
     check("(typeof a).b");
     check("(void a).b");
     check("(delete a.b).c");
+  });
+
+  it("Update", function () {
+    check("(a++).b");
+    check("(a--).b");
+    check("(++a).b");
+    check("(--a).b");
+    check("(a++)()");
+    check("new (a++)");
   });
 
   it("Binary", function () {
@@ -168,6 +188,18 @@ describe("parens", function () {
     check("function* test () { return (yield a) ? b : c }");
     check("function* test () { return (yield a).b }");
     check("function* test () { yield yield foo }");
+  });
+
+  it("TaggedTemplateExpression", function () {
+    check("(a || b)`x`");
+    check("(a + b)`x`");
+    check("(a ? b : c)`x`");
+    check("(!a)`x`");
+    check("(a++)`x`");
+    check("(a = b)`x`");
+    check("(() => {})`x`");
+    check("async () => (await a)`x`");
+    check("function* test () { return (yield a)`x` }");
   });
 
   it("ArrowFunctionExpression", () => {

@@ -1,3 +1,4 @@
+const invariant = (_condition?: unknown, _message?: string): void => {};
 import { comparePos } from "./util";
 import { namedTypes } from "ast-types";
 import { Lines } from "./lines";
@@ -25,6 +26,7 @@ export default class Mapping {
       if (name === "end") {
         targetToPos = end;
       } else {
+        invariant(name === "start");
       }
 
       return skipChars(
@@ -105,45 +107,33 @@ export default class Mapping {
     });
   }
 
-  indent(
-    by: number,
-    skipFirstLine: boolean = false,
-    noNegativeColumns: boolean = false,
-  ) {
-    if (by === 0) {
+  reindent(oldLines: Lines, newLines: Lines) {
+    const start = this.targetLoc.start;
+    const end = this.targetLoc.end;
+
+    // Ask the Lines objects how far each line really moved, rather than
+    // assuming every line moved by the same amount, because getIndentAt
+    // never reports a negative indentation, so lines that already begin at
+    // column zero stay put while the lines around them are dedented.
+    const startShift =
+      newLines.getIndentAt(start.line) - oldLines.getIndentAt(start.line);
+    const endShift =
+      newLines.getIndentAt(end.line) - oldLines.getIndentAt(end.line);
+
+    if (startShift === 0 && endShift === 0) {
       return this;
     }
 
-    let targetLoc = this.targetLoc;
-    const startLine = targetLoc.start.line;
-    const endLine = targetLoc.end.line;
-
-    if (skipFirstLine && startLine === 1 && endLine === 1) {
-      return this;
-    }
-
-    targetLoc = {
-      start: targetLoc.start,
-      end: targetLoc.end,
-    };
-
-    if (!skipFirstLine || startLine > 1) {
-      const startColumn = targetLoc.start.column + by;
-      targetLoc.start = {
-        line: startLine,
-        column: noNegativeColumns ? Math.max(0, startColumn) : startColumn,
-      };
-    }
-
-    if (!skipFirstLine || endLine > 1) {
-      const endColumn = targetLoc.end.column + by;
-      targetLoc.end = {
-        line: endLine,
-        column: noNegativeColumns ? Math.max(0, endColumn) : endColumn,
-      };
-    }
-
-    return new Mapping(this.sourceLines, this.sourceLoc, targetLoc);
+    return new Mapping(this.sourceLines, this.sourceLoc, {
+      start: {
+        line: start.line,
+        column: Math.max(0, start.column + startShift),
+      },
+      end: {
+        line: end.line,
+        column: Math.max(0, end.column + endShift),
+      },
+    });
   }
 }
 
@@ -192,16 +182,16 @@ function skipChars(
       sourceCursor.column = 0;
       targetCursor.column = 0;
     } else {
+      invariant(lineDiff === 0);
     }
 
     while (
       comparePos(targetCursor, targetToPos) < 0 &&
       targetLines.nextPos(targetCursor, true)
     ) {
-// @ts-ignore 
- false &&       assert.strictEqual(
-        sourceLines.charAt(sourceCursor),
-        targetLines.charAt(targetCursor),
+      invariant(sourceLines.nextPos(sourceCursor, true));
+      invariant(
+        sourceLines.charAt(sourceCursor) === targetLines.charAt(targetCursor),
       );
     }
   } else {
@@ -221,16 +211,16 @@ function skipChars(
       sourceCursor.column = sourceLines.getLineLength(sourceCursor.line);
       targetCursor.column = targetLines.getLineLength(targetCursor.line);
     } else {
+      invariant(lineDiff === 0);
     }
 
     while (
       comparePos(targetToPos, targetCursor) < 0 &&
       targetLines.prevPos(targetCursor, true)
     ) {
-// @ts-ignore 
- false &&       assert.strictEqual(
-        sourceLines.charAt(sourceCursor),
-        targetLines.charAt(targetCursor),
+      invariant(sourceLines.prevPos(sourceCursor, true));
+      invariant(
+        sourceLines.charAt(sourceCursor) === targetLines.charAt(targetCursor),
       );
     }
   }

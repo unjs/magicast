@@ -1,3 +1,4 @@
+const invariant = (_condition?: unknown, _message?: string): void => {};
 import * as linesModule from "./lines";
 import * as types from "ast-types";
 const Printable = types.namedTypes.Printable;
@@ -23,6 +24,8 @@ interface PatcherConstructor {
 }
 
 const Patcher = function Patcher(this: PatcherType, lines: any) {
+  invariant(this instanceof Patcher);
+  invariant(lines instanceof linesModule.Lines);
 
   const self = this,
     replacements: any[] = [];
@@ -48,6 +51,7 @@ const Patcher = function Patcher(this: PatcherType, lines: any) {
       toConcat: any[] = [];
 
     function pushSlice(from: any, to: any) {
+      invariant(comparePos(from, to) <= 0);
       toConcat.push(lines.slice(from, to));
     }
 
@@ -95,6 +99,7 @@ Pp.tryToReprintComments = function (newNode, oldNode, print) {
   if (ableToReprintComments && reprints.length > 0) {
     reprints.forEach(function (reprint) {
       const oldComment = reprint.oldPath.getValue();
+      invariant(oldComment.leading || oldComment.trailing);
       patcher.replace(
         oldComment.loc,
         // Comments can't have .comments, so it doesn't matter whether we
@@ -155,6 +160,7 @@ Pp.deleteComments = function (node) {
 };
 
 export function getReprinter(path: any) {
+  invariant(path instanceof FastPath);
 
   // Make sure that this path refers specifically to a Node, rather than
   // some non-Node subproperty of a Node.
@@ -282,6 +288,7 @@ function findReprints(newPath: any, reprints: any) {
   const oldNode = newNode.original;
   Printable.assert(oldNode);
 
+  invariant(reprints.length === 0);
 
   if (newNode.type !== oldNode.type) {
     return false;

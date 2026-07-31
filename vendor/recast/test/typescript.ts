@@ -252,6 +252,13 @@ const nodeMajorVersion = parseInt(process.versions.node, 10);
     ]);
 
     check([
+      "interface LabelledContainer<T> {",
+      "  get label(): string;",
+      "  set label(a: string);",
+      "}",
+    ]);
+
+    check([
       "class Button extends Control<T, U> implements SelectableControl<T, U>, ClickableControl<U> {",
       "  select() {}",
       "}",
@@ -278,16 +285,12 @@ const nodeMajorVersion = parseInt(process.versions.node, 10);
     check([
       "class Dog extends Animal {",
       "  protected override getSound() {",
-      "    return \"bark\";",
+      '    return "bark";',
       "  }",
       "}",
-    ])
-
-    check([
-      "export interface S {",
-      "  i(s: string): boolean;",
-      "}"
     ]);
+
+    check(["export interface S {", "  i(s: string): boolean;", "}"]);
 
     check([
       "namespace Validation {",
@@ -297,17 +300,9 @@ const nodeMajorVersion = parseInt(process.versions.node, 10);
       "}",
     ]);
 
-    check([
-      "export interface S {",
-      "  i(j: string): boolean;",
-      "}",
-    ]);
+    check(["export interface S {", "  i(j: string): boolean;", "}"]);
 
-    check([
-      "declare namespace D3 {",
-      "  export const f: number;",
-      "}",
-    ]);
+    check(["declare namespace D3 {", "  export const f: number;", "}"]);
 
     check(["declare function foo<K, V>(arg: T = getDefault()): R"]);
 
@@ -317,13 +312,7 @@ const nodeMajorVersion = parseInt(process.versions.node, 10);
       "}",
     ]);
 
-    check([
-      "function myFunction(",
-      "  {",
-      "    param1",
-      "  }: Params",
-      ") {}",
-    ]);
+    check(["function myFunction(", "  {", "    param1", "  }: Params", ") {}"]);
 
     check([
       'const unqualified: import("package") = 1;',
@@ -342,6 +331,14 @@ const nodeMajorVersion = parseInt(process.versions.node, 10);
     check(["type Class<T> = new (...args: any) => T;"]);
 
     check(["type T1 = [...Array<any>];", "type T2 = [...any[]];"]);
+    check([
+      "const a = styled.h1<{",
+      "  $upsideDown?: boolean;",
+      "}>`",
+      '  ${props => props.$upsideDown && "transform: rotate(180deg);"}',
+      "  text-align: center;",
+      "`;",
+    ]);
 
     check([
       "type Color = [r: number, g: number, b: number, a?: number];",
@@ -354,8 +351,8 @@ const nodeMajorVersion = parseInt(process.versions.node, 10);
     check([
       "type alias = boolean;",
       "const value = 0;",
-      "export { type alias, value };"
-    ])
+      "export { type alias, value };",
+    ]);
   });
 
   it("InterfaceBody: duplicate semicolon", function () {
@@ -461,11 +458,8 @@ const nodeMajorVersion = parseInt(process.versions.node, 10);
 
     const ast = recast.parse(code, { parser });
 
-    assert.strictEqual(
-      recast.prettyPrint(ast).code,
-      code
-    );
-  })
+    assert.strictEqual(recast.prettyPrint(ast).code, code);
+  });
 });
 
 testReprinting(
