@@ -33,9 +33,8 @@ export function parseExpression<T>(
   // expression position as a regex literal, causing a SyntaxError. Detect this
   // case and prepend `null` so the comment is parsed as a trailing remark on a
   // null literal instead.
-  const isStandaloneComment = /^\s*(?:\/\*[\s\S]*?\*\/|\/\/[^\n]*)\s*$/.test(
-    code,
-  );
+  const isStandaloneComment =
+    /^\s*(?:\/\*[\s\S]*?\*\/|\/\/[^\n\r\u2028\u2029]*)\s*$/.test(code);
 
   const parseCode = isStandaloneComment ? code + "\nnull" : "(" + code + ")";
 
