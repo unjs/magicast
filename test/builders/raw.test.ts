@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { builders, parseModule } from "magicast";
+import { builders, generateCode, parseModule } from "magicast";
 import { generate } from "../_utils";
 
 describe("builders/raw", () => {
@@ -61,5 +61,29 @@ describe("builders/raw", () => {
     expect(await generate(mod)).toMatchInlineSnapshot(`
       "export const a = foo.bar;"
     `);
+  });
+
+  it("block comment does not throw and is a comment proxy", () => {
+    const result = builders.raw("/** foo */");
+    expect(result).toBeDefined();
+    expect((result as any).$type).toBe("comment");
+  });
+
+  it("line comment does not throw and is a comment proxy", () => {
+    const result = builders.raw("// line comment");
+    expect(result).toBeDefined();
+    expect((result as any).$type).toBe("comment");
+  });
+
+  it("block comment preserves comment text when inserted into array", () => {
+    const mod = parseModule("export default [];");
+    (mod.exports.default as any[]).push(builders.raw("/** foo */"));
+    expect(generateCode(mod).code).toContain("/** foo */");
+  });
+
+  it("jsdoc comment preserves text when inserted into array", () => {
+    const mod = parseModule("export default [];");
+    (mod.exports.default as any[]).push(builders.raw("/** @type {string} */"));
+    expect(generateCode(mod).code).toContain("/** @type {string} */");
   });
 });
