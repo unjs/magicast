@@ -1,3 +1,4 @@
+const invariant = (_condition?: unknown, _message?: string): void => {};
 import * as types from "ast-types";
 import * as util from "./util";
 
@@ -51,6 +52,7 @@ interface FastPathConstructor {
 }
 
 const FastPath = function FastPath(this: FastPathType, value: any) {
+  invariant(this instanceof FastPath);
   this.stack = [value];
 } as any as FastPathConstructor;
 
@@ -364,6 +366,30 @@ FPp.needsParens = function (assumeExpressionContext) {
     return true;
   }
 
+  // The tag of a tagged template literal occupies a MemberExpression /
+  // CallExpression (LeftHandSideExpression) position, so a lower-precedence
+  // tag expression must be wrapped in parentheses, just like the callee of a
+  // call or new expression. Without this, e.g. the AST for `(a || b)`x``
+  // would print as `a || b`x``, which parses as `a || (b`x`)`.
+  if (
+    parent.type === "TaggedTemplateExpression" &&
+    name === "tag" &&
+    parent.tag === node
+  ) {
+    switch (node.type) {
+      case "UnaryExpression":
+      case "UpdateExpression":
+      case "BinaryExpression":
+      case "LogicalExpression":
+      case "ConditionalExpression":
+      case "AssignmentExpression":
+      case "AwaitExpression":
+      case "YieldExpression":
+      case "ArrowFunctionExpression":
+        return true;
+    }
+  }
+
   switch (node.type) {
     case "UnaryExpression":
     case "SpreadElement":
@@ -373,6 +399,23 @@ FPp.needsParens = function (assumeExpressionContext) {
         name === "object" &&
         parent.object === node
       );
+
+    case "UpdateExpression":
+      // An UpdateExpression binds looser than a MemberExpression /
+      // CallExpression, so it needs parentheses in those positions, e.g.
+      // `(a++).b`, `(a++)()`, `new (a++)`. Without them the output is invalid
+      // syntax (`a++.b`) or changes meaning (`++a.b` parses as `++(a.b)`).
+      switch (parent.type) {
+        case "MemberExpression":
+          return name === "object" && parent.object === node;
+
+        case "CallExpression":
+        case "NewExpression":
+          return name === "callee" && parent.callee === node;
+
+        default:
+          return false;
+      }
 
     case "BinaryExpression":
     case "LogicalExpression":
@@ -399,8 +442,20 @@ FPp.needsParens = function (assumeExpressionContext) {
             return true;
           }
 
-          if (pp === np && name === "right") {
-            return true;
+          if (pp === np) {
+            // `**` is right-associative, so `a ** b ** c` parses as
+            // `a ** (b ** c)`: the left operand needs parentheses
+            // (e.g. `(a ** b) ** c`), the right operand does not. Every other
+            // binary/logical operator is left-associative, so the right
+            // operand needs parentheses (e.g. `a - (b - c)`).
+            if (po === "**") {
+              return name === "left";
+            }
+
+            if (name === "right") {
+              invariant(parent.right === node);
+              return true;
+            }
           }
 
           break;
@@ -633,18 +688,22 @@ FPp.firstInStatement = function () {
       parentName === "body" &&
       childName === 0
     ) {
+      invariant(parent.body[0] === child);
       return true;
     }
 
     if (n.ExpressionStatement.check(parent) && childName === "expression") {
+      invariant(parent.expression === child);
       return true;
     }
 
     if (n.AssignmentExpression.check(parent) && childName === "left") {
+      invariant(parent.left === child);
       return true;
     }
 
     if (n.ArrowFunctionExpression.check(parent) && childName === "body") {
+      invariant(parent.body === child);
       return true;
     }
 
@@ -655,22 +714,27 @@ FPp.firstInStatement = function () {
       s[i + 1] === "expressions" &&
       childName === 0
     ) {
+      invariant(parent.expressions[0] === child);
       continue;
     }
 
     if (n.CallExpression.check(parent) && childName === "callee") {
+      invariant(parent.callee === child);
       continue;
     }
 
     if (n.MemberExpression.check(parent) && childName === "object") {
+      invariant(parent.object === child);
       continue;
     }
 
     if (n.ConditionalExpression.check(parent) && childName === "test") {
+      invariant(parent.test === child);
       continue;
     }
 
     if (isBinary(parent) && childName === "left") {
+      invariant(parent.left === child);
       continue;
     }
 
@@ -679,6 +743,7 @@ FPp.firstInStatement = function () {
       !parent.prefix &&
       childName === "argument"
     ) {
+      invariant(parent.argument === child);
       continue;
     }
 

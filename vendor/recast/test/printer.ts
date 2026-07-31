@@ -508,6 +508,56 @@ describe("printer", function () {
     assert.strictEqual(printer.printGenerically(ast).code, code);
   });
 
+  it("export namespace", function () {
+    const printer = new Printer();
+
+    assert.strictEqual(
+      printer.print({
+        type: "ExportNamedDeclaration",
+        exportKind: "value",
+        specifiers: [
+          {
+            type: "ExportNamespaceSpecifier",
+            exported: {
+              type: "Identifier",
+              name: "Foobar",
+            },
+          },
+        ],
+        source: {
+          type: "StringLiteral",
+          value: "./foo",
+        },
+      }).code,
+      `export * as Foobar from "./foo";`,
+    );
+  });
+
+  it("export type namespace", function () {
+    const printer = new Printer();
+
+    assert.strictEqual(
+      printer.print({
+        type: "ExportNamedDeclaration",
+        exportKind: "type",
+        specifiers: [
+          {
+            type: "ExportNamespaceSpecifier",
+            exported: {
+              type: "Identifier",
+              name: "Foobar",
+            },
+          },
+        ],
+        source: {
+          type: "StringLiteral",
+          value: "./foo",
+        },
+      }).code,
+      `export type * as Foobar from "./foo";`,
+    );
+  });
+
   it("export default of IIFE", function () {
     const printer = new Printer();
     let ast = b.exportDefaultDeclaration(
@@ -1174,11 +1224,7 @@ describe("printer", function () {
   });
 
   it("prints class property initializers with type annotations correctly", function () {
-    const code = [
-      "class A {",
-      "  foo = (a: b): void => {};",
-      "}",
-    ].join(eol);
+    const code = ["class A {", "  foo = (a: b): void => {};", "}"].join(eol);
 
     const arg = b.identifier("a");
     arg.typeAnnotation = b.typeAnnotation(
@@ -1204,11 +1250,7 @@ describe("printer", function () {
   });
 
   it("prints ClassProperty correctly", function () {
-    const code = [
-      "class A {",
-      "  foo: Type = Bar;",
-      "}",
-    ].join(eol);
+    const code = ["class A {", "  foo: Type = Bar;", "}"].join(eol);
 
     const ast = b.program([
       b.classDeclaration(
@@ -1234,11 +1276,7 @@ describe("printer", function () {
   });
 
   it("prints 'definite' ClassProperty correctly", function () {
-    const code = [
-      "class A {",
-      "  foo!: string;",
-      "}",
-    ].join(eol);
+    const code = ["class A {", "  foo!: string;", "}"].join(eol);
 
     const ast = b.program([
       b.classDeclaration(
@@ -1265,11 +1303,7 @@ describe("printer", function () {
   });
 
   it("prints static ClassProperty correctly", function () {
-    const code = [
-      "class A {",
-      "  static foo = Bar;",
-      "}",
-    ].join(eol);
+    const code = ["class A {", "  static foo = Bar;", "}"].join(eol);
 
     const ast = b.program([
       b.classDeclaration(
@@ -1289,11 +1323,7 @@ describe("printer", function () {
   });
 
   it("prints ClassAccessorProperty correctly", function () {
-    const code = [
-      "class A {",
-      "  accessor foo: Type = Bar;",
-      "}",
-    ].join(eol);
+    const code = ["class A {", "  accessor foo: Type = Bar;", "}"].join(eol);
 
     const ast = b.program([
       b.classDeclaration(
@@ -1304,8 +1334,8 @@ describe("printer", function () {
             value: b.identifier("Bar"),
             typeAnnotation: b.tsTypeAnnotation(
               b.tsTypeReference(b.identifier("Type")),
-            )
-          })
+            ),
+          }),
         ]),
       ),
     ]);
@@ -1319,11 +1349,7 @@ describe("printer", function () {
   });
 
   it("prints 'definite' ClassAccessorProperty correctly", function () {
-    const code = [
-      "class A {",
-      "  accessor foo!: string;",
-      "}",
-    ].join(eol);
+    const code = ["class A {", "  accessor foo!: string;", "}"].join(eol);
 
     const ast = b.program([
       b.classDeclaration(
@@ -1347,11 +1373,7 @@ describe("printer", function () {
   });
 
   it("prints static ClassAccessorProperty correctly", function () {
-    const code = [
-      "class A {",
-      "  static accessor foo = Bar;",
-      "}",
-    ].join(eol);
+    const code = ["class A {", "  static accessor foo = Bar;", "}"].join(eol);
 
     const ast = b.program([
       b.classDeclaration(
@@ -1375,11 +1397,7 @@ describe("printer", function () {
   });
 
   it("prints abstract ClassAccessorProperty correctly", function () {
-    const code = [
-      "class A {",
-      "  abstract accessor foo = Bar;",
-      "}",
-    ].join(eol);
+    const code = ["class A {", "  abstract accessor foo = Bar;", "}"].join(eol);
 
     const ast = b.program([
       b.classDeclaration(
@@ -1403,11 +1421,7 @@ describe("printer", function () {
   });
 
   it("prints override ClassAccessorProperty correctly", function () {
-    const code = [
-      "class A {",
-      "  override accessor foo = Bar;",
-      "}",
-    ].join(eol);
+    const code = ["class A {", "  override accessor foo = Bar;", "}"].join(eol);
 
     const ast = b.program([
       b.classDeclaration(
@@ -2585,5 +2599,160 @@ describe("printer", function () {
         eol,
       ),
     );
+  });
+
+  it("can print TSUnionType as element of TSArrayType", function () {
+    const node = b.tsArrayType(
+      b.tsUnionType([b.tsNumberKeyword(), b.tsStringKeyword()]),
+    );
+
+    assert.strictEqual(recast.print(node).code, "(number | string)[]");
+  });
+
+  describe("modern TypeScript syntax", function () {
+    function check(
+      expected: string,
+      update?: (ast: any) => void,
+      source = expected,
+    ) {
+      const ast = parse(source, { parser: tsParser });
+      if (update) {
+        update(ast);
+      }
+      assert.strictEqual(new Printer().printGenerically(ast).code, expected);
+    }
+
+    it("prints optional calls, binding patterns, and modifiers", function () {
+      [
+        "const optional = factory?.<number>();",
+        "const array = ([value]?: [number]) => value;",
+        "type Factory = abstract new () => X;",
+        "type Query = typeof Foo<string>;",
+        "interface Variance<in T, out U> {}",
+        'import type X = require("x");',
+      ].forEach((code) => check(code));
+
+      check(
+        [
+          "class A extends B {",
+          "    constructor(public override x: number) {",
+          "        super();",
+          "    }",
+          "}",
+        ].join(eol),
+        undefined,
+        "class A extends B { constructor(public override x: number) { super(); } }",
+      );
+
+      check(
+        ["type M<T> = {", "    -readonly [K in keyof T]+?: T[K];", "};"].join(
+          eol,
+        ),
+        undefined,
+        "type M<T> = { -readonly [K in keyof T]+?: T[K] };",
+      );
+
+      check(
+        [
+          "const object = (",
+          "    {",
+          "        value",
+          "    }?: {",
+          "        value: number;",
+          "    }",
+          ") => value;",
+        ].join(eol),
+        undefined,
+        "const object = ({ value }?: { value: number }) => value;",
+      );
+
+      check(
+        "class Box<const T> {}",
+        (ast) => {
+          const declaration = ast.program.body[0];
+          declaration.typeParameters.params[0].const = true;
+        },
+        "class Box<T> {}",
+      );
+
+      check("module M {}", (ast) => {
+        const declaration = ast.program.body[0];
+        declaration.kind = "module";
+        declaration.loc = null;
+        declaration.id.loc = null;
+      });
+    });
+
+    it("prints type-only exports and import attributes", function () {
+      check(
+        'export type * from "types";',
+        (ast) => {
+          ast.program.body[0].exportKind = "type";
+        },
+        'export * from "types";',
+      );
+
+      check('export * from "x" assert { type: "json" };');
+
+      check(
+        'import data from "x" with {};',
+        (ast) => {
+          const declaration = ast.program.body[0];
+          declaration.assertions = [];
+          declaration.importAttributesKeyword = "with";
+        },
+        'import data from "x";',
+      );
+    });
+
+    it("prints options on TypeScript import types", function () {
+      const code = [
+        'type T = import("pkg", {',
+        "    with: {",
+        '        "resolution-mode": "import"',
+        "    }",
+        "}).Foo;",
+      ].join(eol);
+      const ast = parse('type T = import("pkg").Foo;', {
+        parser: tsParser,
+      }) as any;
+      const optionsAst = parse(
+        'const options = { with: { "resolution-mode": "import" } };',
+        { parser: tsParser },
+      ) as any;
+      ast.program.body[0].typeAnnotation.options =
+        optionsAst.program.body[0].declarations[0].init;
+
+      assert.strictEqual(new Printer().printGenerically(ast).code, code);
+    });
+  });
+
+  it("can print JSXElement syntax with newlines", function () {
+    const code = ["<div>", "  <span />", "", "  <span />", "</div>;"].join(eol);
+
+    const ast = b.program([
+      b.expressionStatement(
+        b.jsxElement(
+          b.jsxOpeningElement(b.jsxIdentifier("div")),
+          b.jsxClosingElement(b.jsxIdentifier("div")),
+          [
+            b.jsxText("\n  "),
+            b.jsxElement(
+              b.jsxOpeningElement(b.jsxIdentifier("span"), [], true),
+            ),
+            b.jsxText("\n\n  "),
+            b.jsxElement(
+              b.jsxOpeningElement(b.jsxIdentifier("span"), [], true),
+            ),
+            b.jsxText("\n"),
+          ],
+        ),
+      ),
+    ]);
+
+    const printer = new Printer({ tabWidth: 2 });
+
+    const pretty = printer.print(ast).code;
+    assert.strictEqual(pretty, code);
   });
 });

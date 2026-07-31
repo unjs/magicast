@@ -106,13 +106,7 @@ export type ProxifiedBlockStatement = ProxyBase & {
 };
 
 export type Proxified<T = any> = T extends
-  | number
-  | string
-  | null
-  | undefined
-  | boolean
-  | bigint
-  | symbol
+  number | string | null | undefined | boolean | bigint | symbol
   ? T
   : T extends any[]
     ? {
