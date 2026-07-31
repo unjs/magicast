@@ -22,6 +22,7 @@ export default defineConfig({
     name: process.env.TEST_BUILD === "true" ? "build" : "src",
     coverage: {
       include: ["src/**/*.ts"],
+      exclude: ["vendor/**"],
     },
   },
 });
