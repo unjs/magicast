@@ -1,5 +1,10 @@
 import { expect, it, describe } from "vitest";
-import { CodeFormatOptions, detectCodeFormat } from "magicast";
+import {
+  CodeFormatOptions,
+  detectCodeFormat,
+  generateCode,
+  parseModule,
+} from "magicast";
 
 describe("format", () => {
   const cases: Array<{
@@ -66,4 +71,28 @@ describe("format", () => {
       expect(detectedFormat).toMatchObject(testCase.format);
     });
   }
+
+  it("omits undetected options instead of returning them as undefined", () => {
+    // recast resolves its defaults with `hasOwnProperty`, so an own key holding
+    // `undefined` shadows the default instead of falling back to it.
+    const detectedFormat = detectCodeFormat("console.log('hello')");
+    expect(Object.keys(detectedFormat)).not.toContain("objectCurlySpacing");
+    expect(Object.keys(detectedFormat)).not.toContain("arrayBracketSpacing");
+  });
+
+  it("keeps object curly spacing when generating code", () => {
+    const mod = parseModule("import { defineConfig } from 'vite'\n");
+    mod.imports.$add({ from: "vite-plugin-pwa", imported: "VitePWA" });
+    expect(generateCode(mod).code).toContain(
+      "import { VitePWA } from 'vite-plugin-pwa'",
+    );
+  });
+
+  it("respects an explicit objectCurlySpacing override", () => {
+    const mod = parseModule("import { defineConfig } from 'vite'\n");
+    mod.imports.$add({ from: "vite-plugin-pwa", imported: "VitePWA" });
+    expect(
+      generateCode(mod, { format: { objectCurlySpacing: false } }).code,
+    ).toContain("import {VitePWA} from 'vite-plugin-pwa'");
+  });
 });
