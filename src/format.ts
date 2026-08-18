@@ -111,7 +111,7 @@ export function detectCodeFormat(
     }
   }
 
-  return <CodeFormatOptions>{
+  const format = <CodeFormatOptions>{
     wrapColumn: maxLineLength,
     useTabs: tabUsages > 0,
     tabWidth: codeIndent,
@@ -121,8 +121,20 @@ export function detectCodeFormat(
     trailingComma:
       multiLineTrailingCommaUsages > 0 || syntaxUsages.trailingComma > 0,
     useSemi: semiUsages > 0,
-    arrayBracketSpacing: undefined, // TODO
-    objectCurlySpacing: undefined, // TODO
-    ...userStyles,
+    // TODO: detect arrayBracketSpacing / objectCurlySpacing
   };
+
+  // Only apply options the user actually specified. `undefined` means "not
+  // specified" here (see `detect` above), so it must not overwrite a detected
+  // value, and it must not end up as an own key either: recast resolves its
+  // defaults with `hasOwnProperty`, so a key holding `undefined` shadows the
+  // default rather than falling back to it (e.g. `objectCurlySpacing` would
+  // become falsy and print `{a}` instead of `{ a }`).
+  for (const key of Object.keys(userStyles) as (keyof CodeFormatOptions)[]) {
+    if (userStyles[key] !== undefined) {
+      format[key] = userStyles[key] as any;
+    }
+  }
+
+  return format;
 }
