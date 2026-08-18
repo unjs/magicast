@@ -122,16 +122,17 @@ export function detectCodeFormat(
       multiLineTrailingCommaUsages > 0 || syntaxUsages.trailingComma > 0,
     useSemi: semiUsages > 0,
     // TODO: detect arrayBracketSpacing / objectCurlySpacing
-    ...userStyles,
   };
 
-  // Drop undetected options instead of passing them through as explicit
-  // `undefined`. recast resolves its defaults with `hasOwnProperty`, so an own
-  // key holding `undefined` shadows the default rather than falling back to it
-  // (e.g. `objectCurlySpacing` would become falsy and print `{a}` for `{ a }`).
-  for (const key of Object.keys(format) as (keyof CodeFormatOptions)[]) {
-    if (format[key] === undefined) {
-      delete format[key];
+  // Only apply options the user actually specified. `undefined` means "not
+  // specified" here (see `detect` above), so it must not overwrite a detected
+  // value, and it must not end up as an own key either: recast resolves its
+  // defaults with `hasOwnProperty`, so a key holding `undefined` shadows the
+  // default rather than falling back to it (e.g. `objectCurlySpacing` would
+  // become falsy and print `{a}` instead of `{ a }`).
+  for (const key of Object.keys(userStyles) as (keyof CodeFormatOptions)[]) {
+    if (userStyles[key] !== undefined) {
+      format[key] = userStyles[key] as any;
     }
   }
 

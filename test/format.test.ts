@@ -95,4 +95,17 @@ describe("format", () => {
       generateCode(mod, { format: { objectCurlySpacing: false } }).code,
     ).toContain("import {VitePWA} from 'vite-plugin-pwa'");
   });
+
+  it("keeps detected values when a user option is undefined", () => {
+    // `undefined` means "not specified" for detection, so it must not overwrite
+    // the detected value nor become an own key shadowing recast's default.
+    const code = "console.log('hello')";
+    const detectedFormat = detectCodeFormat(code, {
+      quote: undefined,
+      useTabs: undefined,
+    });
+    expect(detectedFormat.quote).toBe(detectCodeFormat(code).quote);
+    expect(detectedFormat.quote).toBe("single");
+    expect(detectedFormat.useTabs).toBe(false);
+  });
 });
