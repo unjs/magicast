@@ -15,6 +15,15 @@ export default defineConfig({
   exports: {
     legacy: true,
   },
-  external: ["@babel/types"],
+  // Bundle all runtime/type dependencies so consumers install zero deps:
+  // - @babel/parser is inlined into the JS bundle
+  // - @babel/types is types-only and gets inlined into the d.ts bundle
+  noExternal: ["@babel/parser", "@babel/types"],
   fixedExtension: false,
+  // Keep identifiers readable for debugging; only strip whitespace
+  minify: {
+    compress: false,
+    mangle: false,
+    codegen: { removeWhitespace: true },
+  },
 });

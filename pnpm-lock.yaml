@@ -18,17 +18,13 @@ overrides:
 importers:
 
   .:
-    dependencies:
+    devDependencies:
       '@babel/parser':
         specifier: ^7.29.7
         version: 7.29.7
       '@babel/types':
         specifier: ^7.29.7
         version: 7.29.7
-      source-map-js:
-        specifier: ^1.2.1
-        version: 1.2.1
-    devDependencies:
       '@types/node':
         specifier: ^26.1.2
         version: 26.1.2
@@ -74,6 +70,9 @@ importers:
       source-map:
         specifier: npm:source-map-js@latest
         version: source-map-js@1.2.1
+      source-map-js:
+        specifier: ^1.2.1
+        version: 1.2.1
       taze:
         specifier: ^19.16.0
         version: 19.16.0
