@@ -94,4 +94,29 @@ describe("array", () => {
     expect(fullArray.length).toBe(3);
     expect(fullArray[2].id).toBe(3);
   });
+
+  it("push and unshift accept multiple values", async () => {
+    const mod = parseModule<{ default: string[] }>(`export default ["c"]`);
+    const arr = mod.exports.default;
+
+    expect(arr.push("d", "e")).toBe(3);
+    expect(arr.unshift("a", "b")).toBe(5);
+
+    expect([...arr]).toEqual(["a", "b", "c", "d", "e"]);
+    expect(await generate(mod)).toMatchInlineSnapshot(
+      `"export default ["a", "b", "c", "d", "e"];"`,
+    );
+  });
+
+  it("splice without a deleteCount removes the rest of the array", async () => {
+    const mod = parseModule<{ default: number[] }>(
+      `export default [1, 2, 3, 4]`,
+    );
+
+    const deleted = mod.exports.default.splice(1);
+
+    expect(deleted).toEqual([2, 3, 4]);
+    expect(mod.exports.default.length).toBe(1);
+    expect(await generate(mod)).toMatchInlineSnapshot(`"export default [1];"`);
+  });
 });

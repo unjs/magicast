@@ -11,24 +11,29 @@ export function proxifyArrayElements<T extends any[]>(
   const utils = makeProxyUtils(node, {
     $type: "array",
     // Mutator methods - they modify the underlying AST
-    push(value: any) {
-      elements.push(literalToAst(value) as any);
+    push(...values: any[]) {
+      return elements.push(...values.map((v) => literalToAst(v) as any));
     },
     pop() {
       return proxify(elements.pop() as any, mod);
     },
-    unshift(value: any) {
-      elements.unshift(literalToAst(value) as any);
+    unshift(...values: any[]) {
+      return elements.unshift(...values.map((v) => literalToAst(v) as any));
     },
     shift() {
       return proxify(elements.shift() as any, mod);
     },
-    splice(start: number, deleteCount: number, ...items: any[]) {
-      const deleted = elements.splice(
-        start,
-        deleteCount,
-        ...items.map((n) => literalToAst(n)),
-      );
+    splice(start: number, ...rest: [number?, ...any[]]) {
+      // `deleteCount` is only defaulted to 0 when it is passed explicitly;
+      // omitting it removes every element from `start` onwards.
+      const deleted =
+        rest.length === 0
+          ? elements.splice(start)
+          : elements.splice(
+              start,
+              rest[0] as number,
+              ...rest.slice(1).map((n) => literalToAst(n)),
+            );
       return deleted.map((n) => proxify(n as any, mod));
     },
     toJSON() {
