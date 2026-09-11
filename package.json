@@ -39,8 +39,8 @@
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
-    "@vitest/coverage-v8": "^4.1.10",
-    "@vitest/ui": "^4.1.10",
+    "@vitest/coverage-v8": "^5.0.0",
+    "@vitest/ui": "^5.0.0",
     "ast-types": "^0.16.1",
     "bumpp": "^12.1.1",
     "eslint": "^9.39.4",
