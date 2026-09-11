@@ -146,4 +146,14 @@ foo: []
       });"
     `);
   });
+
+  it("keeps an import proxy in sync after moving its source", () => {
+    const mod = parseModule(`import { foo } from "a"`);
+    const item = mod.imports.foo;
+
+    item.from = "b";
+
+    expect(item.from).toBe("b");
+    expect(mod.imports.foo.from).toBe("b");
+  });
 });

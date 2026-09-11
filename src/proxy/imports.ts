@@ -83,13 +83,14 @@ export function createImportProxy(
         if (declaration) {
           // TODO: insert after the last import maybe?
           declaration.specifiers.push(specifier as any);
+          node = declaration;
         } else {
-          root.body.unshift(
-            b.importDeclaration(
-              [specifier as any],
-              b.stringLiteral(value),
-            ) as any,
+          const newDeclaration = b.importDeclaration(
+            [specifier as any],
+            b.stringLiteral(value),
           );
+          root.body.unshift(newDeclaration as any);
+          node = newDeclaration as any;
         }
       },
       toJSON() {
