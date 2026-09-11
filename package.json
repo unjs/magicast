@@ -2,7 +2,7 @@
   "name": "magicast",
   "type": "module",
   "version": "0.5.5",
-  "packageManager": "pnpm@12.3.4",
+  "packageManager": "pnpm@12.4.0",
   "description": "Modify a JS/TS file and write back magically just like JSON!",
   "license": "MIT",
   "repository": "unjs/magicast",
@@ -34,8 +34,8 @@
     "test:full": "pnpm run test --run && pnpm run build && pnpm run test:build --run"
   },
   "dependencies": {
-    "@babel/parser": "^7.29.7",
-    "@babel/types": "^7.29.7",
+    "@babel/parser": "^7.29.8",
+    "@babel/types": "^7.29.8",
     "source-map-js": "^1.2.1"
   },
   "devDependencies": {
