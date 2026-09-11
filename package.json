@@ -1,7 +1,7 @@
 {
   "name": "magicast",
   "type": "module",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "packageManager": "pnpm@12.3.4",
   "description": "Modify a JS/TS file and write back magically just like JSON!",
   "license": "MIT",
