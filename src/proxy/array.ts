@@ -12,13 +12,13 @@ export function proxifyArrayElements<T extends any[]>(
     $type: "array",
     // Mutator methods - they modify the underlying AST
     push(...values: any[]) {
-      return elements.push(...values.map((v) => literalToAst(v) as any));
+      return elements.push(...values.map(v => literalToAst(v) as any));
     },
     pop() {
       return proxify(elements.pop() as any, mod);
     },
     unshift(...values: any[]) {
-      return elements.unshift(...values.map((v) => literalToAst(v) as any));
+      return elements.unshift(...values.map(v => literalToAst(v) as any));
     },
     shift() {
       return proxify(elements.shift() as any, mod);
@@ -26,18 +26,17 @@ export function proxifyArrayElements<T extends any[]>(
     splice(start: number, ...rest: [number?, ...any[]]) {
       // `deleteCount` is only defaulted to 0 when it is passed explicitly;
       // omitting it removes every element from `start` onwards.
-      const deleted =
-        rest.length === 0
-          ? elements.splice(start)
-          : elements.splice(
-              start,
-              rest[0] as number,
-              ...rest.slice(1).map((n) => literalToAst(n)),
-            );
-      return deleted.map((n) => proxify(n as any, mod));
+      const deleted = rest.length === 0
+        ? elements.splice(start)
+        : elements.splice(
+            start,
+            rest[0] as number,
+            ...rest.slice(1).map(n => literalToAst(n)),
+          );
+      return deleted.map(n => proxify(n as any, mod));
     },
     toJSON() {
-      return elements.map((n) => proxify(n as any, mod));
+      return elements.map(n => proxify(n as any, mod));
     },
   });
 
@@ -106,7 +105,8 @@ export function proxifyArrayElements<T extends any[]>(
 
           if (initialValue.length > 0) {
             accumulator = initialValue[0];
-          } else {
+          }
+          else {
             accumulator = array[0];
             startIndex = 1;
           }

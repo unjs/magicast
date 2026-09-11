@@ -1,13 +1,13 @@
 import type { FunctionExpression } from "@babel/types";
 import type {
+  ProxifiedBlockStatement,
   ProxifiedFunctionExpression,
   ProxifiedModule,
-  ProxifiedBlockStatement,
 } from "./types";
-import { proxify } from "./proxify";
-import { proxifyArrayElements } from "./array";
-import { makeProxyUtils } from "./_utils";
 import { MagicastError } from "../error";
+import { makeProxyUtils } from "./_utils";
+import { proxifyArrayElements } from "./array";
+import { proxify } from "./proxify";
 
 export function proxifyFunctionExpression(
   node: FunctionExpression,

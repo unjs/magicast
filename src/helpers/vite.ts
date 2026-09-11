@@ -57,7 +57,8 @@ export function addVitePlugin(
 
   if (config.$type === "identifier") {
     insertPluginIntoVariableDeclarationConfig(magicast, plugin);
-  } else {
+  }
+  else {
     insertPluginIntoConfig(plugin, config);
   }
 
@@ -74,13 +75,13 @@ export function findVitePluginCall(
   magicast: ProxifiedModule<any>,
   plugin: UpdateVitePluginConfigOptions | string,
 ): ProxifiedFunctionCall | undefined {
-  const _plugin =
-    typeof plugin === "string" ? { from: plugin, imported: "default" } : plugin;
+  const _plugin
+    = typeof plugin === "string" ? { from: plugin, imported: "default" } : plugin;
 
   const config = getDefaultExportOptions(magicast);
 
   const constructor = magicast.imports.$items.find(
-    (i) =>
+    i =>
       i.from === _plugin.from && i.imported === (_plugin.imported || "default"),
   )?.local;
 
@@ -101,9 +102,11 @@ export function updateVitePluginConfig(
 
   if (typeof handler === "function") {
     item.$args = handler(item.$args);
-  } else if (item.$args[0]) {
+  }
+  else if (item.$args[0]) {
     deepMergeObject(item.$args[0], handler);
-  } else {
+  }
+  else {
     item.$args[0] = handler;
   }
 
@@ -118,33 +121,35 @@ function insertPluginIntoVariableDeclarationConfig(
   magicast: ProxifiedModule<any>,
   plugin: AddVitePluginOptions,
 ) {
-  const { config: configObject, declaration } =
-    getConfigFromVariableDeclaration(magicast);
+  const { config: configObject, declaration }
+    = getConfigFromVariableDeclaration(magicast);
 
   insertPluginIntoConfig(plugin, configObject);
 
   if (declaration.init) {
     if (declaration.init.type === "ObjectExpression") {
-      // @ts-ignore this works despite the type error because of recast
+      // @ts-expect-error this works despite the type error because of recast
       declaration.init = generateCode(configObject).code;
-    } else if (
-      declaration.init.type === "CallExpression" &&
-      declaration.init.callee.type === "Identifier"
+    }
+    else if (
+      declaration.init.type === "CallExpression"
+      && declaration.init.callee.type === "Identifier"
     ) {
-      // @ts-ignore this works despite the type error because of recast
+      // @ts-expect-error this works despite the type error because of recast
       declaration.init = generateCode(
         builders.functionCall(declaration.init.callee.name, configObject),
       ).code;
-    } else if (declaration.init.type === "TSSatisfiesExpression") {
+    }
+    else if (declaration.init.type === "TSSatisfiesExpression") {
       if (declaration.init.expression.type === "ObjectExpression") {
-        // @ts-ignore this works despite the type error because of recast
+        // @ts-expect-error this works despite the type error because of recast
         declaration.init.expression = generateCode(configObject).code;
       }
       if (
-        declaration.init.expression.type === "CallExpression" &&
-        declaration.init.expression.callee.type === "Identifier"
+        declaration.init.expression.type === "CallExpression"
+        && declaration.init.expression.callee.type === "Identifier"
       ) {
-        // @ts-ignore this works despite the type error because of recast
+        // @ts-expect-error this works despite the type error because of recast
         declaration.init.expression = generateCode(
           builders.functionCall(
             declaration.init.expression.callee.name,

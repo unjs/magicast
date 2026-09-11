@@ -1,9 +1,9 @@
 import type { Program } from "@babel/types";
-import { Options as ParseOptions } from "recast";
-import { CodeFormatOptions } from "./format";
+import type { Options as ParseOptions } from "recast";
+import type { CodeFormatOptions } from "./format";
 
-export type { Node as ASTNode } from "@babel/types";
 export * from "./proxy/types";
+export type { Node as ASTNode } from "@babel/types";
 
 export interface Loc {
   start?: { line?: number; column?: number; token?: number };

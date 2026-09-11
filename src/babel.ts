@@ -1,5 +1,5 @@
-import * as babelParser from "@babel/parser";
 import type { ParserOptions, ParserPlugin } from "@babel/parser";
+import * as babelParser from "@babel/parser";
 
 let _babelParser: { parse: typeof babelParser.parse } | undefined;
 

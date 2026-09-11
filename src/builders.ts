@@ -1,11 +1,11 @@
+import type { Proxified } from "./types";
 import * as recast from "recast";
+import { parseExpression } from "./code";
+import { literalToAst } from "./proxy/_utils";
+import { proxifyAwaitExpression } from "./proxy/await-expression";
+import { proxifyBinaryExpression } from "./proxy/binary-expression";
 import { proxifyFunctionCall } from "./proxy/function-call";
 import { proxifyNewExpression } from "./proxy/new-expression";
-import { literalToAst } from "./proxy/_utils";
-import type { Proxified } from "./types";
-import { parseExpression } from "./code";
-import { proxifyBinaryExpression } from "./proxy/binary-expression";
-import { proxifyAwaitExpression } from "./proxy/await-expression";
 
 const b = recast.types.builders;
 
@@ -16,7 +16,7 @@ export const builders = {
   functionCall(callee: string, ...args: any[]): Proxified {
     const node = b.callExpression(
       b.identifier(callee),
-      args.map((i) => literalToAst(i) as any),
+      args.map(i => literalToAst(i) as any),
     );
     return proxifyFunctionCall(node as any);
   },
@@ -26,7 +26,7 @@ export const builders = {
   newExpression(callee: string, ...args: any[]): Proxified {
     const node = b.newExpression(
       b.identifier(callee),
-      args.map((i) => literalToAst(i) as any),
+      args.map(i => literalToAst(i) as any),
     );
     return proxifyNewExpression(node as any);
   },

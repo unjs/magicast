@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { builders, parseModule } from "magicast";
+import { describe, expect, it } from "vitest";
 import { generate } from "../_utils";
 
 describe("builders/awaitExpression", () => {
@@ -18,7 +18,7 @@ describe("builders/awaitExpression", () => {
   });
 
   it("await with raw expression", async () => {
-    const expr = builders.awaitExpression(builders.raw('import("./module")'));
+    const expr = builders.awaitExpression(builders.raw("import(\"./module\")"));
     expect(expr.$type).toBe("await-expression");
 
     const mod = parseModule("");
@@ -31,7 +31,7 @@ describe("builders/awaitExpression", () => {
 
   it("parse existing await expression", async () => {
     const mod = parseModule(
-      'export const a = await fetch("https://example.com");',
+      "export const a = await fetch(\"https://example.com\");",
     );
     const a = mod.exports.a;
     expect(a.$type).toBe("await-expression");

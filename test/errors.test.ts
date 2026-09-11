@@ -1,5 +1,5 @@
-import { expect, describe, it } from "vitest";
 import { parseExpression, parseModule } from "magicast";
+import { describe, expect, it } from "vitest";
 import { generate } from "./_utils";
 
 describe("errors", () => {

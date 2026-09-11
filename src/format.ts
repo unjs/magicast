@@ -34,8 +34,8 @@ export function detectCodeFormat(
 
   // Syntax detection regex
   // TODO: Perf: Compile only for features we need to detect
-  const syntaxDetectRegex =
-    /(?<doubleQuote>"[^"]+")|(?<singleQuote>'[^']+')|(?<singleParam>\([^),]+\)\s*=>)|(?<trailingComma>,\s*[\]}])/g;
+  const syntaxDetectRegex
+    = /(?<doubleQuote>"[^"]+")|(?<singleQuote>'[^']+')|(?<singleParam>\([^),]+\)\s*=>)|(?<trailingComma>,\s*[\]}])/g;
   const syntaxUsages = {
     doubleQuote: 0,
     singleQuote: 0,
@@ -70,7 +70,8 @@ export function detectCodeFormat(
         }
         if (lineIndent[0] === "\t") {
           tabUsages++;
-        } else if (lineIndent.length > 0) {
+        }
+        else if (lineIndent.length > 0) {
           tabUsages--;
         }
       }
@@ -79,7 +80,8 @@ export function detectCodeFormat(
     // Line ending analysis
     if (trimmitedLine.at(-1) === ";") {
       semiUsages++;
-    } else if (trimmitedLine.length > 0) {
+    }
+    else if (trimmitedLine.length > 0) {
       semiUsages--;
     }
 
@@ -92,7 +94,7 @@ export function detectCodeFormat(
         }
         for (const key in syntaxUsages) {
           if (match.groups[key]) {
-            // @ts-ignore
+            // @ts-expect-error indexing with a template literal type key
             syntaxUsages[key]++;
           }
         }
@@ -103,7 +105,8 @@ export function detectCodeFormat(
       if (line.startsWith("}") || line.startsWith("]")) {
         if (previousLineTrailing) {
           multiLineTrailingCommaUsages++;
-        } else {
+        }
+        else {
           multiLineTrailingCommaUsages--;
         }
       }

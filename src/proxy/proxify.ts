@@ -1,19 +1,19 @@
 import type { ASTNode } from "../types";
-import { MagicastError } from "../error";
 import type { Proxified, ProxifiedModule, ProxifiedValue } from "./types";
+import { MagicastError } from "../error";
+import { LITERALS_AST, LITERALS_TYPEOF } from "./_utils";
 import { proxifyArray } from "./array";
-import { proxifyFunctionCall } from "./function-call";
 import { proxifyArrowFunctionExpression } from "./arrow-function-expression";
-import { proxifyObject } from "./object";
-import { proxifyNewExpression } from "./new-expression";
+import { proxifyAwaitExpression } from "./await-expression";
+import { proxifyBinaryExpression } from "./binary-expression";
+import { proxifyBlockStatement } from "./block-statement";
+import { proxifyFunctionCall } from "./function-call";
+import { proxifyFunctionExpression } from "./function-expression";
 import { proxifyIdentifier } from "./identifier";
 import { proxifyLogicalExpression } from "./logical-expression";
 import { proxifyMemberExpression } from "./member-expression";
-import { proxifyBinaryExpression } from "./binary-expression";
-import { proxifyBlockStatement } from "./block-statement";
-import { proxifyFunctionExpression } from "./function-expression";
-import { LITERALS_AST, LITERALS_TYPEOF } from "./_utils";
-import { proxifyAwaitExpression } from "./await-expression";
+import { proxifyNewExpression } from "./new-expression";
+import { proxifyObject } from "./object";
 
 const _cache = new WeakMap<ASTNode, any>();
 

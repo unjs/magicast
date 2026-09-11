@@ -163,8 +163,8 @@ export default {
       }
     })`);
 
-    const config =
-      mod.exports.default.$type === "function-call"
+    const config
+      = mod.exports.default.$type === "function-call"
         ? mod.exports.default.$args[0]
         : mod.exports.default;
 
@@ -208,8 +208,8 @@ export default {
       }
     })`);
 
-    const config =
-      mod.exports.default.$type === "function-call"
+    const config
+      = mod.exports.default.$type === "function-call"
         ? mod.exports.default.$args[0]
         : mod.exports.default;
 

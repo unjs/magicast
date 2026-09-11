@@ -1,5 +1,5 @@
-import { expect, it, describe } from "vitest";
-import { generateCode, parseModule, parseExpression } from "magicast";
+import { generateCode, parseExpression, parseModule } from "magicast";
+import { describe, expect, it } from "vitest";
 import { generate } from "./_utils";
 
 describe("general", () => {
@@ -9,7 +9,7 @@ describe("general", () => {
     mod.exports.default.a = 2;
 
     expect(await generate(mod)).toMatchInlineSnapshot(
-      '"export default { a: 2, b: { c: {} } };"',
+      "\"export default { a: 2, b: { c: {} } };\"",
     );
 
     mod.exports.default.b.c = { d: 3 };
@@ -113,12 +113,12 @@ describe("general", () => {
     delete mod.exports.default.b[1].foo;
 
     expect(await generate(mod)).toMatchInlineSnapshot(
-      '"export default { a: 1, b: [1, {}] };"',
+      "\"export default { a: 1, b: [1, {}] };\"",
     );
 
     delete mod.exports.default.b[0];
     expect(await generate(mod)).toMatchInlineSnapshot(
-      '"export default { a: 1, b: [undefined, {}] };"',
+      "\"export default { a: 1, b: [undefined, {}] };\"",
     );
 
     delete mod.exports.default.a;
@@ -153,7 +153,7 @@ export const config = {
     mod.exports.obj.foo = 100;
 
     expect(await generate(mod)).toMatchInlineSnapshot(
-      '"export const obj = { foo: 100 } satisfies Record<string, number>;"',
+      "\"export const obj = { foo: 100 } satisfies Record<string, number>;\"",
     );
   });
 
@@ -177,7 +177,7 @@ export const config = {
     mod.exports.obj.foo = 100;
 
     expect(await generate(mod)).toMatchInlineSnapshot(
-      '"export const obj = { foo: 100 } as Record<string, number>;"',
+      "\"export const obj = { foo: 100 } as Record<string, number>;\"",
     );
   });
 

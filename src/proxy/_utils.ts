@@ -1,5 +1,5 @@
-import * as recast from "recast";
 import type { ASTNode } from "../types";
+import * as recast from "recast";
 import { MagicastError } from "../error";
 
 export const LITERALS_AST = new Set([
@@ -24,7 +24,7 @@ export const LITERALS_TYPEOF = new Set([
 const b = recast.types.builders;
 
 export function isValidPropName(name: string) {
-  return /^[$A-Z_a-z][\w$]*$/.test(name);
+  return /^[$A-Z_][\w$]*$/i.test(name);
 }
 
 const PROXY_KEY = "__magicast_proxy";
@@ -57,7 +57,7 @@ export function literalToAst(value: any, seen = new Set()): ASTNode {
   }
   if (value instanceof Set) {
     return b.newExpression(b.identifier("Set"), [
-      b.arrayExpression([...value].map((n) => literalToAst(n, seen)) as any),
+      b.arrayExpression([...value].map(n => literalToAst(n, seen)) as any),
     ]) as any;
   }
   if (value instanceof Date) {
@@ -79,7 +79,7 @@ export function literalToAst(value: any, seen = new Set()): ASTNode {
   }
   if (Array.isArray(value)) {
     return b.arrayExpression(
-      value.map((n) => literalToAst(n, seen)) as any,
+      value.map(n => literalToAst(n, seen)) as any,
     ) as any;
   }
   if (typeof value === "object") {
@@ -87,7 +87,7 @@ export function literalToAst(value: any, seen = new Set()): ASTNode {
       Object.entries(value).map(([key, value]) => {
         return b.property(
           "init",
-          /^[$A-Z_a-z][\w$]*$/g.test(key) ? b.identifier(key) : b.literal(key),
+          /^[$A-Z_][\w$]*$/i.test(key) ? b.identifier(key) : b.literal(key),
           literalToAst(value, seen) as any,
         ) as any;
       }),
@@ -123,7 +123,7 @@ export function createProxy<T>(
     {
       ownKeys() {
         return Object.keys(utils).filter(
-          (i) => i !== PROXY_KEY && !i.startsWith("$"),
+          i => i !== PROXY_KEY && !i.startsWith("$"),
         );
       },
       getOwnPropertyDescriptor() {

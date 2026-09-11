@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/no-nested-ternary */
-import * as recast from "recast";
 import type {
   ImportDeclaration,
   ImportDefaultSpecifier,
@@ -7,13 +5,14 @@ import type {
   ImportSpecifier,
   Program,
 } from "@babel/types";
-import { MagicastError } from "../error";
 import type {
   ImportItemInput,
   ProxifiedImportItem,
   ProxifiedImportsMap,
   ProxifiedModule,
 } from "./types";
+import * as recast from "recast";
+import { MagicastError } from "../error";
 import { createProxy } from "./_utils";
 
 const b = recast.types.builders;
@@ -54,7 +53,8 @@ export function createImportProxy(
         }
         if (specifier.imported.type === "Identifier") {
           specifier.imported.name = value;
-        } else {
+        }
+        else {
           specifier.imported.value = value;
         }
       },
@@ -72,19 +72,20 @@ export function createImportProxy(
           return;
         }
 
-        node.specifiers = node.specifiers.filter((s) => s !== specifier);
+        node.specifiers = node.specifiers.filter(s => s !== specifier);
         if (node.specifiers.length === 0) {
-          root.body = root.body.filter((s) => s !== node);
+          root.body = root.body.filter(s => s !== node);
         }
 
         const declaration = root.body.find(
-          (i) => i.type === "ImportDeclaration" && i.source.value === value,
+          i => i.type === "ImportDeclaration" && i.source.value === value,
         ) as ImportDeclaration | undefined;
         if (declaration) {
           // TODO: insert after the last import maybe?
           declaration.specifiers.push(specifier as any);
           node = declaration;
-        } else {
+        }
+        else {
           const newDeclaration = b.importDeclaration(
             [specifier as any],
             b.stringLiteral(value),
@@ -113,8 +114,7 @@ export function createImportProxy(
 
 export function createImportsProxy(
   root: Program,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  mod: ProxifiedModule,
+  _mod: ProxifiedModule,
 ): ProxifiedImportsMap {
   // TODO: cache
   const getAllImports = () => {
@@ -135,7 +135,7 @@ export function createImportsProxy(
     order: "prepend" | "append",
   ) => {
     const imports = getAllImports();
-    const item = imports.find((i) => i.local === key);
+    const item = imports.find(i => i.local === key);
     const local = value.local || key;
     if (item) {
       item.imported = value.imported;
@@ -144,8 +144,8 @@ export function createImportsProxy(
       return true;
     }
 
-    const specifier =
-      value.imported === "default"
+    const specifier
+      = value.imported === "default"
         ? b.importDefaultSpecifier(b.identifier(local))
         : value.imported === "*"
           ? b.importNamespaceSpecifier(b.identifier(local))
@@ -155,15 +155,17 @@ export function createImportsProxy(
             );
 
     const declaration = imports.find(
-      (i) => i.from === value.from,
+      i => i.from === value.from,
     )?.$declaration;
     if (declaration) {
       declaration.specifiers.push(specifier as any);
-    } else if (order === "prepend" || imports.length === 0) {
+    }
+    else if (order === "prepend" || imports.length === 0) {
       root.body.unshift(
         b.importDeclaration([specifier], b.stringLiteral(value.from)) as any,
       );
-    } else {
+    }
+    else {
       // The `imports` length is already checked above, so `at(-1)` will exist
       const lastImport = imports.at(-1)!.$declaration;
       const lastImportIndex = root.body.indexOf(lastImport);
@@ -177,15 +179,15 @@ export function createImportsProxy(
   };
 
   const removeImport = (key: string) => {
-    const item = getAllImports().find((i) => i.local === key);
+    const item = getAllImports().find(i => i.local === key);
     if (!item) {
       return false;
     }
     const node = item.$declaration;
     const specifier = item.$ast;
-    node.specifiers = node.specifiers.filter((s) => s !== specifier);
+    node.specifiers = node.specifiers.filter(s => s !== specifier);
     if (node.specifiers.length === 0) {
-      root.body = root.body.filter((n) => n !== node);
+      root.body = root.body.filter(n => n !== node);
     }
     return true;
   };
@@ -207,7 +209,6 @@ export function createImportsProxy(
         return getAllImports();
       },
       toJSON() {
-        // eslint-disable-next-line unicorn/no-array-reduce
         return getAllImports().reduce((acc, i) => {
           acc[i.local] = i;
           return acc;
@@ -216,7 +217,7 @@ export function createImportsProxy(
     },
     {
       get(_, prop) {
-        return getAllImports().find((i) => i.local === prop);
+        return getAllImports().find(i => i.local === prop);
       },
       set(_, prop, value) {
         return updateImport(prop as string, value, "prepend");
@@ -225,10 +226,10 @@ export function createImportsProxy(
         return removeImport(prop as string);
       },
       ownKeys() {
-        return getAllImports().map((i) => i.local);
+        return getAllImports().map(i => i.local);
       },
       has(_, prop) {
-        return getAllImports().some((i) => i.local === prop);
+        return getAllImports().some(i => i.local === prop);
       },
     },
   ) as any as ProxifiedImportsMap;

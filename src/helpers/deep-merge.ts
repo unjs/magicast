@@ -12,13 +12,14 @@ export function deepMergeObject(magicast: Proxified<any>, object: any) {
       }
 
       if (
-        typeof magicastValue === "object" &&
-        magicastValue !== null &&
-        typeof objectValue === "object" &&
-        objectValue !== null
+        typeof magicastValue === "object"
+        && magicastValue !== null
+        && typeof objectValue === "object"
+        && objectValue !== null
       ) {
         deepMergeObject(magicastValue, objectValue);
-      } else {
+      }
+      else {
         magicast[key] = objectValue;
       }
     }

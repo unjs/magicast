@@ -8,7 +8,8 @@ import { downloadTemplate } from "giget";
 async function cloneRecast() {
   if (fs.existsSync("vendor/recast")) {
     console.log("vendor/recast already exists");
-  } else {
+  }
+  else {
     // Clone recast
     await downloadTemplate("github:benjamn/recast#v0.23.18", {
       dir: "vendor/recast",
@@ -32,7 +33,7 @@ async function cloneRecast() {
             return;
           }
           return await filterLines(join(file.parentPath, file.name), (line) => {
-            if (line.startsWith('import invariant from "tiny-invariant"')) {
+            if (line.startsWith("import invariant from \"tiny-invariant\"")) {
               return "const invariant = (_condition?: unknown, _message?: string): void => {};";
             }
             if (line.startsWith("import assert from")) {
@@ -42,7 +43,7 @@ async function cloneRecast() {
               if (line.endsWith(";")) {
                 return false;
               }
-              return `// @ts-ignore \n false && ` + line;
+              return `// @ts-ignore \n false && ${line}`;
             }
             return line;
           });
@@ -51,14 +52,14 @@ async function cloneRecast() {
 
     // Remove the require(), and since we are providing our own parser anyway
     await filterLines("vendor/recast/lib/options.ts", (line) => {
-      if (line.includes('parser: require("../parsers/esprima")')) {
+      if (line.includes("parser: require(\"../parsers/esprima\")")) {
         return false;
       }
       return line;
     });
 
     await filterLines("vendor/recast/lib/parser.ts", (line) => {
-      return line.replace('require("esprima")', `false && require("")`);
+      return line.replace("require(\"esprima\")", `false && require("")`);
     });
 
     await filterLines("vendor/recast/lib/util.ts", (line) => {
@@ -72,7 +73,7 @@ async function cloneRecast() {
     // bundler doesn't treat it as a missing value export after type stripping
     await filterLines("vendor/recast/main.ts", (line) => {
       if (
-        /^(import|export) \{ Options \} from "\.\/lib\/options";/.test(line)
+        /^(?:import|export) \{ Options \} from "\.\/lib\/options";/.test(line)
       ) {
         return line.replace(/^(import|export) /, "$1 type ");
       }
@@ -86,7 +87,8 @@ async function cloneRecast() {
 async function cloneAstTypes() {
   if (fs.existsSync("vendor/ast-types")) {
     console.log("vendor/ast-types already exists");
-  } else {
+  }
+  else {
     // Clone recast
     await downloadTemplate("github:benjamn/ast-types#v0.16.1", {
       dir: "vendor/ast-types",
@@ -97,7 +99,7 @@ async function cloneAstTypes() {
 
     // Add import type
     await filterLines("vendor/ast-types/src/main.ts", (line) => {
-      if (/^import\s*{\s*(ASTNode|Visitor)/.test(line)) {
+      if (/^import\s*\{\s*(?:ASTNode|Visitor)/.test(line)) {
         return line.replace(/^import /, "import type ");
       }
       return line;
@@ -145,7 +147,7 @@ async function filterLines(
   const lines = content.split("\n");
   const newContent = lines
     .map((i, idx) => filter(i, idx))
-    .filter((i) => i !== false)
+    .filter(i => i !== false)
     .join("\n");
   if (newContent !== content) {
     await fsp.writeFile(file, newContent);

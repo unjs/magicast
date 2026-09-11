@@ -1,7 +1,7 @@
-import { Program, VariableDeclarator } from "@babel/types";
+import type { Program, VariableDeclarator } from "@babel/types";
+import type { Proxified, ProxifiedModule, ProxifiedObject } from "../types";
 import { generateCode, parseExpression } from "../code";
 import { MagicastError } from "../error";
-import type { Proxified, ProxifiedModule, ProxifiedObject } from "../types";
 
 export function getDefaultExportOptions(magicast: ProxifiedModule<any>) {
   return configFromNode(magicast.exports.default);
@@ -42,12 +42,12 @@ export function getConfigFromVariableDeclaration(
     if (node.type === "VariableDeclaration") {
       for (const declaration of node.declarations) {
         if (
-          declaration.id.type === "Identifier" &&
-          declaration.id.name === configDecalarationId &&
-          declaration.init
+          declaration.id.type === "Identifier"
+          && declaration.id.name === configDecalarationId
+          && declaration.init
         ) {
-          const init =
-            declaration.init.type === "TSSatisfiesExpression"
+          const init
+            = declaration.init.type === "TSSatisfiesExpression"
               ? declaration.init.expression
               : declaration.init;
 

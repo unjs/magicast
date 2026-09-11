@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { builders, parseModule } from "magicast";
+import { describe, expect, it } from "vitest";
 import { generate } from "../_utils";
 
 describe("builders/expression", () => {

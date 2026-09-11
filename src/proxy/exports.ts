@@ -1,6 +1,6 @@
-import * as recast from "recast";
 import type { Program } from "@babel/types";
 import type { ProxifiedModule } from "./types";
+import * as recast from "recast";
 import { createProxy, literalToAst } from "./_utils";
 import { proxify } from "./proxify";
 
@@ -8,8 +8,8 @@ const b = recast.types.builders;
 
 export function createExportsProxy(root: Program, mod: ProxifiedModule) {
   const findExport = (key: string) => {
-    const type =
-      key === "default" ? "ExportDefaultDeclaration" : "ExportNamedDeclaration";
+    const type
+      = key === "default" ? "ExportDefaultDeclaration" : "ExportNamedDeclaration";
 
     for (const n of root.body) {
       if (n.type === type) {
@@ -26,9 +26,9 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
           }
           // `export function greet() {}`
           if (
-            n.declaration.type === "FunctionDeclaration" &&
-            n.declaration.id &&
-            n.declaration.id.name === key
+            n.declaration.type === "FunctionDeclaration"
+            && n.declaration.id
+            && n.declaration.id.name === key
           ) {
             const decl = n.declaration;
             // Convert FunctionDeclaration to FunctionExpression to make it proxifiable as a callable function
@@ -50,8 +50,8 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
   };
 
   const updateOrAddExport = (key: string, value: any) => {
-    const type =
-      key === "default" ? "ExportDefaultDeclaration" : "ExportNamedDeclaration";
+    const type
+      = key === "default" ? "ExportDefaultDeclaration" : "ExportNamedDeclaration";
 
     const node = literalToAst(value) as any;
     for (const n of root.body) {
@@ -69,9 +69,9 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
             }
           }
           if (
-            n.declaration.type === "FunctionDeclaration" &&
-            n.declaration.id &&
-            n.declaration.id.name === key
+            n.declaration.type === "FunctionDeclaration"
+            && n.declaration.id
+            && n.declaration.id.name === key
           ) {
             // Replace `export function` with `export const`
             const newExport = b.exportNamedDeclaration(
@@ -124,7 +124,7 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
             }
             if (i.type === "ExportNamedDeclaration" && i.declaration) {
               if (i.declaration.type === "VariableDeclaration") {
-                return i.declaration.declarations.map((d) =>
+                return i.declaration.declarations.map(d =>
                   "name" in d.id ? d.id.name : "",
                 );
               }
@@ -137,8 +137,8 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
           .filter(Boolean);
       },
       deleteProperty(_, prop) {
-        const type =
-          prop === "default"
+        const type
+          = prop === "default"
             ? "ExportDefaultDeclaration"
             : "ExportNamedDeclaration";
 
@@ -158,9 +158,9 @@ export function createExportsProxy(root: Program, mod: ProxifiedModule) {
                 }
               }
               if (
-                n.declaration.type === "FunctionDeclaration" &&
-                n.declaration.id &&
-                n.declaration.id.name === prop
+                n.declaration.type === "FunctionDeclaration"
+                && n.declaration.id
+                && n.declaration.id.name === prop
               ) {
                 root.body.splice(i, 1);
                 return true;

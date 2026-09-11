@@ -13,32 +13,32 @@ export interface ProxyBase {
 export type ProxifiedArray<T extends any[] = unknown[]> = {
   [K in keyof T]: Proxified<T[K]>;
 } & ProxyBase & {
-    $type: "array";
-  };
+  $type: "array";
+};
 
-export type ProxifiedFunctionCall<Args extends any[] = unknown[]> =
-  ProxyBase & {
+export type ProxifiedFunctionCall<Args extends any[] = unknown[]>
+  = ProxyBase & {
     $type: "function-call";
     $args: ProxifiedArray<Args>;
     $callee: string;
   };
 
-export type ProxifiedNewExpression<Args extends any[] = unknown[]> =
-  ProxyBase & {
+export type ProxifiedNewExpression<Args extends any[] = unknown[]>
+  = ProxyBase & {
     $type: "new-expression";
     $args: ProxifiedArray<Args>;
     $callee: string;
   };
 
-export type ProxifiedArrowFunctionExpression<Params extends any[] = unknown[]> =
-  ProxyBase & {
+export type ProxifiedArrowFunctionExpression<Params extends any[] = unknown[]>
+  = ProxyBase & {
     $type: "arrow-function-expression";
     $params: ProxifiedArray<Params>;
     $body: ProxifiedValue;
   };
 
-export type ProxifiedFunctionExpression<Params extends any[] = unknown[]> =
-  ProxyBase & {
+export type ProxifiedFunctionExpression<Params extends any[] = unknown[]>
+  = ProxyBase & {
     $type: "function-expression";
     $params: ProxifiedArray<Params>;
     $body: ProxifiedBlockStatement;
@@ -47,8 +47,8 @@ export type ProxifiedFunctionExpression<Params extends any[] = unknown[]> =
 export type ProxifiedObject<T extends object = object> = {
   [K in keyof T]: Proxified<T[K]>;
 } & ProxyBase & {
-    $type: "object";
-  };
+  $type: "object";
+};
 
 export type ProxifiedIdentifier = ProxyBase & {
   $type: "identifier";
@@ -63,30 +63,30 @@ export type ProxifiedMemberExpression = ProxyBase & {
   $type: "memberExpression";
 };
 
-export type BinaryOperator =
-  | "+"
-  | "-"
-  | "/"
-  | "%"
-  | "*"
-  | "**"
-  | "&"
-  | "|"
-  | ">>"
-  | ">>>"
-  | "<<"
-  | "^"
-  | "=="
-  | "==="
-  | "!="
-  | "!=="
-  | "in"
-  | "instanceof"
-  | ">"
-  | "<"
-  | ">="
-  | "<="
-  | "|>";
+export type BinaryOperator
+  = | "+"
+    | "-"
+    | "/"
+    | "%"
+    | "*"
+    | "**"
+    | "&"
+    | "|"
+    | ">>"
+    | ">>>"
+    | "<<"
+    | "^"
+    | "=="
+    | "==="
+    | "!="
+    | "!=="
+    | "in"
+    | "instanceof"
+    | ">"
+    | "<"
+    | ">="
+    | "<="
+    | "|>";
 
 export type ProxifiedBinaryExpression = ProxyBase & {
   $type: "binaryExpression";
@@ -105,6 +105,9 @@ export type ProxifiedBlockStatement = ProxyBase & {
   $body: ProxifiedArray;
 };
 
+/* eslint-disable style/indent, style/indent-binary-ops --
+   the two rules disagree on how to indent this nested conditional type;
+   fixing one flips the other back and forth. */
 export type Proxified<T = any> = T extends
   number | string | null | undefined | boolean | bigint | symbol
   ? T
@@ -112,8 +115,8 @@ export type Proxified<T = any> = T extends
     ? {
         [K in keyof T]: Proxified<T[K]>;
       } & ProxyBase & {
-          $type: "array";
-        }
+        $type: "array";
+      }
     : T extends object
       ? ProxyBase & {
           [K in keyof T]: Proxified<T[K]>;
@@ -121,9 +124,10 @@ export type Proxified<T = any> = T extends
           $type: "object";
         }
       : T;
+/* eslint-enable style/indent, style/indent-binary-ops */
 
-export type ProxifiedModule<T extends object = Record<string, any>> =
-  ProxyBase & {
+export type ProxifiedModule<T extends object = Record<string, any>>
+  = ProxyBase & {
     $type: "module";
     $code: string;
     exports: ProxifiedObject<T>;
@@ -131,8 +135,8 @@ export type ProxifiedModule<T extends object = Record<string, any>> =
     generate: (options?: GenerateOptions) => { code: string; map?: any };
   };
 
-export type ProxifiedImportsMap = Record<string, ProxifiedImportItem> &
-  ProxyBase & {
+export type ProxifiedImportsMap = Record<string, ProxifiedImportItem>
+  & ProxyBase & {
     $type: "imports";
     /** @deprecated Use `$prepend` instead  */
     $add: (item: ImportItemInput) => void;
@@ -156,21 +160,21 @@ export interface ImportItemInput {
   from: string;
 }
 
-export type ProxifiedValue =
-  | ProxifiedArray
-  | ProxifiedFunctionCall
-  | ProxifiedNewExpression
-  | ProxifiedIdentifier
-  | ProxifiedLogicalExpression
-  | ProxifiedMemberExpression
-  | ProxifiedObject
-  | ProxifiedModule
-  | ProxifiedImportsMap
-  | ProxifiedImportItem
-  | ProxifiedArrowFunctionExpression
-  | ProxifiedFunctionExpression
-  | ProxifiedBinaryExpression
-  | ProxifiedAwaitExpression
-  | ProxifiedBlockStatement;
+export type ProxifiedValue
+  = | ProxifiedArray
+    | ProxifiedFunctionCall
+    | ProxifiedNewExpression
+    | ProxifiedIdentifier
+    | ProxifiedLogicalExpression
+    | ProxifiedMemberExpression
+    | ProxifiedObject
+    | ProxifiedModule
+    | ProxifiedImportsMap
+    | ProxifiedImportItem
+    | ProxifiedArrowFunctionExpression
+    | ProxifiedFunctionExpression
+    | ProxifiedBinaryExpression
+    | ProxifiedAwaitExpression
+    | ProxifiedBlockStatement;
 
 export type ProxyType = ProxifiedValue["$type"];

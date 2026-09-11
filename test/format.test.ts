@@ -1,10 +1,6 @@
-import { expect, it, describe } from "vitest";
-import {
-  CodeFormatOptions,
-  detectCodeFormat,
-  generateCode,
-  parseModule,
-} from "magicast";
+import type { CodeFormatOptions } from "magicast";
+import { detectCodeFormat, generateCode, parseModule } from "magicast";
+import { describe, expect, it } from "vitest";
 
 describe("format", () => {
   const cases: Array<{
@@ -20,17 +16,17 @@ describe("format", () => {
     },
     {
       name: "double quote",
-      code: 'console.log("hello")',
+      code: "console.log(\"hello\")",
       format: { quote: "double" },
     },
     {
       name: "indent 2",
-      code: '// hello;  if (test)\n    {console.log("hello")\n  }    ',
+      code: "// hello;  if (test)\n    {console.log(\"hello\")\n  }    ",
       format: { tabWidth: 2, useTabs: false },
     },
     {
       name: "indent 2 + tabs",
-      code: '// hello;\tif (test)\n\t\t{console.log("hello")\n\t}    ',
+      code: "// hello;\tif (test)\n\t\t{console.log(\"hello\")\n\t}    ",
       format: { tabWidth: 1, useTabs: true },
     },
     {

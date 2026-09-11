@@ -1,10 +1,10 @@
 import type { ParsedFileNode } from "../types";
-import { MagicastError } from "../error";
-import { generateCode } from "../code";
 import type { ProxifiedModule } from "./types";
-import { createImportsProxy } from "./imports";
-import { createExportsProxy } from "./exports";
+import { generateCode } from "../code";
+import { MagicastError } from "../error";
 import { createProxy } from "./_utils";
+import { createExportsProxy } from "./exports";
+import { createImportsProxy } from "./imports";
 
 export function proxifyModule<T extends object>(
   ast: ParsedFileNode,
@@ -28,7 +28,7 @@ export function proxifyModule<T extends object>(
 
   util.exports = createExportsProxy(root, mod) as any;
   util.imports = createImportsProxy(root, mod) as any;
-  util.generate = (options) => generateCode(mod, options);
+  util.generate = options => generateCode(mod, options);
 
   return mod;
 }

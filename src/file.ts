@@ -1,7 +1,7 @@
-import { promises as fsp } from "node:fs";
 import type { Options as ParseOptions } from "recast";
-import { generateCode, parseModule } from "./code";
 import type { ASTNode, ProxifiedModule } from "./types";
+import { promises as fsp } from "node:fs";
+import { generateCode, parseModule } from "./code";
 
 export async function loadFile<Exports extends object = any>(
   filename: string,
@@ -21,6 +21,6 @@ export async function writeFile(
   const { code, map } = generateCode(ast, options);
   await fsp.writeFile(filename as string, code);
   if (map) {
-    await fsp.writeFile(filename + ".map", map);
+    await fsp.writeFile(`${filename}.map`, map);
   }
 }

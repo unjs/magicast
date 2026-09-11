@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { builders, parseModule } from "magicast";
 import { print } from "recast";
-import { parseModule, builders } from "magicast";
+import { describe, expect, it } from "vitest";
 
 describe("literalToAst", () => {
   function run(value: any) {
@@ -8,10 +8,10 @@ describe("literalToAst", () => {
   }
 
   it("basic", () => {
-    expect(run(1)).toMatchInlineSnapshot('"1"');
-    expect(run(true)).toMatchInlineSnapshot('"true"');
-    expect(run(undefined)).toMatchInlineSnapshot('"undefined"');
-    expect(run(null)).toMatchInlineSnapshot('"null"');
+    expect(run(1)).toMatchInlineSnapshot("\"1\"");
+    expect(run(true)).toMatchInlineSnapshot("\"true\"");
+    expect(run(undefined)).toMatchInlineSnapshot("\"undefined\"");
+    expect(run(null)).toMatchInlineSnapshot("\"null\"");
     expect(run([undefined, 1, { foo: "bar" }])).toMatchInlineSnapshot(`
       "[undefined, 1, {
           foo: "bar"

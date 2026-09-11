@@ -1,16 +1,17 @@
-import { print, parse, Options as ParseOptions, types } from "recast";
-import { getBabelParser } from "./babel";
-import {
+import type { Options as ParseOptions } from "recast";
+import type {
   ASTNode,
   GenerateOptions,
   ParsedFileNode,
   Proxified,
   ProxifiedModule,
 } from "./types";
-import { proxifyModule } from "./proxy/module";
+import { parse, print, types } from "recast";
+import { getBabelParser } from "./babel";
 import { detectCodeFormat } from "./format";
-import { proxify } from "./proxy/proxify";
 import { makeProxyUtils } from "./proxy/_utils";
+import { proxifyModule } from "./proxy/module";
+import { proxify } from "./proxy/proxify";
 
 const b = types.builders;
 
@@ -33,10 +34,11 @@ export function parseExpression<T>(
   // expression position as a regex literal, causing a SyntaxError. Detect this
   // case and prepend `null` so the comment is parsed as a trailing remark on a
   // null literal instead.
-  const isStandaloneComment =
-    /^\s*(?:\/\*[\s\S]*?\*\/|\/\/[^\n\r\u2028\u2029]*)\s*$/.test(code);
+  const isStandaloneComment = /^(?:\/\*[\s\S]*?\*\/|\/\/[^\n\r\u2028\u2029]*)$/.test(
+    code.trim(),
+  );
 
-  const parseCode = isStandaloneComment ? code + "\nnull" : "(" + code + ")";
+  const parseCode = isStandaloneComment ? `${code}\nnull` : `(${code})`;
 
   const root: ParsedFileNode = parse(parseCode, {
     parser: options?.parser || getBabelParser(),
@@ -69,7 +71,7 @@ export function parseExpression<T>(
 
   const mod = {
     $ast: root,
-    $code: " " + code + " ",
+    $code: ` ${code} `,
     $type: "module",
   } as any as ProxifiedModule;
 
@@ -86,8 +88,8 @@ export function generateCode(
     ast = b.expressionStatement(ast);
   }
 
-  const formatOptions =
-    options.format === false || !("$code" in node)
+  const formatOptions
+    = options.format === false || !("$code" in node)
       ? {}
       : detectCodeFormat(node.$code, options.format);
 

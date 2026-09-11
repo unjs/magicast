@@ -1,7 +1,7 @@
-import { it, describe, expect } from "vitest";
 import { parseModule } from "magicast";
-import { generate } from "../_utils";
 import { addVitePlugin, updateVitePluginConfig } from "magicast/helpers";
+import { describe, expect, it } from "vitest";
+import { generate } from "../_utils";
 
 describe("helpers > vite", () => {
   it("add plugin", async () => {

@@ -1,5 +1,6 @@
+import type { ProxifiedModule } from "magicast";
+import { builders, parseModule } from "magicast";
 import { describe, expect, it } from "vitest";
-import { builders, parseModule, ProxifiedModule } from "magicast";
 import { generate } from "./_utils";
 
 describe("function-calls", () => {
@@ -51,8 +52,8 @@ describe("function-calls", () => {
       }
 
       // Get config object, if it's a function call, get the first argument
-      const config =
-        mod.exports.default.$type === "function-call"
+      const config
+        = mod.exports.default.$type === "function-call"
           ? mod.exports.default.$args[0]
           : mod.exports.default;
 

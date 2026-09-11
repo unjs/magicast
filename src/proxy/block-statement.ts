@@ -1,7 +1,7 @@
 import type { BlockStatement } from "@babel/types";
 import type { ProxifiedBlockStatement, ProxifiedModule } from "./types";
-import { proxifyArrayElements } from "./array";
 import { createProxy } from "./_utils";
+import { proxifyArrayElements } from "./array";
 
 export function proxifyBlockStatement(
   node: BlockStatement,

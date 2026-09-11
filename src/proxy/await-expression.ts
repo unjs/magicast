@@ -1,8 +1,8 @@
 import type { AwaitExpression } from "@babel/types";
 import type { ProxifiedAwaitExpression, ProxifiedModule } from "./types";
 import { MagicastError } from "../error";
-import { proxify } from "./proxify";
 import { createProxy } from "./_utils";
+import { proxify } from "./proxify";
 
 export function proxifyAwaitExpression(
   node: AwaitExpression,

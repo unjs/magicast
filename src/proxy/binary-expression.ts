@@ -1,7 +1,7 @@
 import type { BinaryExpression } from "@babel/types";
 import type { ProxifiedBinaryExpression, ProxifiedModule } from "./types";
-import { proxify } from "./proxify";
 import { createProxy } from "./_utils";
+import { proxify } from "./proxify";
 
 export function proxifyBinaryExpression(
   node: BinaryExpression,

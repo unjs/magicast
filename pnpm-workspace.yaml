@@ -1,4 +1,28 @@
+ignoreWorkspaceRootCheck: true
+minimumReleaseAgeExcludePrune: true
+trustPolicy: no-downgrade
+
+update:
+  ignoreDeps:
+    - typescript@7
+
+shellEmulator: true
+
 packages:
   - "!vendor/*"
-shellEmulator: true
-ignoreWorkspaceRootCheck: true
+
+overrides:
+  array-includes: "npm:@nolyfill/array-includes@latest"
+  array.prototype.findlastindex: "npm:@nolyfill/array.prototype.findlastindex@latest"
+  array.prototype.flat: "npm:@nolyfill/array.prototype.flat@latest"
+  array.prototype.flatmap: "npm:@nolyfill/array.prototype.flatmap@latest"
+  hasown: "npm:@nolyfill/hasown@latest"
+  object.fromentries: "npm:@nolyfill/object.fromentries@latest"
+  object.groupby: "npm:@nolyfill/object.groupby@latest"
+  object.values: "npm:@nolyfill/object.values@latest"
+
+  source-map: "npm:source-map-js@latest"
+
+allowBuilds:
+  esbuild: true
+  simple-git-hooks: true

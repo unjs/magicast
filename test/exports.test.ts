@@ -1,5 +1,5 @@
-import { expect, it, describe } from "vitest";
 import { MagicastError, parseModule } from "magicast";
+import { describe, expect, it } from "vitest";
 import { generate } from "./_utils";
 
 describe("exports", () => {
@@ -8,7 +8,7 @@ describe("exports", () => {
 
     expect(Object.keys(mod.exports)).toEqual([]);
     expect(mod.exports).toMatchInlineSnapshot(`{}`);
-    expect(await generate(mod)).toMatchInlineSnapshot('""');
+    expect(await generate(mod)).toMatchInlineSnapshot("\"\"");
 
     mod.exports.default = { foo: "1" };
 
@@ -65,7 +65,7 @@ describe("exports", () => {
 
     expect(Object.keys(mod.exports)).toEqual([]);
 
-    expect(await generate(mod)).toMatchInlineSnapshot('""');
+    expect(await generate(mod)).toMatchInlineSnapshot("\"\"");
   });
   it("export function", async () => {
     let mod = parseModule(

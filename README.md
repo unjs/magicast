@@ -30,7 +30,7 @@ pnpm add -D magicast
 Import utilities:
 
 ```js
-import { parseModule, generateCode, builders, createNode } from "magicast";
+import { builders, createNode, generateCode, parseModule } from "magicast";
 ```
 
 ## Examples
@@ -68,7 +68,7 @@ export default {
 **Example:** Directly use AST utils:
 
 ```js
-import { parseModule, generateCode } from "magicast";
+import { generateCode, parseModule } from "magicast";
 
 // Parse to AST
 const mod = parseModule(`export default { }`);
@@ -94,7 +94,7 @@ export default {
 **Example:** Get the AST directly:
 
 ```js
-import { parseModule, generateCode } from "magicast";
+import { generateCode, parseModule } from "magicast";
 
 const mod = parseModule(`export default { }`);
 
@@ -105,13 +105,13 @@ const ast = mod.exports.default.$ast;
 **Example:** Function arguments:
 
 ```js
-import { parseModule, generateCode } from "magicast";
+import { generateCode, parseModule } from "magicast";
 
 const mod = parseModule(`export default defineConfig({ foo: 'bar' })`);
 
 // Support for both bare object export and `defineConfig` wrapper
-const options =
-  mod.exports.default.$type === "function-call"
+const options
+  = mod.exports.default.$type === "function-call"
     ? mod.exports.default.$args[0]
     : mod.exports.default;
 
@@ -121,7 +121,7 @@ console.log(options.foo); // bar
 **Example:** Create a function call:
 
 ```js
-import { parseModule, generateCode, builders } from "magicast";
+import { builders, generateCode, parseModule } from "magicast";
 
 const mod = parseModule(`export default {}`);
 
@@ -147,7 +147,8 @@ function updateConfig() {
     mod.exports.default.foo.push("b");
 
     await writeFile(mod);
-  } catch {
+  }
+  catch {
     console.error("Unable to update config.js");
     console.error(
       "Please update it manually with the following instructions: ...",
@@ -171,9 +172,9 @@ We also experiment to provide a few high level helpers to make common tasks easi
 
 ```js
 import {
-  deepMergeObject,
   addNuxtModule,
   addVitePlugin,
+  deepMergeObject,
   // ...
 } from "magicast/helpers";
 ```
