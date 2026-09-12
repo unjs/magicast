@@ -22,6 +22,8 @@ export function parseModule<Exports extends object = any>(
   const node: ParsedFileNode = parse(code, {
     parser: options?.parser || getBabelParser(),
     ...options,
+    // Parse and print must agree on the width of existing tab indentation.
+    tabWidth: options?.tabWidth ?? detectCodeFormat(code).tabWidth,
   });
   return proxifyModule(node, code);
 }

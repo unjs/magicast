@@ -1,5 +1,6 @@
 import type { CodeFormatOptions } from "magicast";
 import { detectCodeFormat, generateCode, parseModule } from "magicast";
+import { addVitePlugin } from "magicast/helpers";
 import { describe, expect, it } from "vitest";
 
 describe("format", () => {
@@ -104,4 +105,18 @@ describe("format", () => {
     expect(detectedFormat.quote).toBe("single");
     expect(detectedFormat.useTabs).toBe(false);
   });
+});
+
+it.each([undefined, 4])("preserves tab indentation with tabWidth %s", (tabWidth) => {
+  const mod = parseModule(
+    "import { defineConfig } from 'vite'\n\nexport default defineConfig({\n\tplugins: []\n})\n",
+    tabWidth === undefined ? undefined : { tabWidth },
+  );
+  addVitePlugin(mod, {
+    from: "@vitejs/plugin-vue",
+    constructor: "vue",
+    options: { owo: true },
+  });
+  const code = generateCode(mod, { format: { tabWidth } }).code;
+  expect(code).toContain("\n\tplugins: [vue({\n\t\towo: true\n\t})]");
 });
