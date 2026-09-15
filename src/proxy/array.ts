@@ -8,6 +8,8 @@ export function proxifyArrayElements<T extends any[]>(
   elements: ASTNode[],
   mod?: ProxifiedModule,
 ): ProxifiedArray<T> {
+  const proxifyElement = (element: ASTNode | null | undefined) =>
+    element == null ? undefined : proxify(element, mod);
   const utils = makeProxyUtils(node, {
     $type: "array",
     // Mutator methods - they modify the underlying AST
@@ -15,13 +17,13 @@ export function proxifyArrayElements<T extends any[]>(
       return elements.push(...values.map(v => literalToAst(v) as any));
     },
     pop() {
-      return proxify(elements.pop() as any, mod);
+      return proxifyElement(elements.pop());
     },
     unshift(...values: any[]) {
       return elements.unshift(...values.map(v => literalToAst(v) as any));
     },
     shift() {
-      return proxify(elements.shift() as any, mod);
+      return proxifyElement(elements.shift());
     },
     splice(start: number, ...rest: [number?, ...any[]]) {
       // `deleteCount` is only defaulted to 0 when it is passed explicitly;
@@ -33,10 +35,10 @@ export function proxifyArrayElements<T extends any[]>(
             rest[0] as number,
             ...rest.slice(1).map(n => literalToAst(n)),
           );
-      return deleted.map(n => proxify(n as any, mod));
+      return deleted.map(proxifyElement);
     },
     toJSON() {
-      return elements.map(n => proxify(n as any, mod));
+      return elements.map(proxifyElement);
     },
   });
 
@@ -158,7 +160,7 @@ export function proxifyArrayElements<T extends any[]>(
       if (key === Symbol.iterator) {
         return function* () {
           for (const item of elements) {
-            yield proxify(item as any, mod);
+            yield proxifyElement(item);
           }
         };
       }
@@ -197,7 +199,10 @@ export function proxifyArrayElements<T extends any[]>(
       return Reflect.deleteProperty(target, key);
     },
     ownKeys() {
-      return ["length", ...elements.map((_, i) => i.toString())];
+      return [
+        "length",
+        ...Object.keys(elements).filter(i => elements[+i] != null),
+      ];
     },
     getOwnPropertyDescriptor(target, key) {
       if (key in utils) {
@@ -222,9 +227,13 @@ export function proxifyArrayElements<T extends any[]>(
       }
 
       const index = +key;
-      if (!Number.isNaN(index) && index < elements.length) {
+      if (
+        !Number.isNaN(index)
+        && index < elements.length
+        && elements[index] != null
+      ) {
         return {
-          value: proxify(elements[index], mod),
+          value: proxifyElement(elements[index]),
           writable: true,
           enumerable: true,
           configurable: true,
