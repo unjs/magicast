@@ -126,5 +126,8 @@ describe("array", () => {
 
     expect([...mod.exports.default]).toEqual([1, undefined, 3]);
     expect(Object.keys(mod.exports.default)).toEqual(["0", "2"]);
+    expect(mod.exports.default.shift()).toBe(1);
+    expect(mod.exports.default.shift()).toBeUndefined();
+    expect(mod.exports.default.pop()).toBe(3);
   });
 });
