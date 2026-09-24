@@ -130,4 +130,29 @@ describe("array", () => {
     expect(mod.exports.default.shift()).toBeUndefined();
     expect(mod.exports.default.pop()).toBe(3);
   });
+
+  it("preserves holes in array callbacks and splice results", () => {
+    const mod = parseModule<{ default: Array<number | undefined> }>(
+      `export default [1, , 3]`,
+    );
+    const indexes: number[] = [];
+
+    const mapped = mod.exports.default.map((value, index) => {
+      indexes.push(index);
+      return value;
+    });
+    expect(indexes).toEqual([0, 2]);
+    expect(mapped).toHaveLength(3);
+    expect(Object.keys(mapped)).toEqual(["0", "2"]);
+    expect(mod.exports.default.filter(Boolean)).toEqual([1, 3]);
+
+    indexes.length = 0;
+    mod.exports.default.forEach((_, index) => indexes.push(index));
+    expect(indexes).toEqual([0, 2]);
+    expect(mod.exports.default.reduce((sum, value) => sum + value)).toBe(4);
+
+    const deleted = mod.exports.default.splice(0);
+    expect([...deleted]).toEqual([1, undefined, 3]);
+    expect(Object.keys(deleted)).toEqual(["0", "2"]);
+  });
 });
