@@ -63,7 +63,7 @@ export function proxifyArrayElements<T extends any[]>(
         return (callback: (value: any, index: number, array: any[]) => any) => {
           const results: any[] = [];
           results.length = elements.length;
-          for (let index = 0; index < elements.length; index++) {
+          for (let index = 0; index < results.length; index++) {
             if (elements[index] != null) {
               results[index] = callback(proxifyElement(elements[index]), index, self);
             }
@@ -76,7 +76,8 @@ export function proxifyArrayElements<T extends any[]>(
           callback: (value: any, index: number, array: any[]) => boolean,
         ) => {
           const results = [];
-          for (let index = 0; index < elements.length; index++) {
+          const length = elements.length;
+          for (let index = 0; index < length; index++) {
             if (elements[index] == null)
               continue;
             const item = proxifyElement(elements[index]);
@@ -91,7 +92,8 @@ export function proxifyArrayElements<T extends any[]>(
         return (
           callback: (value: any, index: number, array: any[]) => void,
         ) => {
-          for (let index = 0; index < elements.length; index++) {
+          const length = elements.length;
+          for (let index = 0; index < length; index++) {
             if (elements[index] != null) {
               callback(proxifyElement(elements[index]), index, self);
             }
@@ -110,21 +112,22 @@ export function proxifyArrayElements<T extends any[]>(
         ) => {
           let accumulator: any;
           let startIndex = 0;
+          const length = elements.length;
 
           if (initialValue.length > 0) {
             accumulator = initialValue[0];
           }
           else {
-            while (startIndex < elements.length && elements[startIndex] == null) {
+            while (startIndex < length && elements[startIndex] == null) {
               startIndex++;
             }
-            if (startIndex === elements.length) {
+            if (startIndex === length) {
               throw new TypeError("Reduce of empty array with no initial value");
             }
             accumulator = proxifyElement(elements[startIndex++]);
           }
 
-          for (let index = startIndex; index < elements.length; index++) {
+          for (let index = startIndex; index < length; index++) {
             if (elements[index] != null) {
               accumulator = callback(
                 accumulator,

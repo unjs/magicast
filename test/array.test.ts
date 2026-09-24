@@ -155,4 +155,26 @@ describe("array", () => {
     expect([...deleted]).toEqual([1, undefined, 3]);
     expect(Object.keys(deleted)).toEqual(["0", "2"]);
   });
+
+  it("does not visit elements appended during callbacks", () => {
+    for (const method of ["map", "filter", "forEach", "reduce"] as const) {
+      const mod = parseModule<{ default: number[] }>(`export default [1, 2]`);
+      const visited: number[] = [];
+      const visit = (value: number) => {
+        visited.push(value);
+        if (value === 1)
+          mod.exports.default.push(3);
+        return value;
+      };
+
+      if (method === "reduce")
+        mod.exports.default.reduce((sum, value) => sum + visit(value), 0);
+      else if (method === "filter")
+        mod.exports.default.filter(visit);
+      else
+        mod.exports.default[method](visit);
+
+      expect(visited).toEqual([1, 2]);
+    }
+  });
 });
