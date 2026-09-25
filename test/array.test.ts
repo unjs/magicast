@@ -118,4 +118,63 @@ describe("array", () => {
     expect(mod.exports.default.length).toBe(1);
     expect(await generate(mod)).toMatchInlineSnapshot(`"export default [1];"`);
   });
+
+  it("supports iterating sparse arrays", () => {
+    const mod = parseModule<{ default: Array<number | undefined> }>(
+      `export default [1, , 3]`,
+    );
+
+    expect([...mod.exports.default]).toEqual([1, undefined, 3]);
+    expect(Object.keys(mod.exports.default)).toEqual(["0", "2"]);
+    expect(mod.exports.default.shift()).toBe(1);
+    expect(mod.exports.default.shift()).toBeUndefined();
+    expect(mod.exports.default.pop()).toBe(3);
+  });
+
+  it("preserves holes in array callbacks and splice results", () => {
+    const mod = parseModule<{ default: Array<number | undefined> }>(
+      `export default [1, , 3]`,
+    );
+    const indexes: number[] = [];
+
+    const mapped = mod.exports.default.map((value, index) => {
+      indexes.push(index);
+      return value;
+    });
+    expect(indexes).toEqual([0, 2]);
+    expect(mapped).toHaveLength(3);
+    expect(Object.keys(mapped)).toEqual(["0", "2"]);
+    expect(mod.exports.default.filter(Boolean)).toEqual([1, 3]);
+
+    indexes.length = 0;
+    mod.exports.default.forEach((_, index) => indexes.push(index));
+    expect(indexes).toEqual([0, 2]);
+    expect(mod.exports.default.reduce((sum, value) => sum + value)).toBe(4);
+
+    const deleted = mod.exports.default.splice(0);
+    expect([...deleted]).toEqual([1, undefined, 3]);
+    expect(Object.keys(deleted)).toEqual(["0", "2"]);
+  });
+
+  it("does not visit elements appended during callbacks", () => {
+    for (const method of ["map", "filter", "forEach", "reduce"] as const) {
+      const mod = parseModule<{ default: number[] }>(`export default [1, 2]`);
+      const visited: number[] = [];
+      const visit = (value: number) => {
+        visited.push(value);
+        if (value === 1)
+          mod.exports.default.push(3);
+        return value;
+      };
+
+      if (method === "reduce")
+        mod.exports.default.reduce((sum, value) => sum + visit(value), 0);
+      else if (method === "filter")
+        mod.exports.default.filter(visit);
+      else
+        mod.exports.default[method](visit);
+
+      expect(visited).toEqual([1, 2]);
+    }
+  });
 });
