@@ -18,6 +18,11 @@ import { proxifyObject } from "./object";
 const _cache = new WeakMap<ASTNode, any>();
 
 export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
+  // Array holes (sparse slots) are parsed as `null`; treat them as `undefined`.
+  if (node == null) {
+    return undefined as any;
+  }
+
   if (LITERALS_TYPEOF.has(typeof node)) {
     return node as any;
   }

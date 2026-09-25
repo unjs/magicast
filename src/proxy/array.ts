@@ -33,7 +33,14 @@ export function proxifyArrayElements<T extends any[]>(
             rest[0] as number,
             ...rest.slice(1).map(n => literalToAst(n)),
           );
-      return deleted.map(n => proxify(n as any, mod));
+      const result: any[] = [];
+      result.length = deleted.length;
+      for (let index = 0; index < deleted.length; index++) {
+        if (deleted[index] != null) {
+          result[index] = proxify(deleted[index], mod);
+        }
+      }
+      return result;
     },
     toJSON() {
       return elements.map(n => proxify(n as any, mod));
@@ -50,11 +57,13 @@ export function proxifyArrayElements<T extends any[]>(
       const self = receiver as any[];
       if (key === "map") {
         return (callback: (value: any, index: number, array: any[]) => any) => {
-          const results = [];
-          let index = 0;
-          for (const item of self) {
-            results.push(callback(item, index, self));
-            index++;
+          const results: any[] = [];
+          const length = elements.length;
+          results.length = length;
+          for (let index = 0; index < length; index++) {
+            if (elements[index] != null) {
+              results[index] = callback(proxify(elements[index], mod), index, self);
+            }
           }
           return results;
         };
@@ -64,12 +73,15 @@ export function proxifyArrayElements<T extends any[]>(
           callback: (value: any, index: number, array: any[]) => boolean,
         ) => {
           const results = [];
-          let index = 0;
-          for (const item of self) {
+          const length = elements.length;
+          for (let index = 0; index < length; index++) {
+            if (elements[index] == null) {
+              continue;
+            }
+            const item = proxify(elements[index], mod);
             if (callback(item, index, self)) {
               results.push(item);
             }
-            index++;
           }
           return results;
         };
@@ -78,10 +90,11 @@ export function proxifyArrayElements<T extends any[]>(
         return (
           callback: (value: any, index: number, array: any[]) => void,
         ) => {
-          let index = 0;
-          for (const item of self) {
-            callback(item, index, self);
-            index++;
+          const length = elements.length;
+          for (let index = 0; index < length; index++) {
+            if (elements[index] != null) {
+              callback(proxify(elements[index], mod), index, self);
+            }
           }
         };
       }
@@ -95,24 +108,32 @@ export function proxifyArrayElements<T extends any[]>(
           ) => any,
           ...initialValue: [any?]
         ) => {
-          const array = [...self];
-          if (array.length === 0 && initialValue.length === 0) {
-            throw new TypeError("Reduce of empty array with no initial value");
-          }
-
           let accumulator: any;
           let startIndex = 0;
+          const length = elements.length;
 
           if (initialValue.length > 0) {
             accumulator = initialValue[0];
           }
           else {
-            accumulator = array[0];
-            startIndex = 1;
+            while (startIndex < length && elements[startIndex] == null) {
+              startIndex++;
+            }
+            if (startIndex === length) {
+              throw new TypeError("Reduce of empty array with no initial value");
+            }
+            accumulator = proxify(elements[startIndex++], mod);
           }
 
-          for (let i = startIndex; i < array.length; i++) {
-            accumulator = callback(accumulator, array[i], i, array);
+          for (let index = startIndex; index < length; index++) {
+            if (elements[index] != null) {
+              accumulator = callback(
+                accumulator,
+                proxify(elements[index], mod),
+                index,
+                self,
+              );
+            }
           }
 
           return accumulator;
@@ -222,7 +243,7 @@ export function proxifyArrayElements<T extends any[]>(
       }
 
       const index = +key;
-      if (!Number.isNaN(index) && index < elements.length) {
+      if (!Number.isNaN(index) && index < elements.length && elements[index] != null) {
         return {
           value: proxify(elements[index], mod),
           writable: true,
