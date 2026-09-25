@@ -619,12 +619,18 @@ export class Lines {
 
       if (prevInfo) {
         const info = linesOrNull.infos[0];
-        const indent = new Array(info.indent + 1).join(" ");
+        const isEmpty = prevInfo.sliceStart === prevInfo.sliceEnd;
+        const indent = isEmpty ? "" : new Array(info.indent + 1).join(" ");
         const prevLine = infos.length;
         const prevColumn =
           Math.max(prevInfo.indent, 0) +
           prevInfo.sliceEnd -
           prevInfo.sliceStart;
+
+        if (isEmpty) {
+          // Keep leading indentation as metadata so toString can emit tabs.
+          prevInfo.indent = Math.max(prevInfo.indent, 0) + Math.max(info.indent, 0);
+        }
 
         prevInfo.line =
           prevInfo.line.slice(0, prevInfo.sliceEnd) +
