@@ -82,6 +82,11 @@ export function proxifyObject<T extends object>(
     if (prop) {
       const propType = (prop as any).type;
       if (propType === "Property" || propType === "ObjectProperty") {
+        // A shorthand `{ foo }` shares one source span between key and
+        // value; replacing only the value would print it in place of the key.
+        if ((prop as any).shorthand) {
+          (prop as any).shorthand = false;
+        }
         (prop as any).value = value;
       }
       else if (prop.type === "ObjectMethod") {

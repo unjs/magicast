@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseModule } from "../src";
+import { generateCode, parseModule } from "../src";
 import { deepMergeObject } from "../src/helpers/deep-merge";
 import { generate } from "./_utils";
 
@@ -338,6 +338,16 @@ export default {
     expect(Object.keys(proxy)).toEqual(["a", "b"]);
     expect("a" in proxy).toBe(true);
     expect("c" in proxy).toBe(false);
+  });
+
+  it("expands a shorthand property when its value is replaced", () => {
+    const mod = parseModule(`export default defineConfig({ modules, ssr: true })`);
+
+    mod.exports.default.$args[0].modules = ["@nuxt/ui"];
+
+    expect(generateCode(mod).code).toBe(
+      `export default defineConfig({ modules: ["@nuxt/ui"], ssr: true })`,
+    );
   });
 
   it("preserves inner comment when adding a property to an empty object", async () => {
