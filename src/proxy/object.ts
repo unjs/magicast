@@ -27,7 +27,8 @@ export function proxifyObject<T extends object>(
       || propType === "ObjectMethod"
     ) {
       const propKey = (prop as any).key;
-      if (propKey.type === "Identifier") {
+      // `[key]` reads the variable `key` at runtime, so its name is not the property name
+      if (propKey.type === "Identifier" && !(prop as any).computed) {
         return propKey.name;
       }
       if (

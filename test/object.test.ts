@@ -372,4 +372,30 @@ export default {
 
     expect(await generate(mod)).toContain("// inner comment");
   });
+
+  it("does not treat computed identifier keys as static keys", async () => {
+    const mod = parseModule(
+      `
+const key = "other";
+export default {
+  [key]: 1,
+  key: 2,
+}
+    `.trim(),
+    );
+    const proxy = mod.exports.default;
+
+    expect(proxy.key).toBe(2);
+    expect(Object.keys(proxy)).toEqual(["key"]);
+
+    proxy.key = 3;
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "const key = "other";
+      export default {
+        [key]: 1,
+        key: 3,
+      };"
+    `);
+  });
 });
