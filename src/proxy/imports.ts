@@ -18,6 +18,31 @@ import { createProxy } from "./_utils";
 const b = recast.types.builders;
 const _importProxyCache = new WeakMap<any, ProxifiedImportItem>();
 
+// Whether `specifier` can be added to `declaration` while keeping the import valid
+function canMergeSpecifier(
+  declaration: ImportDeclaration,
+  specifier: { type: string },
+): boolean {
+  // `import type { A } from "a"` cannot hold value imports
+  if (declaration.importKind && declaration.importKind !== "value") {
+    return false;
+  }
+  // `import * as a from "a"` cannot be combined with other specifiers
+  if (
+    specifier.type === "ImportNamespaceSpecifier"
+    || declaration.specifiers.some(s => s.type === "ImportNamespaceSpecifier")
+  ) {
+    return false;
+  }
+  // An import declaration can only have one default specifier
+  if (specifier.type === "ImportDefaultSpecifier") {
+    return !declaration.specifiers.some(
+      s => s.type === "ImportDefaultSpecifier",
+    );
+  }
+  return true;
+}
+
 export function createImportProxy(
   node: ImportDeclaration,
   specifier:
@@ -78,7 +103,10 @@ export function createImportProxy(
         }
 
         const declaration = root.body.find(
-          i => i.type === "ImportDeclaration" && i.source.value === value,
+          i =>
+            i.type === "ImportDeclaration"
+            && i.source.value === value
+            && canMergeSpecifier(i, specifier),
         ) as ImportDeclaration | undefined;
         if (declaration) {
           // TODO: insert after the last import maybe?
@@ -155,7 +183,8 @@ export function createImportsProxy(
             );
 
     const declaration = imports.find(
-      i => i.from === value.from,
+      i =>
+        i.from === value.from && canMergeSpecifier(i.$declaration, specifier),
     )?.$declaration;
     if (declaration) {
       declaration.specifiers.push(specifier as any);
