@@ -87,7 +87,7 @@ export function literalToAst(value: any, seen = new Set()): ASTNode {
       Object.entries(value).map(([key, value]) => {
         return b.property(
           "init",
-          /^[$A-Z_][\w$]*$/i.test(key) ? b.identifier(key) : b.literal(key),
+          isValidPropName(key) ? b.identifier(key) : b.stringLiteral(key),
           literalToAst(value, seen) as any,
         ) as any;
       }),

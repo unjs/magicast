@@ -247,6 +247,55 @@ export default {
       });"
     `);
   });
+
+  it("reads back quoted keys of an assigned object", async () => {
+    const mod = parseModule(`export default {}`);
+
+    mod.exports.default.alias = { "@": "./src" };
+    const alias = mod.exports.default.alias;
+
+    expect(alias["@"]).toBe("./src");
+    expect(Object.keys(alias)).toEqual(["@"]);
+    expect("@" in alias).toBe(true);
+
+    alias["@"] = "./app";
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        alias: {
+          "@": "./app",
+        },
+      };"
+    `);
+
+    delete alias["@"];
+    expect(Object.keys(alias)).toEqual([]);
+  });
+
+  it("deep merges into quoted keys added by a previous merge", async () => {
+    const mod = parseModule(`export default {}`);
+
+    deepMergeObject(mod.exports.default, {
+      server: { proxy: { "/api": { target: "http://localhost:3000" } } },
+    });
+    deepMergeObject(mod.exports.default, {
+      server: { proxy: { "/api": { changeOrigin: true } } },
+    });
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "export default {
+        server: {
+          proxy: {
+            "/api": {
+              target: "http://localhost:3000",
+              changeOrigin: true,
+            },
+          },
+        },
+      };"
+    `);
+  });
+
   it("binary expressions inside functions and arrow functions inside object array", async () => {
     const mod = parseModule(`
         export default {
