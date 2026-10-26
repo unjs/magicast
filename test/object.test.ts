@@ -372,4 +372,23 @@ export default {
 
     expect(await generate(mod)).toContain("// inner comment");
   });
+
+  it("keeps empty-string keys", async () => {
+    const mod = parseModule(`export default { "": 1, regular: 2, nested: { "": 3 } }`);
+    const proxy = mod.exports.default;
+
+    expect(proxy[""]).toBe(1);
+    expect(Object.keys(proxy)).toEqual(["", "regular", "nested"]);
+    expect("" in proxy).toBe(true);
+    expect(Object.getOwnPropertyDescriptor(proxy, "")?.enumerable).toBe(true);
+    expect(JSON.stringify(proxy)).toBe(`{"":1,"regular":2,"nested":{"":3}}`);
+    expect({ ...proxy.nested }).toEqual({ "": 3 });
+
+    proxy[""] = 4;
+    expect(await generate(mod)).toMatchInlineSnapshot(`"export default { "": 4, regular: 2, nested: { "": 3 } };"`);
+
+    delete proxy[""];
+    expect("" in proxy).toBe(false);
+    expect(Object.keys(proxy)).toEqual(["regular", "nested"]);
+  });
 });

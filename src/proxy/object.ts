@@ -122,7 +122,7 @@ export function proxifyObject<T extends object>(
       toJSON() {
         return node.properties.reduce((acc, prop) => {
           const propName = getPropName(prop);
-          if (propName) {
+          if (propName !== undefined) {
             const propType = (prop as any).type;
             if (propType === "Property" || propType === "ObjectProperty") {
               acc[propName] = proxify((prop as any).value, mod);
@@ -172,7 +172,7 @@ export function proxifyObject<T extends object>(
       ownKeys() {
         return node.properties
           .map(p => getPropName(p))
-          .filter(Boolean) as string[];
+          .filter(name => name !== undefined) as string[];
       },
       getOwnPropertyDescriptor(target, key) {
         if (
