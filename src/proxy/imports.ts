@@ -18,6 +18,32 @@ import { createProxy } from "./_utils";
 const b = recast.types.builders;
 const _importProxyCache = new WeakMap<any, ProxifiedImportItem>();
 
+// Whether `specifier` can be added to `declaration` while keeping the import valid
+function canMergeSpecifier(
+  declaration: ImportDeclaration,
+  specifier: { type: string },
+  importKind: ImportDeclaration["importKind"] = "value",
+): boolean {
+  // `import type { A } from "a"` can only hold type imports, and the reverse
+  if ((declaration.importKind ?? "value") !== importKind) {
+    return false;
+  }
+  // `import * as a from "a"` cannot be combined with other specifiers
+  if (
+    specifier.type === "ImportNamespaceSpecifier"
+    || declaration.specifiers.some(s => s.type === "ImportNamespaceSpecifier")
+  ) {
+    return false;
+  }
+  // An import declaration can only have one default specifier
+  if (specifier.type === "ImportDefaultSpecifier") {
+    return !declaration.specifiers.some(
+      s => s.type === "ImportDefaultSpecifier",
+    );
+  }
+  return true;
+}
+
 export function createImportProxy(
   node: ImportDeclaration,
   specifier:
@@ -72,13 +98,17 @@ export function createImportProxy(
           return;
         }
 
+        const importKind = node.importKind ?? "value";
         node.specifiers = node.specifiers.filter(s => s !== specifier);
         if (node.specifiers.length === 0) {
           root.body = root.body.filter(s => s !== node);
         }
 
         const declaration = root.body.find(
-          i => i.type === "ImportDeclaration" && i.source.value === value,
+          i =>
+            i.type === "ImportDeclaration"
+            && i.source.value === value
+            && canMergeSpecifier(i, specifier, importKind),
         ) as ImportDeclaration | undefined;
         if (declaration) {
           // TODO: insert after the last import maybe?
@@ -89,6 +119,7 @@ export function createImportProxy(
           const newDeclaration = b.importDeclaration(
             [specifier as any],
             b.stringLiteral(value),
+            importKind,
           );
           root.body.unshift(newDeclaration as any);
           node = newDeclaration as any;
@@ -155,7 +186,8 @@ export function createImportsProxy(
             );
 
     const declaration = imports.find(
-      i => i.from === value.from,
+      i =>
+        i.from === value.from && canMergeSpecifier(i.$declaration, specifier),
     )?.$declaration;
     if (declaration) {
       declaration.specifiers.push(specifier as any);

@@ -156,4 +156,59 @@ foo: []
     expect(item.from).toBe("b");
     expect(mod.imports.foo.from).toBe("b");
   });
+
+  it("does not merge a named import into a namespace import", async () => {
+    const mod = parseModule(`import * as path from "path"`);
+
+    mod.imports.$append({ imported: "join", from: "path" });
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import * as path from "path";
+      import { join } from "path";"
+    `);
+  });
+
+  it("does not merge a value import into a type-only import", async () => {
+    const mod = parseModule(`import type { UserConfig } from "vite"`);
+
+    mod.imports.$append({ imported: "defineConfig", from: "vite" });
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import type { UserConfig } from "vite";
+      import { defineConfig } from "vite";"
+    `);
+  });
+
+  it("keeps a moved type-only import type-only", async () => {
+    const mod = parseModule(`import type { Foo } from "a"
+import type { Bar } from "b"
+import { baz } from "b"`);
+
+    mod.imports.Foo.from = "b";
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import type { Bar, Foo } from "b";
+      import { baz } from "b";"
+    `);
+
+    mod.imports.Bar.from = "c";
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import type { Bar } from "c";
+      import type { Foo } from "b";
+      import { baz } from "b";"
+    `);
+  });
+
+  it("does not merge a moved import into a namespace import", async () => {
+    const mod = parseModule(`import * as path from "path"
+import { join } from "pathe"`);
+
+    mod.imports.join.from = "path";
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import { join } from "path";
+      import * as path from "path";"
+    `);
+  });
 });
