@@ -22,9 +22,10 @@ const _importProxyCache = new WeakMap<any, ProxifiedImportItem>();
 function canMergeSpecifier(
   declaration: ImportDeclaration,
   specifier: { type: string },
+  importKind: ImportDeclaration["importKind"] = "value",
 ): boolean {
-  // `import type { A } from "a"` cannot hold value imports
-  if (declaration.importKind && declaration.importKind !== "value") {
+  // `import type { A } from "a"` can only hold type imports, and the reverse
+  if ((declaration.importKind ?? "value") !== importKind) {
     return false;
   }
   // `import * as a from "a"` cannot be combined with other specifiers
@@ -97,6 +98,7 @@ export function createImportProxy(
           return;
         }
 
+        const importKind = node.importKind ?? "value";
         node.specifiers = node.specifiers.filter(s => s !== specifier);
         if (node.specifiers.length === 0) {
           root.body = root.body.filter(s => s !== node);
@@ -106,7 +108,7 @@ export function createImportProxy(
           i =>
             i.type === "ImportDeclaration"
             && i.source.value === value
-            && canMergeSpecifier(i, specifier),
+            && canMergeSpecifier(i, specifier, importKind),
         ) as ImportDeclaration | undefined;
         if (declaration) {
           // TODO: insert after the last import maybe?
@@ -117,6 +119,7 @@ export function createImportProxy(
           const newDeclaration = b.importDeclaration(
             [specifier as any],
             b.stringLiteral(value),
+            importKind,
           );
           root.body.unshift(newDeclaration as any);
           node = newDeclaration as any;
