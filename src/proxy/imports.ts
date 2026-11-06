@@ -103,6 +103,11 @@ function canAddSpecifier(
   return !hasNamespace;
 }
 
+/**
+ * Append a specifier to an existing declaration: default specifiers go first,
+ * and a type-only specifier gets an inline `type` modifier when the declaration
+ * itself is a value import.
+ */
 function addSpecifier(
   declaration: ImportDeclaration,
   specifier: SpecifierLike,
@@ -235,6 +240,7 @@ export function createImportsProxy(
   _mod: ProxifiedModule,
 ): ProxifiedImportsMap {
   // TODO: cache
+  /** Every import in the module, in declaration order. */
   const getAllImports = () => {
     const imports: ReturnType<typeof createImportProxy>[] = [];
     for (const n of root.body) {
@@ -247,6 +253,10 @@ export function createImportsProxy(
     return imports;
   };
 
+  /**
+   * Update the import bound to `key` in place, or add it to an existing
+   * declaration that can hold it, creating a new declaration otherwise.
+   */
   const updateImport = (
     key: string,
     value: ImportItemInput,
@@ -296,6 +306,7 @@ export function createImportsProxy(
     return true;
   };
 
+  /** Remove the import bound to `key`, and its declaration once it is empty. */
   const removeImport = (key: string) => {
     const item = getAllImports().find(i => i.local === key);
     if (!item) {
