@@ -156,4 +156,62 @@ foo: []
     expect(item.from).toBe("b");
     expect(mod.imports.foo.from).toBe("b");
   });
+
+  it("does not merge into a declaration that cannot hold the specifier", async () => {
+    const namespace = parseModule(`import * as path from "path"`);
+    namespace.imports.$append({ imported: "join", from: "path" });
+    expect(await generate(namespace)).toMatchInlineSnapshot(`
+      "import * as path from "path";
+      import { join } from "path";"
+    `);
+
+    const typeOnly = parseModule(`import type { UserConfig } from "vite"`);
+    typeOnly.imports.$append({ imported: "defineConfig", from: "vite" });
+    expect(await generate(typeOnly)).toMatchInlineSnapshot(`
+      "import type { UserConfig } from "vite";
+      import { defineConfig } from "vite";"
+    `);
+
+    const defaultImport = parseModule(`import a from "x"`);
+    defaultImport.imports.$append({
+      imported: "default",
+      local: "b",
+      from: "x",
+    });
+    expect(await generate(defaultImport)).toMatchInlineSnapshot(`
+      "import a from "x";
+      import b from "x";"
+    `);
+  });
+
+  it("moves an import to its own declaration when the matching source cannot hold it", async () => {
+    const mod = parseModule(
+      `import { join } from "a"\nimport * as path from "path"`,
+    );
+
+    mod.imports.join.from = "path";
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import { join } from "path";
+      import * as path from "path";"
+    `);
+  });
+
+  it("merges into declarations that can still hold the specifier", async () => {
+    const namespaceAndDefault = parseModule(`import * as ns from "x"`);
+    namespaceAndDefault.imports.$append({
+      imported: "default",
+      local: "def",
+      from: "x",
+    });
+    expect(await generate(namespaceAndDefault)).toMatchInlineSnapshot(`
+      "import def, * as ns from "x";"
+    `);
+
+    const named = parseModule(`import a, { b } from "x"`);
+    named.imports.$append({ imported: "c", from: "x" });
+    expect(await generate(named)).toMatchInlineSnapshot(`
+      "import a, { b, c } from "x";"
+    `);
+  });
 });

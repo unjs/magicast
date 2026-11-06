@@ -18,6 +18,56 @@ import { createProxy } from "./_utils";
 const b = recast.types.builders;
 const _importProxyCache = new WeakMap<any, ProxifiedImportItem>();
 
+type ImportSpecifierNode
+  = | ImportSpecifier
+    | ImportNamespaceSpecifier
+    | ImportDefaultSpecifier;
+
+/**
+ * Whether a specifier can be appended to an existing declaration without
+ * producing invalid or semantically different JavaScript.
+ */
+function canAddSpecifier(
+  declaration: ImportDeclaration,
+  specifier: Pick<ImportSpecifierNode, "type">,
+): boolean {
+  // `import type` declarations only hold type-only specifiers. The input has no
+  // way to express one, so a value import always needs its own declaration.
+  if (declaration.importKind === "type" || declaration.importKind === "typeof") {
+    return false;
+  }
+
+  const specifiers = declaration.specifiers as ImportSpecifierNode[];
+  const hasDefault = specifiers.some(s => s.type === "ImportDefaultSpecifier");
+  const hasNamespace = specifiers.some(
+    s => s.type === "ImportNamespaceSpecifier",
+  );
+  const hasNamed = specifiers.some(s => s.type === "ImportSpecifier");
+
+  if (specifier.type === "ImportNamespaceSpecifier") {
+    // `import def, * as ns from "x"` is valid, `import { named }, * as ns` is not.
+    return !hasNamespace && !hasNamed;
+  }
+  if (specifier.type === "ImportDefaultSpecifier") {
+    return !hasDefault;
+  }
+  // Named specifiers cannot be combined with a namespace specifier.
+  return !hasNamespace;
+}
+
+function addSpecifier(
+  declaration: ImportDeclaration,
+  specifier: Pick<ImportSpecifierNode, "type">,
+): void {
+  // A default specifier must come before named or namespace ones.
+  if (specifier.type === "ImportDefaultSpecifier") {
+    declaration.specifiers.unshift(specifier as any);
+  }
+  else {
+    declaration.specifiers.push(specifier as any);
+  }
+}
+
 export function createImportProxy(
   node: ImportDeclaration,
   specifier:
@@ -78,11 +128,14 @@ export function createImportProxy(
         }
 
         const declaration = root.body.find(
-          i => i.type === "ImportDeclaration" && i.source.value === value,
+          i =>
+            i.type === "ImportDeclaration"
+            && i.source.value === value
+            && canAddSpecifier(i, specifier),
         ) as ImportDeclaration | undefined;
         if (declaration) {
           // TODO: insert after the last import maybe?
-          declaration.specifiers.push(specifier as any);
+          addSpecifier(declaration, specifier);
           node = declaration;
         }
         else {
@@ -155,10 +208,10 @@ export function createImportsProxy(
             );
 
     const declaration = imports.find(
-      i => i.from === value.from,
+      i => i.from === value.from && canAddSpecifier(i.$declaration, specifier),
     )?.$declaration;
     if (declaration) {
-      declaration.specifiers.push(specifier as any);
+      addSpecifier(declaration, specifier);
     }
     else if (order === "prepend" || imports.length === 0) {
       root.body.unshift(
