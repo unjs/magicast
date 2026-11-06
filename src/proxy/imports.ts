@@ -23,19 +23,45 @@ type ImportSpecifierNode
     | ImportNamespaceSpecifier
     | ImportDefaultSpecifier;
 
+type ImportKind
+  = | "type"
+    | "typeof"
+    | "value";
+
+/** A specifier as recast's builders and the AST hand it to us. */
+type SpecifierLike = Pick<ImportSpecifierNode, "type"> & {
+  importKind?: ImportKind | null;
+};
+
+/**
+ * The kind a specifier carries: either its own inline `type` modifier
+ * (`import { type A }`) or the kind of the declaration holding it
+ * (`import type { A }`).
+ */
+function getImportKind(
+  declaration: ImportDeclaration,
+  specifier: SpecifierLike,
+): ImportKind {
+  const declarationKind = declaration.importKind || "value";
+  if (declarationKind !== "value") {
+    return declarationKind;
+  }
+  if (specifier.type === "ImportSpecifier" && specifier.importKind === "type") {
+    return "type";
+  }
+  return "value";
+}
+
 /**
  * Whether a specifier can be appended to an existing declaration without
  * producing invalid or semantically different JavaScript.
  */
 function canAddSpecifier(
   declaration: ImportDeclaration,
-  specifier: Pick<ImportSpecifierNode, "type">,
+  specifier: SpecifierLike,
+  importKind: ImportKind = "value",
 ): boolean {
-  // `import type` declarations only hold type-only specifiers. The input has no
-  // way to express one, so a value import always needs its own declaration.
-  if (declaration.importKind === "type" || declaration.importKind === "typeof") {
-    return false;
-  }
+  const declarationKind = declaration.importKind || "value";
 
   const specifiers = declaration.specifiers as ImportSpecifierNode[];
   const hasDefault = specifiers.some(s => s.type === "ImportDefaultSpecifier");
@@ -43,6 +69,28 @@ function canAddSpecifier(
     s => s.type === "ImportNamespaceSpecifier",
   );
   const hasNamed = specifiers.some(s => s.type === "ImportSpecifier");
+
+  if (importKind !== declarationKind) {
+    // A value specifier cannot live in an `import type` declaration, while a
+    // type-only one can only join it as an inline `type` modifier.
+    if (declarationKind !== "value" || importKind !== "type") {
+      return false;
+    }
+    if (specifier.type !== "ImportSpecifier") {
+      return false;
+    }
+    // Inline type specifiers are named specifiers for the rules below.
+    return !hasNamespace;
+  }
+
+  if (declarationKind !== "value") {
+    // `import type` accepts either one default/namespace specifier or named
+    // ones, never both (`import type A, { B }` does not parse).
+    if (specifier.type !== "ImportSpecifier") {
+      return specifiers.length === 0;
+    }
+    return !hasDefault && !hasNamespace;
+  }
 
   if (specifier.type === "ImportNamespaceSpecifier") {
     // `import def, * as ns from "x"` is valid, `import { named }, * as ns` is not.
@@ -57,8 +105,15 @@ function canAddSpecifier(
 
 function addSpecifier(
   declaration: ImportDeclaration,
-  specifier: Pick<ImportSpecifierNode, "type">,
+  specifier: SpecifierLike,
+  importKind: ImportKind = "value",
 ): void {
+  if (specifier.type === "ImportSpecifier") {
+    // `import type` already makes every specifier type-only, so an inline
+    // modifier there would be a syntax error.
+    specifier.importKind
+      = (declaration.importKind || "value") === importKind ? "value" : importKind;
+  }
   // A default specifier must come before named or namespace ones.
   if (specifier.type === "ImportDefaultSpecifier") {
     declaration.specifiers.unshift(specifier as any);
@@ -122,6 +177,9 @@ export function createImportProxy(
           return;
         }
 
+        // The declaration carries the kind, so read it before detaching.
+        const importKind = getImportKind(node, specifier);
+
         node.specifiers = node.specifiers.filter(s => s !== specifier);
         if (node.specifiers.length === 0) {
           root.body = root.body.filter(s => s !== node);
@@ -131,18 +189,25 @@ export function createImportProxy(
           i =>
             i.type === "ImportDeclaration"
             && i.source.value === value
-            && canAddSpecifier(i, specifier),
+            && canAddSpecifier(i, specifier, importKind),
         ) as ImportDeclaration | undefined;
         if (declaration) {
           // TODO: insert after the last import maybe?
-          addSpecifier(declaration, specifier);
+          addSpecifier(declaration, specifier, importKind);
           node = declaration;
         }
         else {
+          if (importKind !== "value" && specifier.type === "ImportSpecifier") {
+            // Hoist an inline `type` modifier up to the new declaration.
+            specifier.importKind = "value";
+          }
           const newDeclaration = b.importDeclaration(
             [specifier as any],
             b.stringLiteral(value),
           );
+          if (importKind !== "value") {
+            (newDeclaration as ImportDeclaration).importKind = importKind;
+          }
           root.body.unshift(newDeclaration as any);
           node = newDeclaration as any;
         }

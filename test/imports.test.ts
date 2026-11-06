@@ -197,6 +197,46 @@ foo: []
     `);
   });
 
+  it("keeps a moved import type-only", async () => {
+    const merged = parseModule(
+      `import type { UserConfig } from "vite"\nimport type { Builtin } from "node"`,
+    );
+    merged.imports.UserConfig.from = "node";
+    expect(await generate(merged)).toMatchInlineSnapshot(`
+      "import type { Builtin, UserConfig } from "node";"
+    `);
+
+    const inline = parseModule(
+      `import type { UserConfig } from "vite"\nimport { join } from "node"`,
+    );
+    inline.imports.UserConfig.from = "node";
+    expect(await generate(inline)).toMatchInlineSnapshot(`
+      "import { join, type UserConfig } from "node";"
+    `);
+
+    const ownDeclaration = parseModule(
+      `import type { UserConfig } from "vite"\nconst a = 1`,
+    );
+    ownDeclaration.imports.UserConfig.from = "node";
+    expect(await generate(ownDeclaration)).toMatchInlineSnapshot(`
+      "import type { UserConfig } from "node";
+      const a = 1;"
+    `);
+  });
+
+  it("does not put a moved value import into a type-only declaration", async () => {
+    const mod = parseModule(
+      `import { join } from "node"\nimport type { UserConfig } from "vite"`,
+    );
+
+    mod.imports.join.from = "vite";
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import { join } from "vite";
+      import type { UserConfig } from "vite";"
+    `);
+  });
+
   it("merges into declarations that can still hold the specifier", async () => {
     const namespaceAndDefault = parseModule(`import * as ns from "x"`);
     namespaceAndDefault.imports.$append({
