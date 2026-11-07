@@ -18,6 +18,121 @@ import { createProxy } from "./_utils";
 const b = recast.types.builders;
 const _importProxyCache = new WeakMap<any, ProxifiedImportItem>();
 
+type ImportSpecifierNode
+  = | ImportSpecifier
+    | ImportNamespaceSpecifier
+    | ImportDefaultSpecifier;
+
+type ImportKind
+  = | "type"
+    | "typeof"
+    | "value";
+
+/** A specifier as recast's builders and the AST hand it to us. */
+type SpecifierLike = Pick<ImportSpecifierNode, "type"> & {
+  importKind?: ImportKind | null;
+};
+
+/**
+ * The kind a specifier carries: either its own inline `type` modifier
+ * (`import { type A }`) or the kind of the declaration holding it
+ * (`import type { A }`).
+ */
+function getImportKind(
+  declaration: ImportDeclaration,
+  specifier: SpecifierLike,
+): ImportKind {
+  const declarationKind = declaration.importKind || "value";
+  if (declarationKind !== "value") {
+    return declarationKind;
+  }
+  if (specifier.type === "ImportSpecifier" && specifier.importKind === "type") {
+    return "type";
+  }
+  return "value";
+}
+
+/**
+ * Whether a specifier can be appended to an existing declaration without
+ * producing invalid or semantically different JavaScript.
+ */
+function canAddSpecifier(
+  declaration: ImportDeclaration,
+  specifier: SpecifierLike,
+  importKind: ImportKind = "value",
+): boolean {
+  const declarationKind = declaration.importKind || "value";
+
+  const specifiers = declaration.specifiers as ImportSpecifierNode[];
+  const hasDefault = specifiers.some(s => s.type === "ImportDefaultSpecifier");
+  const hasNamespace = specifiers.some(
+    s => s.type === "ImportNamespaceSpecifier",
+  );
+  const hasNamed = specifiers.some(s => s.type === "ImportSpecifier");
+
+  if (importKind !== declarationKind) {
+    // A value specifier cannot live in an `import type` declaration, while a
+    // type-only one can only join it as an inline `type` modifier.
+    if (declarationKind !== "value" || importKind !== "type") {
+      return false;
+    }
+    if (specifier.type !== "ImportSpecifier") {
+      return false;
+    }
+    // Inline type specifiers are named specifiers for the rules below.
+    return !hasNamespace;
+  }
+
+  if (declarationKind !== "value") {
+    // `import type` accepts either one default/namespace specifier or named
+    // ones, never both (`import type A, { B }` does not parse).
+    if (specifier.type !== "ImportSpecifier") {
+      return specifiers.length === 0;
+    }
+    return !hasDefault && !hasNamespace;
+  }
+
+  if (specifier.type === "ImportNamespaceSpecifier") {
+    // `import def, * as ns from "x"` is valid, `import { named }, * as ns` is not.
+    return !hasNamespace && !hasNamed;
+  }
+  if (specifier.type === "ImportDefaultSpecifier") {
+    return !hasDefault;
+  }
+  // Named specifiers cannot be combined with a namespace specifier.
+  return !hasNamespace;
+}
+
+/**
+ * Append a specifier to an existing declaration: default specifiers go first,
+ * and a type-only specifier gets an inline `type` modifier when the declaration
+ * itself is a value import.
+ */
+function addSpecifier(
+  declaration: ImportDeclaration,
+  specifier: SpecifierLike,
+  importKind: ImportKind = "value",
+): void {
+  if (specifier.type === "ImportSpecifier") {
+    // `import type` already makes every specifier type-only, so an inline
+    // modifier there would be a syntax error.
+    specifier.importKind
+      = (declaration.importKind || "value") === importKind ? "value" : importKind;
+  }
+  // A default specifier must come before named or namespace ones.
+  if (specifier.type === "ImportDefaultSpecifier") {
+    declaration.specifiers.unshift(specifier as any);
+  }
+  else {
+    declaration.specifiers.push(specifier as any);
+  }
+}
+
+/**
+ * Proxy a single import specifier, so that reading `from` reports its
+ * declaration's source and writing it moves the specifier to another
+ * declaration (or a new one). Proxies are cached per specifier node.
+ */
 export function createImportProxy(
   node: ImportDeclaration,
   specifier:
@@ -72,24 +187,37 @@ export function createImportProxy(
           return;
         }
 
+        // The declaration carries the kind, so read it before detaching.
+        const importKind = getImportKind(node, specifier);
+
         node.specifiers = node.specifiers.filter(s => s !== specifier);
         if (node.specifiers.length === 0) {
           root.body = root.body.filter(s => s !== node);
         }
 
         const declaration = root.body.find(
-          i => i.type === "ImportDeclaration" && i.source.value === value,
+          i =>
+            i.type === "ImportDeclaration"
+            && i.source.value === value
+            && canAddSpecifier(i, specifier, importKind),
         ) as ImportDeclaration | undefined;
         if (declaration) {
           // TODO: insert after the last import maybe?
-          declaration.specifiers.push(specifier as any);
+          addSpecifier(declaration, specifier, importKind);
           node = declaration;
         }
         else {
+          if (importKind !== "value" && specifier.type === "ImportSpecifier") {
+            // Hoist an inline `type` modifier up to the new declaration.
+            specifier.importKind = "value";
+          }
           const newDeclaration = b.importDeclaration(
             [specifier as any],
             b.stringLiteral(value),
           );
+          if (importKind !== "value") {
+            (newDeclaration as ImportDeclaration).importKind = importKind;
+          }
           root.body.unshift(newDeclaration as any);
           node = newDeclaration as any;
         }
@@ -117,6 +245,7 @@ export function createImportsProxy(
   _mod: ProxifiedModule,
 ): ProxifiedImportsMap {
   // TODO: cache
+  /** Every import in the module, in declaration order. */
   const getAllImports = () => {
     const imports: ReturnType<typeof createImportProxy>[] = [];
     for (const n of root.body) {
@@ -129,6 +258,10 @@ export function createImportsProxy(
     return imports;
   };
 
+  /**
+   * Update the import bound to `key` in place, or add it to an existing
+   * declaration that can hold it, creating a new declaration otherwise.
+   */
   const updateImport = (
     key: string,
     value: ImportItemInput,
@@ -155,10 +288,10 @@ export function createImportsProxy(
             );
 
     const declaration = imports.find(
-      i => i.from === value.from,
+      i => i.from === value.from && canAddSpecifier(i.$declaration, specifier),
     )?.$declaration;
     if (declaration) {
-      declaration.specifiers.push(specifier as any);
+      addSpecifier(declaration, specifier);
     }
     else if (order === "prepend" || imports.length === 0) {
       root.body.unshift(
@@ -178,6 +311,7 @@ export function createImportsProxy(
     return true;
   };
 
+  /** Remove the import bound to `key`, and its declaration once it is empty. */
   const removeImport = (key: string) => {
     const item = getAllImports().find(i => i.local === key);
     if (!item) {

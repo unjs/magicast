@@ -156,4 +156,147 @@ foo: []
     expect(item.from).toBe("b");
     expect(mod.imports.foo.from).toBe("b");
   });
+
+  it("does not merge into a declaration that cannot hold the specifier", async () => {
+    const namespace = parseModule(`import * as path from "path"`);
+    namespace.imports.$append({ imported: "join", from: "path" });
+    expect(await generate(namespace)).toMatchInlineSnapshot(`
+      "import * as path from "path";
+      import { join } from "path";"
+    `);
+
+    const typeOnly = parseModule(`import type { UserConfig } from "vite"`);
+    typeOnly.imports.$append({ imported: "defineConfig", from: "vite" });
+    expect(await generate(typeOnly)).toMatchInlineSnapshot(`
+      "import type { UserConfig } from "vite";
+      import { defineConfig } from "vite";"
+    `);
+
+    const defaultImport = parseModule(`import a from "x"`);
+    defaultImport.imports.$append({
+      imported: "default",
+      local: "b",
+      from: "x",
+    });
+    expect(await generate(defaultImport)).toMatchInlineSnapshot(`
+      "import a from "x";
+      import b from "x";"
+    `);
+  });
+
+  it("moves an import to its own declaration when the matching source cannot hold it", async () => {
+    const mod = parseModule(
+      `import { join } from "a"\nimport * as path from "path"`,
+    );
+
+    mod.imports.join.from = "path";
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import { join } from "path";
+      import * as path from "path";"
+    `);
+  });
+
+  it("keeps a moved import type-only", async () => {
+    const merged = parseModule(
+      `import type { UserConfig } from "vite"\nimport type { Builtin } from "node"`,
+    );
+    merged.imports.UserConfig.from = "node";
+    expect(await generate(merged)).toMatchInlineSnapshot(`
+      "import type { Builtin, UserConfig } from "node";"
+    `);
+
+    const inline = parseModule(
+      `import type { UserConfig } from "vite"\nimport { join } from "node"`,
+    );
+    inline.imports.UserConfig.from = "node";
+    expect(await generate(inline)).toMatchInlineSnapshot(`
+      "import { join, type UserConfig } from "node";"
+    `);
+
+    const ownDeclaration = parseModule(
+      `import type { UserConfig } from "vite"\nconst a = 1`,
+    );
+    ownDeclaration.imports.UserConfig.from = "node";
+    expect(await generate(ownDeclaration)).toMatchInlineSnapshot(`
+      "import type { UserConfig } from "node";
+      const a = 1;"
+    `);
+  });
+
+  it("does not put a moved value import into a type-only declaration", async () => {
+    const mod = parseModule(
+      `import { join } from "node"\nimport type { UserConfig } from "vite"`,
+    );
+
+    mod.imports.join.from = "vite";
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import { join } from "vite";
+      import type { UserConfig } from "vite";"
+    `);
+  });
+
+  it("merges into declarations that can still hold the specifier", async () => {
+    const namespaceAndDefault = parseModule(`import * as ns from "x"`);
+    namespaceAndDefault.imports.$append({
+      imported: "default",
+      local: "def",
+      from: "x",
+    });
+    expect(await generate(namespaceAndDefault)).toMatchInlineSnapshot(`
+      "import def, * as ns from "x";"
+    `);
+
+    const named = parseModule(`import a, { b } from "x"`);
+    named.imports.$append({ imported: "c", from: "x" });
+    expect(await generate(named)).toMatchInlineSnapshot(`
+      "import a, { b, c } from "x";"
+    `);
+  });
+
+  it("keeps an inline type modifier when moving a specifier", async () => {
+    const mod = parseModule(
+      `import { type UserConfig } from "vite"\nimport { join } from "node"`,
+    );
+
+    mod.imports.UserConfig.from = "node";
+
+    expect(await generate(mod)).toMatchInlineSnapshot(`
+      "import { join, type UserConfig } from "node";"
+    `);
+  });
+
+  it("keeps type-only default and namespace imports in their own declaration", async () => {
+    const defaultImport = parseModule(
+      `import type A from "a"\nimport b from "b"`,
+    );
+    defaultImport.imports.A.from = "b";
+    expect(await generate(defaultImport)).toMatchInlineSnapshot(`
+      "import type A from "b";
+      import b from "b";"
+    `);
+
+    const merged = parseModule(`import type {} from "a"\nimport type A from "b"`);
+    merged.imports.A.from = "a";
+    expect(await generate(merged)).toMatchInlineSnapshot(`
+      "import type A from "a";"
+    `);
+  });
+
+  it("does not merge namespace and named specifiers", async () => {
+    const named = parseModule(`import { a } from "x"`);
+    named.imports.$append({ imported: "*", local: "ns", from: "x" });
+    expect(await generate(named)).toMatchInlineSnapshot(`
+      "import { a } from "x";
+      import * as ns from "x";"
+    `);
+
+    const namespace = parseModule(`import * as ns from "x"`);
+    namespace.imports.$append({ imported: "*", local: "ns2", from: "x" });
+    expect(await generate(namespace)).toMatchInlineSnapshot(`
+      "import * as ns from "x";
+      import * as ns2 from "x";"
+    `);
+  });
 });
