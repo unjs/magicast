@@ -128,6 +128,11 @@ function addSpecifier(
   }
 }
 
+/**
+ * Proxy a single import specifier, so that reading `from` reports its
+ * declaration's source and writing it moves the specifier to another
+ * declaration (or a new one). Proxies are cached per specifier node.
+ */
 export function createImportProxy(
   node: ImportDeclaration,
   specifier:
