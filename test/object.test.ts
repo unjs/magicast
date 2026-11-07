@@ -302,6 +302,19 @@ export default {
     );
   });
 
+  it("object property with null literal", () => {
+    const mod = parseModule(
+      `export default { proxy: null, port: 3000, list: [null, 1] }`,
+    );
+    const config = mod.exports.default;
+
+    expect(config.proxy).toBeNull();
+    expect("proxy" in config).toBe(true);
+    expect(config.missing).toBeUndefined();
+    expect(config.list[0]).toBeNull();
+    expect({ ...config.list }).toEqual({ 0: null, 1: 1 });
+  });
+
   it("proxified array should be an array", async () => {
     const mod = parseModule(`export default { myArray: [1, "a"] }`);
 
