@@ -37,6 +37,11 @@ export function proxify<T>(node: ASTNode, mod?: ProxifiedModule): Proxified<T> {
     return new RegExp(pattern, flags) as any;
   }
 
+  // Babel's NullLiteral has no `value` property
+  if (node.type === "NullLiteral") {
+    return null as any;
+  }
+
   if (LITERALS_AST.has(node.type)) {
     return (node as any).value as any;
   }

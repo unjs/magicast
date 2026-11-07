@@ -62,10 +62,10 @@ export function parseExpression<T>(
   }
 
   if (isStandaloneComment) {
-    // proxify() for NullLiteral returns JS `undefined` (NullLiteral has no
-    // .value in Babel's AST), which loses the comment. Return a proxy with
-    // $ast pointing to the expression directly so that literalToAst() emits
-    // it — including the attached comment — when the node is inserted.
+    // proxify() for NullLiteral returns a plain JS `null`, which loses the
+    // comment. Return a proxy with $ast pointing to the expression directly
+    // so that literalToAst() emits it — including the attached comment —
+    // when the node is inserted.
     return makeProxyUtils(body, {
       $type: "comment",
     }) as unknown as Proxified<T>;
