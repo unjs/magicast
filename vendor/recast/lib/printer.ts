@@ -271,7 +271,7 @@ function genericPrintNoParens(path: any, options: any, print: any) {
       return fromString("");
 
     case "ExpressionStatement":
-      return concat([path.call(print, "expression"), ";"]);
+      return concat([path.call(print, "expression"), semi(options)]);
 
     case "ParenthesizedExpression": // Babel extension.
       return concat(["(", path.call(print, "expression"), ")"]);
@@ -537,14 +537,14 @@ function genericPrintNoParens(path: any, options: any, print: any) {
         " from ",
         path.call(print, "source"),
         maybePrintImportAssertions(path, options, print),
-        ";",
+        semi(options),
       );
 
       return concat(parts);
 
     case "TSNamespaceExportDeclaration":
       parts.push("export as namespace ", path.call(print, "id"));
-      return maybeAddSemicolon(concat(parts));
+      return maybeAddSemicolon(concat(parts), options);
 
     case "ExportNamespaceSpecifier":
       return concat(["* as ", path.call(print, "exported")]);
@@ -620,7 +620,7 @@ function genericPrintNoParens(path: any, options: any, print: any) {
       parts.push(
         path.call(print, "source"),
         maybePrintImportAssertions(path, options, print),
-        ";",
+        semi(options),
       );
 
       return concat(parts);
@@ -651,7 +651,10 @@ function genericPrintNoParens(path: any, options: any, print: any) {
       if (n.directives) {
         path.each(function (childPath: any) {
           parts.push(
-            maybeAddSemicolon(print(childPath).indent(options.tabWidth)),
+            maybeAddSemicolon(
+              print(childPath).indent(options.tabWidth),
+              options,
+            ),
             n.directives.length > 1 || !naked.isEmpty() ? "\n" : "",
           );
         }, "directives");
@@ -691,7 +694,7 @@ function genericPrintNoParens(path: any, options: any, print: any) {
         }
       }
 
-      parts.push(";");
+      parts.push(semi(options));
 
       return concat(parts);
     }
@@ -1066,7 +1069,7 @@ function genericPrintNoParens(path: any, options: any, print: any) {
           namedTypes.ForAwaitStatement.check(parentNode)
         )
       ) {
-        parts.push(";");
+        parts.push(semi(options));
       }
 
       return concat(parts);
@@ -1173,7 +1176,7 @@ function genericPrintNoParens(path: any, options: any, print: any) {
       if (endsWithBrace(doBody)) parts.push(" while");
       else parts.push("\nwhile");
 
-      parts.push(" (", path.call(print, "test"), ");");
+      parts.push(" (", path.call(print, "test"), ")", semi(options));
 
       return concat(parts);
     }
@@ -1190,13 +1193,13 @@ function genericPrintNoParens(path: any, options: any, print: any) {
     case "BreakStatement":
       parts.push("break");
       if (n.label) parts.push(" ", path.call(print, "label"));
-      parts.push(";");
+      parts.push(semi(options));
       return concat(parts);
 
     case "ContinueStatement":
       parts.push("continue");
       if (n.label) parts.push(" ", path.call(print, "label"));
-      parts.push(";");
+      parts.push(semi(options));
       return concat(parts);
 
     case "LabeledStatement":
@@ -1244,7 +1247,11 @@ function genericPrintNoParens(path: any, options: any, print: any) {
       return concat(parts);
 
     case "ThrowStatement":
-      return concat(["throw ", path.call(print, "argument"), ";"]);
+      return concat([
+        "throw ",
+        path.call(print, "argument"),
+        semi(options),
+      ]);
 
     case "SwitchStatement":
       return concat([
@@ -2583,7 +2590,7 @@ function genericPrintNoParens(path: any, options: any, print: any) {
         path.call(print, "moduleReference"),
       );
 
-      return maybeAddSemicolon(concat(parts));
+      return maybeAddSemicolon(concat(parts), options);
 
     case "TSExternalModuleReference":
       return concat(["require(", path.call(print, "expression"), ")"]);
@@ -3166,7 +3173,7 @@ function printExportDeclaration(path: any, options: any, print: any) {
         decl.declaration.type === "TSEnumDeclaration")
     )
   ) {
-    lines = concat([lines, ";"]);
+    lines = concat([lines, semi(options)]);
   }
   return lines;
 }
@@ -3209,7 +3216,10 @@ function printVariance(path: any, print: any) {
 function adjustClause(clause: any, options: any) {
   if (clause.length > 1) return concat([" ", clause]);
 
-  return concat(["\n", maybeAddSemicolon(clause).indent(options.tabWidth)]);
+  return concat([
+    "\n",
+    maybeAddSemicolon(clause, options).indent(options.tabWidth),
+  ]);
 }
 
 function lastNonSpaceCharacter(lines: any) {
@@ -3274,8 +3284,13 @@ function nodeStr(str: string, options: any) {
   }
 }
 
-function maybeAddSemicolon(lines: any) {
+function semi(options: any) {
+  return options.useSemi === false ? "" : ";";
+}
+
+function maybeAddSemicolon(lines: any, options?: any) {
   const eoc = lastNonSpaceCharacter(lines);
-  if (!eoc || "\n};".indexOf(eoc) < 0) return concat([lines, ";"]);
+  if (!eoc || "\n};".indexOf(eoc) < 0)
+    return concat([lines, semi(options)]);
   return lines;
 }

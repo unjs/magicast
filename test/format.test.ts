@@ -120,3 +120,21 @@ it.each([undefined, 4])("preserves tab indentation with tabWidth %s", (tabWidth)
   const code = generateCode(mod, { format: { tabWidth } }).code;
   expect(code).toContain("\n\tplugins: [vue({\n\t\towo: true\n\t})]");
 });
+
+describe("useSemi on generated nodes", () => {
+  it("omits the semicolon of a generated import when `useSemi` is false", () => {
+    const mod = parseModule("export default {}\n");
+    mod.imports.$append({ imported: "foo", from: "foo" });
+    expect(generateCode(mod, { format: { useSemi: false } }).code).toBe(
+      "import { foo } from \"foo\"\nexport default {}",
+    );
+  });
+
+  it("keeps the semicolon of a generated import when `useSemi` is true", () => {
+    const mod = parseModule("const a = 1;\nexport default {}\n");
+    mod.imports.$append({ imported: "foo", from: "foo" });
+    expect(generateCode(mod, { format: { useSemi: true } }).code).toBe(
+      "import { foo } from \"foo\";\nconst a = 1;\nexport default {}",
+    );
+  });
+});

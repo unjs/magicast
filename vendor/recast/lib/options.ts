@@ -145,6 +145,12 @@ export interface Options extends DeprecatedOptions {
   arrowParensAlways?: boolean;
 
   /**
+   * Whether to terminate statements with semicolons.
+   * @default true
+   */
+  useSemi?: boolean;
+
+  /**
    * There are 2 supported syntaxes (`,` and `;`) in Flow Object Types;
    * The use of commas is in line with the more popular style and matches
    * how objects are defined in JS, making it a bit more natural to write.
@@ -181,6 +187,7 @@ const defaults: Options = {
   arrayBracketSpacing: false,
   objectCurlySpacing: true,
   arrowParensAlways: false,
+  useSemi: true,
   flowObjectCommas: true,
   tokens: true,
 };
@@ -216,6 +223,7 @@ export function normalize(opts?: Options): NormalizedOptions {
     arrayBracketSpacing: get("arrayBracketSpacing"),
     objectCurlySpacing: get("objectCurlySpacing"),
     arrowParensAlways: get("arrowParensAlways"),
+    useSemi: !!get("useSemi"),
     flowObjectCommas: get("flowObjectCommas"),
     tokens: !!get("tokens"),
   };
